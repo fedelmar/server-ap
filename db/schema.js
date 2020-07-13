@@ -15,7 +15,8 @@ const typeDefs = gql`
     }
 
     type Query {
-        obtenerProductos(input: ProductoInput!): [Producto]
+        obtenerProductos: [Producto]
+        obtenerProducto(input: ProductoInput!): [Producto]
         obtenerCategoria: [Categoria]
     }
 
