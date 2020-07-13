@@ -21,7 +21,7 @@ const typeDefs = gql`
         obtenerProducto: String
     }
     type Mutation {
-        nuevoUsuario(input: UsuarioInput): String
+        nuevoUsuario(input: UsuarioInput): Usuario
     }
 `;
 

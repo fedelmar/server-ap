@@ -1,4 +1,4 @@
-const { addErrorLoggingToSchema } = require("apollo-server");
+const Usuario = require('../models/Usuarios');
 
 const resolvers = {
 
@@ -6,9 +6,24 @@ const resolvers = {
         obtenerProducto: () => Algo,
     },
     Mutation: {
-        nuevoUsuario: (_, { input }) =>{
-            console.log(input);
-            return "Creando... "
+        nuevoUsuario: async (_, { input }) =>{
+
+            const { email, password } = input;
+
+            //Verificar si ya existe el usuario
+            const existeUsuario = await Usuario.findOne({email});
+            if (existeUsuario) {
+                throw new Error('El usuario ya esta registrado');
+            }
+
+            //Guardar en la base de datos
+            try {
+                const usuario = new Usuario(input);
+                usuario.save();
+                return usuario;
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
 
