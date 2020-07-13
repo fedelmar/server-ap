@@ -10,8 +10,12 @@ const typeDefs = gql`
         cat: String
     }
 
+    input ProductoInput {
+        cat: String
+    }
+
     type Query {
-        obtenerProductos: [Producto]
+        obtenerProductos(input: ProductoInput!): [Producto]
         obtenerCategoria: [Categoria]
     }
 

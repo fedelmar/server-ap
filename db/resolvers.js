@@ -20,7 +20,10 @@ const productos = [
 const resolvers = {
 
     Query: {
-        obtenerProductos: () => productos,
+        obtenerProductos: (_, {input}, ctx) => {
+            const resultado = productos.filter( producto => producto.cat === input.cat);
+            return resultado;
+        },
         obtenerCategoria: () => productos
     }
 }
