@@ -6,7 +6,10 @@ const resolvers = {
         obtenerProducto: () => Algo,
     },
     Mutation: {
-        nuevoUsuario: () => "Creando usuario"
+        nuevoUsuario: (_, { input }) =>{
+            console.log(input);
+            return "Creando... "
+        }
     }
 
 }
