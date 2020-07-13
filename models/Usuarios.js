@@ -21,7 +21,6 @@ const UsuariosSchema = mongoose.Schema({
         type: String,
         require: true,
         trim: true,
-        unique: true
     },
     creado: {
         type: Date,
