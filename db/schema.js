@@ -27,7 +27,7 @@ const typeDefs = gql`
     }
 
     type Query {
-        obtenerProducto: String
+        obtenerUsuario(token: String!): Usuario
     }
     type Mutation {
         nuevoUsuario(input: UsuarioInput): Usuario

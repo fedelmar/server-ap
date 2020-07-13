@@ -13,7 +13,11 @@ const crearToken = (usuario, secreta, expiresIn) => {
 const resolvers = {
 
     Query: {
-        obtenerProducto: () => Algo,
+        obtenerUsuario: async (_, { token }) => {
+            const usuarioId = await jwt.verify( token, process.env.SECRETA )
+
+            return usuarioId
+        }
     },
     Mutation: {
 
@@ -59,7 +63,7 @@ const resolvers = {
 
             //Generar Token
             return {
-                token: crearToken(existeUsuario, process.env.SECRETA, '12' ),
+                token: crearToken(existeUsuario, process.env.SECRETA, '24h' ),
             }
         }
     }
