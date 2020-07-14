@@ -50,6 +50,17 @@ const resolvers = {
             } catch (error) {
                 console.log(error);
             }
+        },
+
+        obtenerInsumo: async (_, { id }) => {
+            
+            const insumo = await Insumo.findById(id);
+
+            if(!insumo) {
+                throw new Error('Insumo no encontrado');
+            }
+
+            return insumo;
         }
     },
     Mutation: {

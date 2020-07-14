@@ -64,6 +64,7 @@ const typeDefs = gql`
 
         #Insumos
         obtenerInsumos: [Insumo]
+        obtenerInsumo(id: ID!): Insumo
     }
 
     type Mutation {
