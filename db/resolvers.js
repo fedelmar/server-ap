@@ -148,6 +148,19 @@ const resolvers = {
             } catch (error) {
                 console.log(error);
             }
+        },
+
+        actualizarInsumo: async (_, { id, input }) => {
+            //Comprobar existencia del insumo
+            let insumo = await Insumo.findById(id);
+
+            if (!insumo) {
+                throw new Error('Insumo no encontrado');
+            }
+
+            insumo = await Insumo.findByIdAndUpdate( { _id: id }, input, { new: true } );
+
+            return insumo;
         }
     }
 
