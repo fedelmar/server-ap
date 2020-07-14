@@ -137,6 +137,19 @@ const resolvers = {
             return producto;
         },
 
+        eliminarProducto: async (_, { id } ) => {
+            let producto = await Producto.findById(id);
+            
+            if (!producto) {
+                throw new Error('Producto no encontrado');
+            }
+
+            producto = await Producto.findByIdAndDelete({ _id: id });
+
+            return "Producto eliminado.";
+
+        },
+
         nuevoInsumo: async (_, {input}) => {
             try {
                 const nuevoInsumo = new Insumo(input);
@@ -161,6 +174,19 @@ const resolvers = {
             insumo = await Insumo.findByIdAndUpdate( { _id: id }, input, { new: true } );
 
             return insumo;
+        },
+
+        eliminarInsumo: async (_, { id } ) => {
+            let insumo = await Insumo.findById(id);
+            
+            if (!insumo) {
+                throw new Error('Insumo no encontrado');
+            }
+
+            insumo = await Insumo.findByIdAndDelete({ _id: id });
+
+            return "Insumo eliminado.";
+
         }
     }
 
