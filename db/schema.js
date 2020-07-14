@@ -17,9 +17,16 @@ const typeDefs = gql`
         cantidad: Int
         creado: String
     }
-    
+
     type Token {
         token: String
+    }
+
+    type Insumo {
+        id: ID
+        nombre: String
+        categoria: String
+        cantidad: Int
     }
 
     input UsuarioInput {
@@ -40,9 +47,16 @@ const typeDefs = gql`
         cantidad: Int!
     }
 
+    input InsumoInput {
+        nombre: String!
+        categoria: String!
+        cantidad: Int!
+    }
+
     type Query {
         obtenerUsuario(token: String!): Usuario
     }
+
     type Mutation {
 
         #Usuarios
@@ -51,6 +65,9 @@ const typeDefs = gql`
 
         #Productos
         nuevoProducto(input: ProductoInput): Producto
+
+        #Insumos
+        nuevoInsumo(input: InsumoInput): Insumo
     }
 `;
 

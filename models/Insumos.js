@@ -1,11 +1,10 @@
 const mongoose = require('mongoose');
 
-const ProducoSchema = mongoose.Schema({
+const InsumosSchema = mongoose.Schema({
     nombre: {
         type: String,
         require: true,
         trim: true,
-        unique: true 
     },
     categoria: {
         type: String,
@@ -16,11 +15,7 @@ const ProducoSchema = mongoose.Schema({
         type: Number,
         require: true,
         trim: true
-    },
-    creado: {
-        type: Date,
-        default: Date.now()
     }
 });
 
-module.exports = mongoose.model('Producto', ProducoSchema);
+module.exports = mongoose.model('Insumo', InsumosSchema);

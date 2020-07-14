@@ -1,5 +1,6 @@
 const Usuario = require('../models/Usuarios');
 const Producto = require('../models/Productos');
+const Insumo = require('../models/Insumos');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 require('dotenv').config({ path:'variables.env' });
@@ -76,6 +77,19 @@ const resolvers = {
                 const resultado = await producto.save();
 
                 return resultado;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
+        nuevoInsumo: async (_, {input}) => {
+            try {
+                const nuevoInsumo = new Insumo(input);
+
+                //Guardar en db
+                const insumo = await nuevoInsumo.save();
+
+                return insumo;
             } catch (error) {
                 console.log(error);
             }
