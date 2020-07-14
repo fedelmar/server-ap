@@ -32,6 +32,17 @@ const resolvers = {
             }
         },
 
+        obtenerProducto: async (_, { id }) => {
+            //Comprobar existencia del producto
+            const producto = await Producto.findById(id);
+
+            if (!producto) {
+                throw new Error('Producto no encontrado');
+            }
+
+            return producto;
+        },
+
         obtenerInsumos: async () => {
             try {
                 const insumos = await Insumo.find({});
