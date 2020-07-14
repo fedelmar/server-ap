@@ -124,6 +124,19 @@ const resolvers = {
             }
         },
 
+        actualizarProducto: async (_, { id, input }) => {
+            //Comprobar existencia del producto
+            let producto = await Producto.findById(id);
+
+            if (!producto) {
+                throw new Error('Producto no encontrado');
+            }
+
+            producto = await Producto.findByIdAndUpdate( { _id: id }, input, { new: true } );
+
+            return producto;
+        },
+
         nuevoInsumo: async (_, {input}) => {
             try {
                 const nuevoInsumo = new Insumo(input);
