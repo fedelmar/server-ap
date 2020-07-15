@@ -5,6 +5,7 @@ const InsumosSchema = mongoose.Schema({
         type: String,
         require: true,
         trim: true,
+        unique: true
     },
     categoria: {
         type: String,

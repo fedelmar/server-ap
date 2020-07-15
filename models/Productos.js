@@ -16,10 +16,6 @@ const ProducoSchema = mongoose.Schema({
         type: Number,
         require: true,
         trim: true
-    },
-    creado: {
-        type: Date,
-        default: Date.now()
     }
 });
 
