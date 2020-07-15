@@ -63,6 +63,7 @@ const resolvers = {
             return insumo;
         }
     },
+
     Mutation: {
 
         nuevoUsuario: async (_, { input }) => {
@@ -112,6 +113,14 @@ const resolvers = {
         },
 
         nuevoProducto: async (_, {input}) => {
+
+            //Verificar existencia del producto
+            const { nombre } = input;
+            const existeProducto = await Producto.findOne({nombre});
+            if (existeProducto) {
+                throw new Error('Ya existe ese producto');
+            }
+
             try {
                 const producto = new Producto(input);
 
@@ -151,6 +160,14 @@ const resolvers = {
         },
 
         nuevoInsumo: async (_, {input}) => {
+            
+            //Verificar existencia del insumo
+            const { nombre } = input;
+            const existeInsumo = await Insumo.findOne({nombre});
+            if (existeInsumo) {
+                throw new Error('Ya existe ese insumo');
+            }
+            
             try {
                 const nuevoInsumo = new Insumo(input);
 
