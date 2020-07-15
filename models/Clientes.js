@@ -4,8 +4,7 @@ const ClientesSchema = mongoose.Schema({
     nombre: {
         type: String,
         required: true,
-        trim: true,
-        unique: true 
+        trim: true
     },
     apellido: {
         type: String,
@@ -17,15 +16,15 @@ const ClientesSchema = mongoose.Schema({
         required: true,
         trim: true
     },
-    contacto: {
-        email: String,
+    email: {
+        type: String,
         required: true,
         trim: true,
         unique: true
     },
     telefono: {
         type: String,
-        trim: true,
+        trim: true
     },
     creado: {
         type: Date,

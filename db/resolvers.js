@@ -1,6 +1,8 @@
 const Usuario = require('../models/Usuarios');
 const Producto = require('../models/Productos');
 const Insumo = require('../models/Insumos');
+const Cliente = require('../models/Clientes');
+
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Productos = require('../models/Productos');
@@ -204,6 +206,31 @@ const resolvers = {
 
             return "Insumo eliminado.";
 
+        },
+
+        nuevoCliente: async (_, { input }) => {
+
+            //Verificar si ya existe el cliente
+            console.log(input);
+            const { email } = input
+
+            const cliente = await Cliente.findOne({ email });
+            if(cliente) {
+                throw new Error('Ya existe el cliente');
+            }
+
+            const nuevoCliente = new Cliente(input);
+
+            //Asignar el vendedor
+            nuevoCliente.vendedor="5f0c962a1e3bf6238caaf0b4";
+
+            //Guardar en DB
+            try {
+                const resultado = await nuevoCliente.save();
+                return resultado; 
+            } catch (error) {
+                console.log(error);
+            }            
         }
     }
 
