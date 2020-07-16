@@ -82,3 +82,26 @@ query obtenerCliente($id: ID!){
 {
   "id": "5f10408925fa9f22bc409c65"
 }
+
+#Nuevo Cliente
+mutation	nuevoCliente($input: ClienteInput){
+  nuevoCliente(input: $input) {
+    nombre
+    apellido
+  }
+}
+
+#Query variables 
+{
+  "input": {
+    "nombre": "Otra Paula",
+    "apellido": "Rivero",
+    "empresa": "Pau company",
+    "email": "pauco43@gmail.com"
+  }
+}
+
+#HTTP Headers
+{
+  "authorization": "token"
+}
