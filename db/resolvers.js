@@ -62,6 +62,24 @@ const resolvers = {
             }
 
             return insumo;
+        },
+
+        obtenerClientes: async () => {
+            try {
+                const clientes = await Cliente.find({});
+                return clientes;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
+        obtenerClientesVendedor: async (_, {}, ctx ) => {
+            try {
+                const clientes = await Cliente.find({ vendedor: ctx.usuario.id.toString() });
+                return clientes;
+            } catch (error) {
+                console.log(error);
+            }
         }
     },
 
