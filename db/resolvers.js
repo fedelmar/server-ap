@@ -2,10 +2,10 @@ const Usuario = require('../models/Usuarios');
 const Producto = require('../models/Productos');
 const Insumo = require('../models/Insumos');
 const Cliente = require('../models/Clientes');
+//const Pedido = require('../models/Pedidos');
 
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { findOneAndDelete } = require('../models/Usuarios');
 require('dotenv').config({ path:'variables.env' });
 
 const crearToken = (usuario, secreta, expiresIn) => {
@@ -298,6 +298,27 @@ const resolvers = {
            //Eliminar el cliente
            await Cliente.findOneAndDelete({_id: id});
            return 'Cliente eliminado'; 
+        },
+
+        nuevoPedido: async (_, {input}, ctx) => {
+            
+            const { cliente } = input
+            
+            //Verificar existencia de cliente
+            let existeCliente = await Cliente.findById(cliente);
+            if (!existeCliente) {
+                throw new Error('El cliente no existe');
+            }
+            //Verificar si pertenece al vendedor
+            if(existeCliente.vendedor.toString() !== ctx.usuario.id ) {
+                throw new Error('No tienes las credenciales.');
+            }
+            //Verificar stock
+
+            //Asignar vendedor
+
+            //Guardar en DB
+
         }
     }
 
