@@ -309,10 +309,12 @@ const resolvers = {
             if (!existeCliente) {
                 throw new Error('El cliente no existe');
             }
+
             //Verificar si pertenece al vendedor
             if(existeCliente.vendedor.toString() !== ctx.usuario.id ) {
                 throw new Error('No tienes las credenciales.');
             }
+
             //Verificar stock
             for await ( const articulo of input.pedido ) {
                 const { id } = articulo;
@@ -321,12 +323,23 @@ const resolvers = {
 
                 if(articulo.cantidad > producto.cantidad) {
                     throw new Error(`El articulo: ${producto.nombre} exede la cantidad disponible`);
-                }
+                } else {
+                    //Descontar articulos del stock
+                    producto.cantidad = producto.cantidad - articulo.cantidad;
+
+                    await producto.save();
+                } 
             }
+
+            //Crear nuevo pedido
+            const nuevoPedido = new Pedido(input);
+
             //Asignar vendedor
+            nuevoPedido.vendedor = ctx.usuario.id;
 
             //Guardar en DB
-
+            const resultado = await nuevoPedido.save();
+            return resultado;
         }
     }
 
