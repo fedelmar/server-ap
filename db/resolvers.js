@@ -5,6 +5,7 @@ const Cliente = require('../models/Clientes');
 
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { findOneAndDelete } = require('../models/Usuarios');
 require('dotenv').config({ path:'variables.env' });
 
 const crearToken = (usuario, secreta, expiresIn) => {
@@ -62,6 +63,21 @@ const resolvers = {
             }
 
             return insumo;
+        },
+
+        obtenerCliente: async (_, {id}, ctx ) => {
+            //Verificar existencia
+            const cliente = await Cliente.findById(id);
+
+            if (!cliente) {
+                throw new Error('Cliente no encontrado');
+            }
+
+            if(cliente.vendedor.toString() !== ctx.usuario.id ) {
+                throw new Error('No tienes las credenciales.');
+            } 
+
+            return cliente;
         },
 
         obtenerClientes: async () => {
@@ -248,6 +264,40 @@ const resolvers = {
             } catch (error) {
                 console.log(error);
             }            
+        },
+
+        actualizarCliente: async (_, {id, input}, ctx) => {
+            //Verificar existencia
+            let cliente = await Cliente.findById(id);
+            if (!cliente) {
+                throw new Error('El cliente no existe');
+            }
+
+            //Verificar si edita el vendedor
+            if(cliente.vendedor.toString() !== ctx.usuario.id ) {
+                throw new Error('No tienes las credenciales.');
+            } 
+
+            //Guardar en db
+            cliente = await Cliente.findOneAndUpdate({_id: id}, input, {new: true});
+            return cliente;
+        },
+
+        eliminarCliente: async (_, { id }, ctx) => {
+            //Verificar existencia
+            let cliente = await Cliente.findById(id);
+            if (!cliente) {
+                throw new Error('El cliente no existe');
+            }
+            
+            //Verificar si edita el vendedor
+            if(cliente.vendedor.toString() !== ctx.usuario.id ) {
+                throw new Error('No tienes las credenciales.');
+            } 
+            
+           //Eliminar el cliente
+           await Cliente.findOneAndDelete({_id: id});
+           return 'Cliente eliminado'; 
         }
     }
 
