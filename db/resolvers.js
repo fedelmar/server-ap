@@ -114,6 +114,22 @@ const resolvers = {
             } catch (error) {
                 console.log(error);
             }
+        },
+
+        obtenerPedido: async (_, {id}, ctx) => {
+            //Verificar su existencia
+            const pedido = await Pedido.findById(id);
+            if(!pedido) {
+                throw new Error('Pedido no encontrado');
+            }
+
+            //Solo lo ve su vendedor
+            if(pedido.vendedor.toString() !== ctx.usuario.id){
+                throw new Error('Acción no permitida');
+            }
+            
+            //Retornar resultado
+            return pedido;
         }
     },
 
