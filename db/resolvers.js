@@ -325,7 +325,7 @@ const resolvers = {
             }
             
             //Verificar si edita el vendedor
-            if(cliente.vendedor.toString() !== ctx.usuario.id ) {
+            if(cliente.vendedor.toString() !== ctx.usuario.id) {
                 throw new Error('No tienes las credenciales.');
             } 
             
@@ -383,10 +383,13 @@ const resolvers = {
                 throw new Error('Pedido no encontrado');
             }
             //Verificar vendedor
-
-            //Actualizar pedido
-
+            if(existePedido.vendedor.toString() !== ctx.usuario.id) {
+                throw new Error('No tienes las credenciales.');
+            }
+            
             //Cargarlo en DB
+            pedido = await Pedido.findOneAndUpdate({_id: id}, input, {new: true});
+            return pedido;
         }
     }
 
