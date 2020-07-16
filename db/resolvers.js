@@ -1,9 +1,10 @@
 const Usuario = require('../models/Usuarios');
 const Producto = require('../models/Productos');
 const Insumo = require('../models/Insumos');
+const Cliente = require('../models/Clientes');
+
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const Productos = require('../models/Productos');
 require('dotenv').config({ path:'variables.env' });
 
 const crearToken = (usuario, secreta, expiresIn) => {
@@ -61,6 +62,24 @@ const resolvers = {
             }
 
             return insumo;
+        },
+
+        obtenerClientes: async () => {
+            try {
+                const clientes = await Cliente.find({});
+                return clientes;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
+        obtenerClientesVendedor: async (_, {}, ctx ) => {
+            try {
+                const clientes = await Cliente.find({ vendedor: ctx.usuario.id.toString() });
+                return clientes;
+            } catch (error) {
+                console.log(error);
+            }
         }
     },
 
@@ -204,6 +223,31 @@ const resolvers = {
 
             return "Insumo eliminado.";
 
+        },
+
+        nuevoCliente: async (_, { input }, ctx) => {
+
+            console.log(ctx);
+
+            //Verificar si ya existe el cliente
+            const { email } = input
+            const cliente = await Cliente.findOne({ email });
+            if(cliente) {
+                throw new Error('Ya existe el cliente');
+            }
+
+            const nuevoCliente = new Cliente(input);
+
+            //Asignar el vendedor
+            nuevoCliente.vendedor = ctx.usuario.id;
+
+            //Guardar en DB
+            try {
+                const resultado = await nuevoCliente.save();
+                return resultado; 
+            } catch (error) {
+                console.log(error);
+            }            
         }
     }
 

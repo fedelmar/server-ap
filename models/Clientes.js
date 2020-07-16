@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const UsuariosSchema = mongoose.Schema({
+const ClientesSchema = mongoose.Schema({
     nombre: {
         type: String,
         required: true,
@@ -11,21 +11,30 @@ const UsuariosSchema = mongoose.Schema({
         required: true,
         trim: true
     },
+    empresa: {
+        type: String,
+        required: true,
+        trim: true
+    },
     email: {
         type: String,
         required: true,
         trim: true,
-        unique: true 
+        unique: true
     },
-    password: {
+    telefono: {
         type: String,
-        required: true,
-        trim: true,
+        trim: true
     },
     creado: {
         type: Date,
         default: Date.now()
+    },
+    vendedor: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Usuario'
     }
 });
 
-module.exports = mongoose.model('Usuario', UsuariosSchema);
+module.exports = mongoose.model('Cliente', ClientesSchema);
