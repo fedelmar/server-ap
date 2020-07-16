@@ -69,3 +69,16 @@ mutation eliminarProducto($id: ID!){
 {
   "id": "5f0f04fcea7c3917fc0160f7"
 }
+
+#Obtener Cliente by ID
+query obtenerCliente($id: ID!){
+  obtenerCliente(id: $id){
+    nombre
+    empresa
+    email
+  }
+}
+
+{
+  "id": "5f10408925fa9f22bc409c65"
+}
