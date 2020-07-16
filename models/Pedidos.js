@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
-const PedidosSchema = mongoose.Schema({
+const ProductoSchema = mongoose.Schema({
     pedido: {
         type: Array,
         required: true,
     },
     total: {
-        total: Number,
+        type: Number,
         required: true,
     },
     cliente: {
@@ -29,4 +29,4 @@ const PedidosSchema = mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('Pedido', PedidosSchema);
+module.exports = mongoose.model('Pedido', ProductoSchema);

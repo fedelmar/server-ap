@@ -2,7 +2,7 @@ const Usuario = require('../models/Usuarios');
 const Producto = require('../models/Productos');
 const Insumo = require('../models/Insumos');
 const Cliente = require('../models/Clientes');
-//const Pedido = require('../models/Pedidos');
+const Pedido = require('../models/Pedidos');
 
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -314,7 +314,15 @@ const resolvers = {
                 throw new Error('No tienes las credenciales.');
             }
             //Verificar stock
+            for await ( const articulo of input.pedido ) {
+                const { id } = articulo;
+                  
+                const producto = await Producto.findById(id);
 
+                if(articulo.cantidad > producto.cantidad) {
+                    throw new Error(`El articulo: ${producto.nombre} exede la cantidad disponible`);
+                }
+            }
             //Asignar vendedor
 
             //Guardar en DB
