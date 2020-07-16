@@ -374,6 +374,19 @@ const resolvers = {
             //Guardar en DB
             const resultado = await nuevoPedido.save();
             return resultado;
+        },
+
+        actualizarPedido: async (_,{id, input}, ctx) => {
+            //Verificar si existe
+            const pedido = await Pedido.findById(id);
+            if(!pedido) {
+                throw new Error('Pedido no encontrado');
+            }
+            //Verificar vendedor
+
+            //Actualizar pedido
+
+            //Cargarlo en DB
         }
     }
 
