@@ -117,21 +117,28 @@ const resolvers = {
         },
 
         obtenerPedido: async (_, {id}, ctx) => {
-            //Verificar su existencia
-            const pedido = await Pedido.findById(id);
-            if(!pedido) {
-                throw new Error('Pedido no encontrado');
-            }
+                //Verificar su existencia
+                const pedido = await Pedido.findById(id);
+                if(!pedido) {
+                    throw new Error('Pedido no encontrado');
+                }
 
-            //Solo lo ve su vendedor
-            if(pedido.vendedor.toString() !== ctx.usuario.id){
-                throw new Error('Acción no permitida');
-            }
-            
-            //Retornar resultado
-            return pedido;
+                //Solo lo ve su vendedor
+                if(pedido.vendedor.toString() !== ctx.usuario.id){
+                    throw new Error('Acción no permitida');
+                }
+                
+                //Retornar resultado
+                return pedido;
+        },
+
+        obtenerPedidosEstado: async (_, { estado }, ctx) => {
+            const pedidos = await Pedido.find({ vendedor: ctx.usuario.id, estado});
+
+            return pedidos;
         }
     },
+    
 
     Mutation: {
 
