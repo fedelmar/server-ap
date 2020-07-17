@@ -377,19 +377,48 @@ const resolvers = {
         },
 
         actualizarPedido: async (_,{id, input}, ctx) => {
+            
+            const { cliente } = input;
+
             //Verificar si existe
-            const pedido = await Pedido.findById(id);
-            if(!pedido) {
+            const existePedido = await Pedido.findById(id);
+            if(!existePedido) {
                 throw new Error('Pedido no encontrado');
             }
+
+            //Verificar cliente
+            const existeCliente = await Cliente.findById(cliente);
+            if(!existeCliente) {
+                throw new Error('Cliente no encontrado');
+            }
+
             //Verificar vendedor
-            if(existePedido.vendedor.toString() !== ctx.usuario.id) {
+            if(existeCliente.vendedor.toString() !== ctx.usuario.id) {
                 throw new Error('No tienes las credenciales.');
             }
+
+            //Revisar el stock
+            if (input.pedido) {
+                for await ( const articulo of input.pedido ) {
+                    const { id } = articulo;
+                    
+                    const producto = await Producto.findById(id);
+
+                    if(articulo.cantidad > producto.cantidad) {
+                        throw new Error(`El articulo: ${producto.nombre} exede la cantidad disponible`);
+                    } else {
+                        //Descontar articulos del stock
+                        producto.cantidad = producto.cantidad - articulo.cantidad;
+
+                        await producto.save();
+                    } 
+                }    
+            }
             
-            //Cargarlo en DB
-            pedido = await Pedido.findOneAndUpdate({_id: id}, input, {new: true});
-            return pedido;
+            
+            //Guardar en DB
+            resultado = await Pedido.findOneAndUpdate({_id: id}, input, {new: true});
+            return resultado;
         }
     }
 
