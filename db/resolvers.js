@@ -6,6 +6,7 @@ const Pedido = require('../models/Pedidos');
 
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const Productos = require('../models/Productos');
 require('dotenv').config({ path:'variables.env' });
 
 const crearToken = (usuario, secreta, expiresIn) => {
@@ -136,6 +137,59 @@ const resolvers = {
             const pedidos = await Pedido.find({ vendedor: ctx.usuario.id, estado});
 
             return pedidos;
+        },
+
+        mejoresClientes: async () => {
+            const clientes = await Pedido.aggregate([
+                { $match: { estado: "COMPLETADO" }},
+                { $group: {
+                    _id: "$cliente",
+                    total: { $sum: "$total"}
+                }},
+                {
+                    $loockup: {
+                        from: 'clientes',
+                        localField: '_id',
+                        foreignField: "_id",
+                        as: "cliente"
+                    }   
+                },
+                {
+                    $sort: { total:  -1}
+                }
+            ])
+        },
+
+        mejoresVendedores: async () => {
+            const vendedores = await Pedido.aggregate([
+                { $match: { estado: "COMPLETADO" }},
+                { $group: {
+                    _id: "vendedor",
+                    total: { $sum: "$total"}
+                }},
+                {
+                    $lookup: {
+                        from: 'usuarios',
+                        localField: '_id',
+                        foreignField: '_id',
+                        as: "vendedor"
+                    }
+                },
+                {
+                    $limit: 3
+                },
+                {
+                    $sort: { total: -1}
+                }
+            ]);
+
+            return vendedores;
+        },
+
+        buscarProducto: async (_, { texto }) => {
+            const productos = await Producto.find({$text: { $search: texto }})
+
+            return productos;
         }
     },
     
