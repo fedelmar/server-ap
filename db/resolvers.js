@@ -338,8 +338,6 @@ const resolvers = {
 
         nuevoCliente: async (_, { input }, ctx) => {
 
-            console.log(ctx);
-
             //Verificar si ya existe el cliente
             const { email } = input
             const cliente = await Cliente.findOne({ email });
