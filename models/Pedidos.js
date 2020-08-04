@@ -7,7 +7,6 @@ const ProductoSchema = mongoose.Schema({
     },
     total: {
         type: Number,
-        required: true,
     },
     cliente: {
         type: mongoose.Schema.Types.ObjectId,
