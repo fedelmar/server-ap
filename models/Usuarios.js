@@ -20,7 +20,12 @@ const UsuariosSchema = mongoose.Schema({
     password: {
         type: String,
         required: true,
-        trim: true,
+        trim: true
+    },
+    rol: {
+        type: String,
+        required: true,
+        trim: true
     },
     creado: {
         type: Date,

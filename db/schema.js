@@ -7,6 +7,7 @@ const typeDefs = gql`
         nombre: String
         apellido: String
         email: String
+        rol: String
         creado: String
     }
 
@@ -68,6 +69,7 @@ const typeDefs = gql`
         nombre: String!
         apellido: String!
         email: String!
+        rol: String!
         password: String!
     }
 
