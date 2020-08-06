@@ -12,10 +12,18 @@ const ProducoSchema = mongoose.Schema({
         required: true,
         trim: true
     },
-    cantidad: {
-        type: Number,
-        required: true,
-        trim: true
+    caja: {
+        type: String,
+        trim: true,
+    },
+    cantCaja: {
+        type: String,
+        trim: true,
+        cantidad: Number
+    },
+    insumos: {
+        type: Array,
+        required: true
     }
 });
 

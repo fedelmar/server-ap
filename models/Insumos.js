@@ -11,11 +11,6 @@ const InsumosSchema = mongoose.Schema({
         type: String,
         required: true,
         trim: true
-    },
-    cantidad: {
-        type: Number,
-        required: true,
-        trim: true
     }
 });
 

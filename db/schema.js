@@ -15,8 +15,9 @@ const typeDefs = gql`
         id: ID
         nombre: String
         categoria: String
-        cantidad: Int
-        creado: String
+        caja: String
+        cantCaja: Int
+        insumos: [Insumo]
     }
 
     type Token {
@@ -27,7 +28,6 @@ const typeDefs = gql`
         id: ID
         nombre: String
         categoria: String
-        cantidad: Int
     }
 
     type Cliente {
@@ -81,13 +81,20 @@ const typeDefs = gql`
     input ProductoInput {
         nombre: String!
         categoria: String!
-        cantidad: Int!
+        caja: String
+        cantCaja: Int
+        insumos: [InsumoInput]
+    }
+
+    enum EstadoProducto {
+        Terminado
+        Proceso
+        Reproceso
     }
 
     input InsumoInput {
         nombre: String!
         categoria: String!
-        cantidad: Int!
     }
 
     input ClienteInput {
