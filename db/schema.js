@@ -17,7 +17,7 @@ const typeDefs = gql`
         categoria: String
         caja: String
         cantCaja: Int
-        insumos: [Insumo]
+        insumos: [ID]
     }
 
     type Token {
@@ -83,7 +83,7 @@ const typeDefs = gql`
         categoria: String!
         caja: String
         cantCaja: Int
-        insumos: [InsumoInput]
+        insumos: [ID]
     }
 
     enum EstadoProducto {
