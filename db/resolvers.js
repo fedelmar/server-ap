@@ -53,6 +53,17 @@ const resolvers = {
             }
         },
 
+        obtenerInsumo: async (_, { id }) => {
+            
+            const insumo = await Insumo.findById(id);
+
+            if(!insumo) {
+                throw new Error('Insumo no encontrado');
+            }
+
+            return insumo;
+        },
+
         obtenerStockInsumos: async () => {
             try {
                 const insumos = await StockInsumo.find({});
@@ -62,12 +73,11 @@ const resolvers = {
             }
         },
 
-        obtenerInsumo: async (_, { id }) => {
-            
-            const insumo = await Insumo.findById(id);
+        obtenerInsumoEnStock: async (_, { id }) => {
+            const insumo = await StockInsumo.findById(id);
 
             if(!insumo) {
-                throw new Error('Insumo no encontrado');
+                throw new Error('El insumos no existe en el Stock');
             }
 
             return insumo;
