@@ -343,7 +343,7 @@ const resolvers = {
             return insumo;
         },
 
-        actualizarInsumosStock: async (_, { id, input }) => {
+        actualizarInsumoStock: async (_, { id, input }) => {
             //Comprobar existencia del insumo en stock
             let insumo = await StockInsumo.findById(id);
 
@@ -366,6 +366,21 @@ const resolvers = {
             insumo = await Insumo.findByIdAndDelete({ _id: id });
 
             return "Insumo eliminado.";
+
+        },
+
+        eliminarInsumoStock: async (_, { id }) => {
+
+            //Comprobar existencia del insumo en stock
+            let lote = await StockInsumo.findById(id);
+
+            if (!lote) {
+                throw new Error('No existe el insumo en stock')
+            }
+
+            lote = await Insumo.findByIdAndDelete({ _id: id });
+
+            return "Lote eliminado del stock.";
 
         },
 
