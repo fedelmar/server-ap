@@ -30,6 +30,13 @@ const typeDefs = gql`
         categoria: String
     }
 
+    type sInsumo {
+        id: ID
+        lote: String
+        insumo: ID
+        cantidad: Int
+    }
+
     type Cliente {
         id: ID
         nombre: String
@@ -96,6 +103,12 @@ const typeDefs = gql`
         nombre: String!
         categoria: String!
     }
+    
+    input sInsumoInput {
+        insumo: ID
+        lote: String
+        cantidad: Int    
+    }
 
     input ClienteInput {
         nombre: String!
@@ -135,6 +148,10 @@ const typeDefs = gql`
         obtenerInsumos: [Insumo]
         obtenerInsumo(id: ID!): Insumo
 
+        # Stock Insumos
+        obtenerStockInsumos: [sInsumo]
+        obtenerInsumoEnStock(id: ID!): sInsumo 
+
         # Clientes
         obtenerClientes: [Cliente]
         obtenerClientesVendedor: [Cliente]
@@ -167,6 +184,11 @@ const typeDefs = gql`
         nuevoInsumo(input: InsumoInput): Insumo
         actualizarInsumo(id: ID!, input: InsumoInput): Insumo
         eliminarInsumo(id: ID!): String
+
+        # Stock Insumos
+        nuevoInsumoStock(input: sInsumoInput): sInsumo
+        actualizarInsumoStock(id: ID!, input: sInsumoInput): sInsumo
+        eliminarInsumoStock(id: ID!): String
 
         # Clientes
         nuevoCliente(input: ClienteInput): Cliente

@@ -3,6 +3,7 @@ const Producto = require('../models/Productos');
 const Insumo = require('../models/Insumos');
 const Cliente = require('../models/Clientes');
 const Pedido = require('../models/Pedidos');
+const StockInsumo = require('../models/StockInsumos');
 
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -58,6 +59,25 @@ const resolvers = {
 
             if(!insumo) {
                 throw new Error('Insumo no encontrado');
+            }
+
+            return insumo;
+        },
+
+        obtenerStockInsumos: async () => {
+            try {
+                const insumos = await StockInsumo.find({});
+                return insumos;
+            } catch (error) {
+                console.log(error)
+            }
+        },
+
+        obtenerInsumoEnStock: async (_, { id }) => {
+            const insumo = await StockInsumo.findById(id);
+
+            if(!insumo) {
+                throw new Error('El insumos no existe en el Stock');
             }
 
             return insumo;
@@ -332,6 +352,54 @@ const resolvers = {
             insumo = await Insumo.findByIdAndDelete({ _id: id });
 
             return "Insumo eliminado.";
+
+        },
+
+        nuevoInsumoStock: async (_, {input}) => {
+
+            // Verificar del la existencia del insumo en Stock
+            const { lote } = input;
+            const existeInsumo = await StockInsumo.findOne({lote});
+            if (existeInsumo) {
+                throw new Error('Ya existe ese lote');
+            }
+
+            try {
+                const nuevoLote = new StockInsumo(input);
+
+                const lote = await nuevoLote.save();
+
+                return lote;
+            } catch (error) {
+                console.lot(error);
+            }
+        },
+
+        actualizarInsumoStock: async (_, { id, input }) => {
+            //Comprobar existencia del insumo en stock
+            let insumo = await StockInsumo.findById(id);
+
+            if (!insumo) {
+                throw new Error('No existe el insumo en stock')
+            }
+
+            insumo = await StockInsumo.findByIdAndUpdate( {_id: id}, input, { new: true });
+            
+            return insumo;            
+        },
+
+        eliminarInsumoStock: async (_, { id }) => {
+
+            //Comprobar existencia del insumo en stock
+            let lote = await StockInsumo.findById(id);
+
+            if (!lote) {
+                throw new Error('No existe el insumo en stock')
+            }
+
+            lote = await Insumo.findByIdAndDelete({ _id: id });
+
+            return "Lote eliminado del stock.";
 
         },
 
