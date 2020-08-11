@@ -54,6 +54,17 @@ const resolvers = {
             }
         },
 
+        obtenerProductoStock: async (_, { id }) => {
+            // Comprobar existencia del lote
+            const lote = await StockProducto.findById(id);
+
+            if (!lote) {
+                throw new Error('Lote no encontrado');
+            }
+
+            return lote;
+        },
+
         obtenerInsumos: async () => {
             try {
                 const insumos = await Insumo.find({});
