@@ -148,6 +148,10 @@ const typeDefs = gql`
         obtenerInsumos: [Insumo]
         obtenerInsumo(id: ID!): Insumo
 
+        # Stock Insumos
+        obtenerStockInsumos: [sInsumo]
+        
+
         # Clientes
         obtenerClientes: [Cliente]
         obtenerClientesVendedor: [Cliente]

@@ -53,6 +53,15 @@ const resolvers = {
             }
         },
 
+        obtenerStockInsumos: async () => {
+            try {
+                const insumos = await StockInsumo.find({});
+                return insumos;
+            } catch (error) {
+                console.log(error)
+            }
+        },
+
         obtenerInsumo: async (_, { id }) => {
             
             const insumo = await Insumo.findById(id);
@@ -310,6 +319,32 @@ const resolvers = {
             }
         },
 
+        actualizarInsumo: async (_, { id, input }) => {
+            //Comprobar existencia del insumo
+            let insumo = await Insumo.findById(id);
+
+            if (!insumo) {
+                throw new Error('Insumo no encontrado');
+            }
+
+            insumo = await Insumo.findByIdAndUpdate( { _id: id }, input, { new: true } );
+
+            return insumo;
+        },
+
+        eliminarInsumo: async (_, { id } ) => {
+            let insumo = await Insumo.findById(id);
+            
+            if (!insumo) {
+                throw new Error('Insumo no encontrado');
+            }
+
+            insumo = await Insumo.findByIdAndDelete({ _id: id });
+
+            return "Insumo eliminado.";
+
+        },
+
         nuevoInsumoStock: async (_, {input}) => {
 
             // Verificar del la existencia del insumo en Stock
@@ -330,19 +365,6 @@ const resolvers = {
             }
         },
 
-        actualizarInsumo: async (_, { id, input }) => {
-            //Comprobar existencia del insumo
-            let insumo = await Insumo.findById(id);
-
-            if (!insumo) {
-                throw new Error('Insumo no encontrado');
-            }
-
-            insumo = await Insumo.findByIdAndUpdate( { _id: id }, input, { new: true } );
-
-            return insumo;
-        },
-
         actualizarInsumoStock: async (_, { id, input }) => {
             //Comprobar existencia del insumo en stock
             let insumo = await StockInsumo.findById(id);
@@ -354,19 +376,6 @@ const resolvers = {
             insumo = await StockInsumo.findByIdAndUpdate( {_id: id}, input, { new: true });
             
             return insumo;            
-        },
-
-        eliminarInsumo: async (_, { id } ) => {
-            let insumo = await Insumo.findById(id);
-            
-            if (!insumo) {
-                throw new Error('Insumo no encontrado');
-            }
-
-            insumo = await Insumo.findByIdAndDelete({ _id: id });
-
-            return "Insumo eliminado.";
-
         },
 
         eliminarInsumoStock: async (_, { id }) => {
