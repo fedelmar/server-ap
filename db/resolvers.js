@@ -45,6 +45,15 @@ const resolvers = {
             return producto;
         },
 
+        obtenerProductosStock: async () => {
+            try {
+                const lote = await StockProducto.find({});
+                return lote;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
         obtenerInsumos: async () => {
             try {
                 const insumos = await Insumo.find({});
@@ -283,6 +292,33 @@ const resolvers = {
             }
         },
 
+        actualizarProducto: async (_, { id, input }) => {
+            //Comprobar existencia del producto
+            let producto = await Producto.findById(id);
+
+            if (!producto) {
+                throw new Error('Producto no encontrado');
+            }
+
+            producto = await Producto.findByIdAndUpdate( { _id: id }, input, { new: true } );
+
+            return producto;
+        },
+
+        eliminarProducto: async (_, { id } ) => {
+            let producto = await Producto.findById(id);
+            
+            if (!producto) {
+                throw new Error('Producto no encontrado');
+            }
+
+            producto = await Producto.findByIdAndDelete({ _id: id });
+
+            return "Producto eliminado.";
+
+        },
+
+
         nuevoProductoStock: async (_, {input}) => {
 
             // Verificar la existencia del producto en stock
@@ -329,32 +365,6 @@ const resolvers = {
             lote = await StockProducto.findByIdAndDelete({ _id: id });
 
             return "Lote eliminado.";
-        },
-
-        actualizarProducto: async (_, { id, input }) => {
-            //Comprobar existencia del producto
-            let producto = await Producto.findById(id);
-
-            if (!producto) {
-                throw new Error('Producto no encontrado');
-            }
-
-            producto = await Producto.findByIdAndUpdate( { _id: id }, input, { new: true } );
-
-            return producto;
-        },
-
-        eliminarProducto: async (_, { id } ) => {
-            let producto = await Producto.findById(id);
-            
-            if (!producto) {
-                throw new Error('Producto no encontrado');
-            }
-
-            producto = await Producto.findByIdAndDelete({ _id: id });
-
-            return "Producto eliminado.";
-
         },
 
         nuevoInsumo: async (_, {input}) => {
