@@ -3,6 +3,7 @@ const Producto = require('../models/Productos');
 const Insumo = require('../models/Insumos');
 const Cliente = require('../models/Clientes');
 const Pedido = require('../models/Pedidos');
+const StockInsumo = require('../models/StockInsumos');
 
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -306,6 +307,26 @@ const resolvers = {
                 return insumo;
             } catch (error) {
                 console.log(error);
+            }
+        },
+
+        nuevoInsumoStock: async (_, {input}) => {
+
+            // Verificar del la existencia del insumo en Stock
+            const { lote } = input;
+            const existeInsumo = await StockInsumo.findOne({lote});
+            if (existeInsumo) {
+                throw new Error('Ya existe ese lote');
+            }
+
+            try {
+                const nuevoLote = new StockInsumo(input);
+
+                const lote = await nuevoLote.save();
+
+                return lote;
+            } catch (error) {
+                console.lot(error);
             }
         },
 

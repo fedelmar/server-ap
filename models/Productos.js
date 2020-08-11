@@ -17,9 +17,7 @@ const ProducoSchema = mongoose.Schema({
         trim: true,
     },
     cantCaja: {
-        type: String,
-        trim: true,
-        cantidad: Number
+        type: Number
     },
     insumos: {
         type: Array,
