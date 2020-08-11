@@ -307,6 +307,18 @@ const resolvers = {
 
         },
 
+        actualizarProductoStock: async (_,{ id, input }) => {
+            //Comprobar existencia en stock del producto
+            let lote = await StockProducto.findById(id);
+            if (!lote) {
+                throw new Error('Lote no encontrado');
+            }
+
+            lote = await StockProducto.findByIdAndUpdate( {_id: id }, input, { new: true });
+
+            return lote;
+        },
+
         actualizarProducto: async (_, { id, input }) => {
             //Comprobar existencia del producto
             let producto = await Producto.findById(id);

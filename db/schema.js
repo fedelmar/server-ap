@@ -197,6 +197,7 @@ const typeDefs = gql`
 
         # Stock Productos
         nuevoProductoStock(input: sProductoInput): sProducto
+        actualizarProductoStock(id: ID!, input: sProductoInput): sProducto
 
         # Insumos
         nuevoInsumo(input: InsumoInput): Insumo
