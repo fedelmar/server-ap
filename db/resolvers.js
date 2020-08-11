@@ -4,6 +4,7 @@ const Insumo = require('../models/Insumos');
 const Cliente = require('../models/Clientes');
 const Pedido = require('../models/Pedidos');
 const StockInsumo = require('../models/StockInsumos');
+const StockProducto = require('../models/StockProductos');
 
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -42,6 +43,26 @@ const resolvers = {
             }
 
             return producto;
+        },
+
+        obtenerProductosStock: async () => {
+            try {
+                const lote = await StockProducto.find({});
+                return lote;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
+        obtenerProductoStock: async (_, { id }) => {
+            // Comprobar existencia del lote
+            const lote = await StockProducto.findById(id);
+
+            if (!lote) {
+                throw new Error('Lote no encontrado');
+            }
+
+            return lote;
         },
 
         obtenerInsumos: async () => {
@@ -306,6 +327,55 @@ const resolvers = {
 
             return "Producto eliminado.";
 
+        },
+
+
+        nuevoProductoStock: async (_, {input}) => {
+
+            // Verificar la existencia del producto en stock
+            const { lote } = input;
+            const existeLote = await StockProducto.findOne({lote});
+            if (existeLote) {
+                throw new Error('Ya existe ese lote');
+            }
+
+            try {
+                const producto = new StockProducto(input);
+
+                //Guardar en db
+                const resultado = await producto.save();
+
+                return resultado;
+            } catch (error) {
+                console.log(error)
+            }
+            
+
+
+        },
+
+        actualizarProductoStock: async (_,{ id, input }) => {
+            //Comprobar existencia en stock del producto
+            let lote = await StockProducto.findById(id);
+            if (!lote) {
+                throw new Error('Lote no encontrado');
+            }
+
+            lote = await StockProducto.findByIdAndUpdate( {_id: id }, input, { new: true });
+
+            return lote;
+        },
+
+        eliminarProductoStock: async (_, { id }) => {
+            let lote = await StockProducto.findById(id);
+            
+            if (!lote) {
+                throw new Error('Lote no encontrado');
+            }
+
+            lote = await StockProducto.findByIdAndDelete({ _id: id });
+
+            return "Lote eliminado.";
         },
 
         nuevoInsumo: async (_, {input}) => {

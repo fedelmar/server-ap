@@ -1,0 +1,22 @@
+const mongoose = require('mongoose');
+
+const StockProductoSchema = mongoose.Schema({
+    lote: {
+        type: String,
+        required: true
+    },
+    producto: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Producto'
+    },
+    estado: {
+        type: String,
+        trim: true
+    },
+    cantidad: {
+        type: Number
+    }    
+});
+
+module.exports = mongoose.model('StockProducto', StockProductoSchema);

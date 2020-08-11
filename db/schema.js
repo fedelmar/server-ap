@@ -19,6 +19,14 @@ const typeDefs = gql`
         cantCaja: Int
         insumos: [ID]
     }
+    
+    type sProducto {
+        id: ID
+        lote: String
+        producto: ID
+        estado: EstadoProducto
+        cantidad: Int
+    }
 
     type Token {
         token: String
@@ -93,10 +101,11 @@ const typeDefs = gql`
         insumos: [ID]
     }
 
-    enum EstadoProducto {
-        Terminado
-        Proceso
-        Reproceso
+    input sProductoInput {
+        lote: String!
+        producto: ID!
+        estado: EstadoProducto
+        cantidad: Int
     }
 
     input InsumoInput {
@@ -135,6 +144,12 @@ const typeDefs = gql`
         CANCELADO
     }
 
+    enum EstadoProducto {
+        Terminado
+        Proceso
+        Reproceso
+    }
+
     type Query {
 
         # Usuarios
@@ -143,6 +158,10 @@ const typeDefs = gql`
         # Productos
         obtenerProductos: [Producto]
         obtenerProducto(id: ID!): Producto
+
+        # Stock Productos
+        obtenerProductosStock: [sProducto]
+        obtenerProductoStock(id: ID!): sProducto
 
         # Insumos
         obtenerInsumos: [Insumo]
@@ -179,6 +198,11 @@ const typeDefs = gql`
         nuevoProducto(input: ProductoInput): Producto
         actualizarProducto(id: ID!, input: ProductoInput): Producto
         eliminarProducto(id: ID!): String
+
+        # Stock Productos
+        nuevoProductoStock(input: sProductoInput): sProducto
+        actualizarProductoStock(id: ID!, input: sProductoInput): sProducto
+        eliminarProductoStock(id: ID!): String
 
         # Insumos
         nuevoInsumo(input: InsumoInput): Insumo
