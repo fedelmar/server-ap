@@ -319,6 +319,18 @@ const resolvers = {
             return lote;
         },
 
+        eliminarProductoStock: async (_, { id }) => {
+            let lote = await StockProducto.findById(id);
+            
+            if (!lote) {
+                throw new Error('Lote no encontrado');
+            }
+
+            lote = await StockProducto.findByIdAndDelete({ _id: id });
+
+            return "Lote eliminado.";
+        },
+
         actualizarProducto: async (_, { id, input }) => {
             //Comprobar existencia del producto
             let producto = await Producto.findById(id);
