@@ -154,6 +154,7 @@ const typeDefs = gql`
 
         # Usuarios
         obtenerUsuario: Usuario
+        obtenerUsuarios: [Usuario]
 
         # Productos
         obtenerProductos: [Producto]

@@ -25,6 +25,15 @@ const resolvers = {
             return ctx.usuario;
         },
 
+        obtenerUsuarios: async () => {
+            try {
+                const usuarios = await Usuario.find({});
+                return usuarios
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
         obtenerProductos: async () => {
             try {
                 const productos = await Producto.find({});
