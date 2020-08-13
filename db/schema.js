@@ -257,8 +257,9 @@ const typeDefs = gql`
         actualizarPedido(id: ID!, input: PedidoInput): Pedido
         eliminarPedido(id: ID!): String
 
-        # Planilla de gestion de produccion de Esponjas
-        nuevaPlanillaCE(input: CPEInput): CPE
+        # Registro de gestion de produccion de Esponjas
+        nuevoRegistroCE(input: CPEInput): CPE
+        actualizarRegistroCE(id: ID!, input: CPEInput): CPE
     }
 `;
 

@@ -641,7 +641,7 @@ const resolvers = {
             return 'Pedido eliminado'
         },
 
-        nuevaPlanillaCE: async (_, {input}) => {
+        nuevoRegistroCE: async (_, {input}) => {
             try {
                 const planilla = new CPE(input);
 
@@ -652,6 +652,20 @@ const resolvers = {
             } catch (error) {
                 console.log(error);
             }
+        },
+        
+        actualizarRegistroCE: async (_, {id, input}) => {
+            // Buscar existencia de planilla por ID
+            let registro = await CPE.findById(id);
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            //Actualizar DB
+            updateRegistro = await CPE.findByIdAndUpdate( {_id: id}, input, { new: true });
+            
+            return updateRegistro; 
+
         }
     }
 
