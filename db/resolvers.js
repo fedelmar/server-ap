@@ -5,6 +5,7 @@ const Cliente = require('../models/Clientes');
 const Pedido = require('../models/Pedidos');
 const StockInsumo = require('../models/StockInsumos');
 const StockProducto = require('../models/StockProductos');
+const CPE = require('../models/CPE');
 
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -638,6 +639,19 @@ const resolvers = {
 
             await Pedido.findByIdAndDelete(id);
             return 'Pedido eliminado'
+        },
+
+        nuevaPlanillaCE: async (_, {input}) => {
+            try {
+                const planilla = new CPE(input);
+
+                //Guardar en db
+                const resultado = await planilla.save();
+
+                return resultado;
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
 

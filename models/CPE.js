@@ -13,18 +13,17 @@ const CPESchema = mongoose.Schema({
     lote: {
         type: String,
         required: true,
-        trim: true,
-        unique: true 
+        trim: true
     },
     horaInicio: {
-        type: Date,
+        type: String,
         required: true
     },
     horaCierre: {
-        type: Date,
+        type: String,
         required: true
     },
-    Producto: {
+    producto: {
         type: String,
         required: true,
         trim: true
