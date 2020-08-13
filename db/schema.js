@@ -218,7 +218,7 @@ const typeDefs = gql`
         buscarProducto(texto: String!): [Producto]
 
         # Planilla de gestion de produccion de Esponjas
-       
+        obtenerRegistrosCE: [CPE]
     }
 
     type Mutation {

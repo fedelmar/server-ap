@@ -240,6 +240,11 @@ const resolvers = {
             const productos = await Producto.find({$text: { $search: texto }})
 
             return productos;
+        },
+
+        obtenerRegistrosCE: async () => {
+            const registros = await CPE.find({});
+            return registros;
         }
     },
     
