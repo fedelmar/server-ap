@@ -245,6 +245,16 @@ const resolvers = {
         obtenerRegistrosCE: async () => {
             const registros = await CPE.find({});
             return registros;
+        },
+
+        obtenerRegistroCE: async (_, {id}) => {
+            let registro = await CPE.findById(id);
+            
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            return registro;
         }
     },
     

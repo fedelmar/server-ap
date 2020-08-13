@@ -219,6 +219,7 @@ const typeDefs = gql`
 
         # Planilla de gestion de produccion de Esponjas
         obtenerRegistrosCE: [CPE]
+        obtenerRegistroCE(id: ID!): CPE
     }
 
     type Mutation {
