@@ -5,6 +5,7 @@ const Cliente = require('../models/Clientes');
 const Pedido = require('../models/Pedidos');
 const StockInsumo = require('../models/StockInsumos');
 const StockProducto = require('../models/StockProductos');
+const CPE = require('../models/CPE');
 
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -239,6 +240,21 @@ const resolvers = {
             const productos = await Producto.find({$text: { $search: texto }})
 
             return productos;
+        },
+
+        obtenerRegistrosCE: async () => {
+            const registros = await CPE.find({});
+            return registros;
+        },
+
+        obtenerRegistroCE: async (_, {id}) => {
+            let registro = await CPE.findById(id);
+            
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            return registro;
         }
     },
     
@@ -638,6 +654,45 @@ const resolvers = {
 
             await Pedido.findByIdAndDelete(id);
             return 'Pedido eliminado'
+        },
+
+        nuevoRegistroCE: async (_, {input}) => {
+            try {
+                const planilla = new CPE(input);
+
+                //Guardar en db
+                const resultado = await planilla.save();
+
+                return resultado;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        
+        actualizarRegistroCE: async (_, {id, input}) => {
+            // Buscar existencia de planilla por ID
+            let registro = await CPE.findById(id);
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            //Actualizar DB
+            registro = await CPE.findByIdAndUpdate( {_id: id}, input, { new: true });
+            
+            return registro; 
+
+        },
+
+        eliminarRegistroCE: async (_, { id }) => {
+            // Buscar existencia de planilla por ID
+            let registro = await CPE.findById(id);
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            registro = await CPE.findByIdAndDelete({ _id: id });
+
+            return "Registro eliminado del stock.";
         }
     }
 

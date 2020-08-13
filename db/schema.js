@@ -80,6 +80,21 @@ const typeDefs = gql`
         vendedor: [Usuario]
     }
 
+    type CPE {
+        id: ID
+        fecha: String
+        operario: String
+        lote: String
+        horaInicio: String
+        horaCierre: String
+        producto: String
+        lBolsa: String
+        lEsponja: String
+        cantProductida: Int
+        cantDescarte: Int
+        observaciones: String
+    }
+
     input UsuarioInput {
         nombre: String!
         apellido: String!
@@ -138,6 +153,20 @@ const typeDefs = gql`
         estado: EstadoPedido
     }
 
+    input CPEInput {
+        fecha: String!
+        operario: String!
+        lote: String!
+        horaInicio: String!
+        horaCierre: String!
+        producto: String!
+        lBolsa: String
+        lEsponja: String
+        cantProductida: Int!
+        cantDescarte: Int!
+        observaciones: String
+    }
+
     enum EstadoPedido {
         PENDIENTE
         COMPLETADO
@@ -187,6 +216,10 @@ const typeDefs = gql`
         mejoresClientes: [TopCliente]
         mejoresVendedores: [TopVendedor]
         buscarProducto(texto: String!): [Producto]
+
+        # Planilla de gestion de produccion de Esponjas
+        obtenerRegistrosCE: [CPE]
+        obtenerRegistroCE(id: ID!): CPE
     }
 
     type Mutation {
@@ -224,6 +257,11 @@ const typeDefs = gql`
         nuevoPedido(input: PedidoInput): Pedido
         actualizarPedido(id: ID!, input: PedidoInput): Pedido
         eliminarPedido(id: ID!): String
+
+        # Registro de gestion de produccion de Esponjas
+        nuevoRegistroCE(input: CPEInput): CPE
+        actualizarRegistroCE(id: ID!, input: CPEInput): CPE
+        eliminarRegistroCE(id: ID!): String
     }
 `;
 
