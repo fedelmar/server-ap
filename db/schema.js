@@ -218,7 +218,7 @@ const typeDefs = gql`
         buscarProducto(texto: String!): [Producto]
 
         # Planilla de gestion de produccion de Esponjas
-
+       
     }
 
     type Mutation {
@@ -260,6 +260,7 @@ const typeDefs = gql`
         # Registro de gestion de produccion de Esponjas
         nuevoRegistroCE(input: CPEInput): CPE
         actualizarRegistroCE(id: ID!, input: CPEInput): CPE
+        eliminarRegistroCE(id: ID!): String
     }
 `;
 

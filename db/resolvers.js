@@ -662,10 +662,22 @@ const resolvers = {
             }
 
             //Actualizar DB
-            updateRegistro = await CPE.findByIdAndUpdate( {_id: id}, input, { new: true });
+            registro = await CPE.findByIdAndUpdate( {_id: id}, input, { new: true });
             
-            return updateRegistro; 
+            return registro; 
 
+        },
+
+        eliminarRegistroCE: async (_, { id }) => {
+            // Buscar existencia de planilla por ID
+            let registro = await CPE.findById(id);
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            registro = await CPE.findByIdAndDelete({ _id: id });
+
+            return "Registro eliminado del stock.";
         }
     }
 
