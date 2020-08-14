@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const CPESchema = mongoose.Schema({
     fecha: {
         type: Date,
-        required: true
+        default: new Date(Date.now())
     },
     operario: {
         type: String,

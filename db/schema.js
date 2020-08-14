@@ -80,9 +80,11 @@ const typeDefs = gql`
         vendedor: [Usuario]
     }
 
+    scalar Date
+
     type CPE {
         id: ID
-        fecha: String
+        fecha: Date
         operario: String
         lote: String
         horaInicio: String
@@ -154,7 +156,7 @@ const typeDefs = gql`
     }
 
     input CPEInput {
-        fecha: String!
+        fecha: Date
         operario: String!
         lote: String!
         horaInicio: String!
