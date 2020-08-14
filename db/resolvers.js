@@ -263,9 +263,9 @@ const resolvers = {
         },
 
         obtenerRegistrosCE: async () => {
+
             let registros = await CPE.find({});
-        
-            console.log(registros)
+            
             return registros;
         },
 
