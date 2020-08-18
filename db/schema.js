@@ -120,7 +120,7 @@ const typeDefs = gql`
 
     input sProductoInput {
         lote: String!
-        producto: ID!
+        producto: ID
         estado: EstadoProducto
         cantidad: Int
     }
