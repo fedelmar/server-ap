@@ -92,7 +92,7 @@ const typeDefs = gql`
         producto: String
         lBolsa: String
         lEsponja: String
-        cantProductida: Int
+        cantProducida: Int
         cantDescarte: Int
         observaciones: String
     }
