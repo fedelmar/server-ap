@@ -38,7 +38,7 @@ const CPESchema = mongoose.Schema({
         required: true,
         trim: true
     },
-    cantProductida: {
+    cantProducida: {
         type: Number,
         required: true,
     },
