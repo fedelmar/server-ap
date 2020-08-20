@@ -381,23 +381,25 @@ const resolvers = {
             // Verificar la existencia del producto en stock
             const { lote } = input;
             const existeLote = await StockProducto.findOne({lote});
-            if (existeLote) {
-                throw new Error('Ya existe ese lote');
+            if (!existeLote) {
+                try {
+                    const producto = new StockProducto(input);
+
+                    //Guardar en db
+                    const resultado = await producto.save();
+
+                    return resultado;
+                } catch (error) {
+                    console.log(error)
+                }
+            } else {
+                // Si ya hay un lote en existencia, sumar la cantidad producida
+                let nuevoInput = input;
+                nuevoInput.cantidad += existeLote.cantidad;
+                nuevoLote = await StockProducto.findByIdAndUpdate( {_id: existeLote.id },  nuevoInput, { new: true });  
+                
+                return nuevoLote;
             }
-
-            try {
-                const producto = new StockProducto(input);
-
-                //Guardar en db
-                const resultado = await producto.save();
-
-                return resultado;
-            } catch (error) {
-                console.log(error)
-            }
-            
-
-
         },
 
         actualizarProductoStock: async (_,{ id, input }) => {
