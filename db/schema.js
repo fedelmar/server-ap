@@ -194,6 +194,7 @@ const typeDefs = gql`
         # Stock Productos
         obtenerProductosStock: [sProducto]
         obtenerProductoStock(id: ID!): sProducto
+        existeProductoStock(id: ID!): Boolean
 
         # Insumos
         obtenerInsumos: [Insumo]
@@ -202,6 +203,7 @@ const typeDefs = gql`
         # Stock Insumos
         obtenerStockInsumos: [sInsumo]
         obtenerInsumoEnStock(id: ID!): sInsumo 
+        existeInsumoStock(id: ID!): Boolean
 
         # Clientes
         obtenerClientes: [Cliente]

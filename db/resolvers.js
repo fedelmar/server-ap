@@ -95,6 +95,16 @@ const resolvers = {
             return lote;
         },
 
+        existeProductoStock: async (_, { id }) => {
+            // Comprobar su existencia
+            const lote = await StockProducto.findOne({producto: id})
+            if (lote) {
+                return true
+            } else {
+                return false
+            }
+        },
+
         obtenerInsumos: async () => {
             try {
                 const insumos = await Insumo.find({});
@@ -132,6 +142,17 @@ const resolvers = {
             }
 
             return insumo;
+        },
+
+        existeInsumoStock: async (_, { id }) => {
+            // Comprobar su existencia
+            const lote = await StockInsumo.findOne({insumo: id})
+            
+            if (lote) {
+                return true
+            } else {
+                return false
+            }
         },
 
         obtenerCliente: async (_, {id}, ctx ) => {
