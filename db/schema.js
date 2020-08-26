@@ -111,6 +111,7 @@ const typeDefs = gql`
         fecha: Date
         operario: String
         lote: String
+        producto: String
         loteID: String
         horaInicio: String
         horaCierre: String
@@ -197,6 +198,7 @@ const typeDefs = gql`
         fecha: Date
         operario: String!
         lote: String!
+        producto: String
         loteID: String
         horaInicio: String!
         horaCierre: String!

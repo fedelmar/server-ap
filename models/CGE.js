@@ -15,6 +15,11 @@ const CFESchema = mongoose.Schema({
         required: true,
         trim: true
     },
+    producto: {
+        type: String,
+        required: true,
+        trim: true
+    },
     loteID: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
