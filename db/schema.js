@@ -45,6 +45,15 @@ const typeDefs = gql`
         cantidad: Int
     }
 
+    type lEsponjas {
+        lote: String
+        estado: String
+        caja: String
+        producto: String
+        cantidad: Int
+        cantCaja: Int
+    }
+
     type Cliente {
         id: ID
         nombre: String
@@ -94,6 +103,21 @@ const typeDefs = gql`
         lEsponja: String
         cantProducida: Int
         cantDescarte: Int
+        observaciones: String
+    }
+
+    type CGE {
+        id: ID
+        fecha: Date
+        operario: String
+        lote: String
+        loteID: String
+        horaInicio: String
+        horaCierre: String
+        caja: String
+        descCajas: Int
+        guardado: Int
+        descarte: Int
         observaciones: String
     }
 
@@ -169,6 +193,20 @@ const typeDefs = gql`
         observaciones: String
     }
 
+    input CGEInput {
+        fecha: Date
+        operario: String!
+        lote: String!
+        loteID: String
+        horaInicio: String!
+        horaCierre: String!
+        caja: String
+        descCajas: Int
+        guardado: Int!
+        descarte: Int!
+        observaciones: String
+    }
+
     enum EstadoPedido {
         PENDIENTE
         COMPLETADO
@@ -195,6 +233,7 @@ const typeDefs = gql`
         obtenerProductosStock: [sProducto]
         obtenerProductoStock(id: ID!): sProducto
         existeProductoStock(id: ID!): Boolean
+        obtenerStockEsponjas: [lEsponjas]
 
         # Insumos
         obtenerInsumos: [Insumo]
@@ -205,6 +244,16 @@ const typeDefs = gql`
         obtenerInsumoEnStock(id: ID!): sInsumo 
         existeInsumoStock(id: ID!): Boolean
 
+        # Planillas de control de produccion de Esponjas
+        obtenerRegistrosCE: [CPE]
+        obtenerRegistroCE(id: ID!): CPE
+
+        # Planillas de contol de guardado de Esponjas
+        obtenerRegistrosGE: [CGE]
+        obtenerRegistroGE(id: ID!): CGE
+
+        # Consultas especificas
+         
         # Clientes
         obtenerClientes: [Cliente]
         obtenerClientesVendedor: [Cliente]
@@ -221,9 +270,6 @@ const typeDefs = gql`
         mejoresVendedores: [TopVendedor]
         buscarProducto(texto: String!): [Producto]
 
-        # Planilla de gestion de produccion de Esponjas
-        obtenerRegistrosCE: [CPE]
-        obtenerRegistroCE(id: ID!): CPE
     }
 
     type Mutation {
@@ -262,10 +308,15 @@ const typeDefs = gql`
         actualizarPedido(id: ID!, input: PedidoInput): Pedido
         eliminarPedido(id: ID!): String
 
-        # Registro de gestion de produccion de Esponjas
+        # Control de produccion de Esponjas
         nuevoRegistroCE(input: CPEInput): CPE
         actualizarRegistroCE(id: ID!, input: CPEInput): CPE
         eliminarRegistroCE(id: ID!): String
+
+        # Control de guardado de Esponjas
+        nuevoRegistroGE(input: CGEInput): CGE
+        actualizarRegistroGE(id: ID!, input: CGEInput): CGE
+        eliminarRegistroGE(id: ID!): String
     }
 `;
 
