@@ -97,6 +97,20 @@ const typeDefs = gql`
         observaciones: String
     }
 
+    type CGE {
+        id: ID
+        fecha: Date
+        operario: String
+        lote: String
+        horaInicio: String
+        horaCierre: String
+        caja: String
+        descCajas: Int
+        guardado: Int
+        descarte: Int
+        observaciones: String
+    }
+
     input UsuarioInput {
         nombre: String!
         apellido: String!
@@ -169,6 +183,19 @@ const typeDefs = gql`
         observaciones: String
     }
 
+    input CGEInput {
+        fecha: Date
+        operario: String!
+        lote: String!
+        horaInicio: String!
+        horaCierre: String!
+        caja: String
+        descCajas: Int
+        guardado: Int!
+        descarte: Int!
+        observaciones: String
+    }
+
     enum EstadoPedido {
         PENDIENTE
         COMPLETADO
@@ -221,9 +248,13 @@ const typeDefs = gql`
         mejoresVendedores: [TopVendedor]
         buscarProducto(texto: String!): [Producto]
 
-        # Planilla de gestion de produccion de Esponjas
+        # Planillas de control de produccion de Esponjas
         obtenerRegistrosCE: [CPE]
         obtenerRegistroCE(id: ID!): CPE
+
+        # Planillas de contol de guardado de Esponjas
+        obtenerRegistrosGE: [CGE]
+        obtenerRegistroGE(id: ID!): CGE
     }
 
     type Mutation {
@@ -262,10 +293,15 @@ const typeDefs = gql`
         actualizarPedido(id: ID!, input: PedidoInput): Pedido
         eliminarPedido(id: ID!): String
 
-        # Registro de gestion de produccion de Esponjas
+        # Control de produccion de Esponjas
         nuevoRegistroCE(input: CPEInput): CPE
         actualizarRegistroCE(id: ID!, input: CPEInput): CPE
         eliminarRegistroCE(id: ID!): String
+
+        # Control de guardado de Esponjas
+        nuevoRegistroGE(input: CGEInput): CGE
+        actualizarRegistroGE(id: ID!, input: CGEInput): CGE
+        eliminarRegistroGE(id: ID!): String
     }
 `;
 

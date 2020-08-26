@@ -6,6 +6,7 @@ const Pedido = require('../models/Pedidos');
 const StockInsumo = require('../models/StockInsumos');
 const StockProducto = require('../models/StockProductos');
 const CPE = require('../models/CPE');
+const CGE = require('../models/CGE');
 
 
 const { GraphQLScalarType } = require('graphql');
@@ -292,6 +293,23 @@ const resolvers = {
 
         obtenerRegistroCE: async (_, {id}) => {
             let registro = await CPE.findById(id);
+            
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            return registro;
+        },
+
+        obtenerRegistrosGE: async () => {
+
+            let registros = await CGE.find({});
+            
+            return registros;
+        },
+
+        obtenerRegistroGE: async (_, {id}) => {
+            let registro = await CGE.findById(id);
             
             if(!registro) {
                 throw new Error('Registro no encontrado');
@@ -715,7 +733,7 @@ const resolvers = {
                 console.log(error);
             }
         },
-        
+
         actualizarRegistroCE: async (_, {id, input}) => {
             // Buscar existencia de planilla por ID
             let registro = await CPE.findById(id);
@@ -738,6 +756,44 @@ const resolvers = {
             }
 
             registro = await CPE.findByIdAndDelete({ _id: id });
+
+            return "Registro eliminado del stock.";
+        },
+
+        nuevoRegistroGE: async (_, {input}) => {
+            try {
+                const registro = new CGE(input);
+
+                const resultado = await registro.save();
+
+                return resultado;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
+        actualizarRegistroGE: async (_, { id, input }) => {
+            // Buscar existencia de planilla por ID
+            let registro = await CGE.findById(id);
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            //Actualizar DB
+            registro = await CGE.findByIdAndUpdate( {_id: id}, input, { new: true });
+            
+            return registro; 
+        },
+
+        eliminarRegistroGE: async(_, { id }) => {
+            // Buscar existencia de planilla por ID
+            let registro = await CGE.findById(id);
+
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            registro = await CGE.findByIdAndDelete({ _id: id });
 
             return "Registro eliminado del stock.";
         }
