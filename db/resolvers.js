@@ -239,7 +239,7 @@ const resolvers = {
                     total: { $sum: "$total"}
                 }},
                 {
-                    $loockup: {
+                    $lookup: {
                         from: 'clientes',
                         localField: '_id',
                         foreignField: "_id",
@@ -316,6 +316,30 @@ const resolvers = {
             }
 
             return registro;
+        },
+
+        obtenerStockEsponjas: async () => {
+            let listaProductos = await Producto.find({});
+            let stockProductos = await StockProducto.find({});            
+    
+            let lotesEsponjas = [];
+
+            stockProductos.forEach(function(loteProducto) {
+                listaProductos.forEach(function(producto) {
+                    if (producto.id == loteProducto.producto && producto.categoria == 'Esponjas' && loteProducto.estado != 'Terminado') {
+                        lotesEsponjas.push({
+                            lote: loteProducto.lote,
+                            estado: loteProducto.estado,
+                            cantidad: loteProducto.cantidad,
+                            producto: producto.nombre,
+                            caja: producto.caja,
+                            cantCaja: producto.cantCaja
+                        })
+                    }
+                })
+            })
+
+            return lotesEsponjas;
         }
     },
     

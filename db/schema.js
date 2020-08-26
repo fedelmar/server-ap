@@ -45,6 +45,15 @@ const typeDefs = gql`
         cantidad: Int
     }
 
+    type lEsponjas {
+        lote: String
+        estado: String
+        caja: String
+        producto: String
+        cantidad: Int
+        cantCaja: Int
+    }
+
     type Cliente {
         id: ID
         nombre: String
@@ -222,6 +231,7 @@ const typeDefs = gql`
         obtenerProductosStock: [sProducto]
         obtenerProductoStock(id: ID!): sProducto
         existeProductoStock(id: ID!): Boolean
+        obtenerStockEsponjas: [lEsponjas]
 
         # Insumos
         obtenerInsumos: [Insumo]
@@ -232,6 +242,16 @@ const typeDefs = gql`
         obtenerInsumoEnStock(id: ID!): sInsumo 
         existeInsumoStock(id: ID!): Boolean
 
+        # Planillas de control de produccion de Esponjas
+        obtenerRegistrosCE: [CPE]
+        obtenerRegistroCE(id: ID!): CPE
+
+        # Planillas de contol de guardado de Esponjas
+        obtenerRegistrosGE: [CGE]
+        obtenerRegistroGE(id: ID!): CGE
+
+        # Consultas especificas
+         
         # Clientes
         obtenerClientes: [Cliente]
         obtenerClientesVendedor: [Cliente]
@@ -248,13 +268,6 @@ const typeDefs = gql`
         mejoresVendedores: [TopVendedor]
         buscarProducto(texto: String!): [Producto]
 
-        # Planillas de control de produccion de Esponjas
-        obtenerRegistrosCE: [CPE]
-        obtenerRegistroCE(id: ID!): CPE
-
-        # Planillas de contol de guardado de Esponjas
-        obtenerRegistrosGE: [CGE]
-        obtenerRegistroGE(id: ID!): CGE
     }
 
     type Mutation {
