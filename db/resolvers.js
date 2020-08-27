@@ -329,6 +329,7 @@ const resolvers = {
                     if (producto.id == loteProducto.producto && producto.categoria == 'Esponjas' && loteProducto.estado != 'Terminado') {
                         lotesEsponjas.push({
                             lote: loteProducto.lote,
+                            loteID: loteProducto.id,
                             estado: loteProducto.estado,
                             cantidad: loteProducto.cantidad,
                             producto: producto.nombre,
@@ -790,10 +791,25 @@ const resolvers = {
             let lote = await StockProducto.findById({ _id: loteID});
                         
             try {
-                // Actualizar info en el lote del producto
-                lote.cantidad -= guardado;
-                const nuevoLote = await StockProducto.findByIdAndUpdate({_id: loteID}, lote, {new: true})
-                
+                // Actualizar info en el lote del producto                
+                if(lote.cantidad > guardado) {
+                    lote.cantidad -= guardado;
+                    await StockProducto.findByIdAndUpdate({_id: loteID}, lote, {new: true})
+
+                    // Crear nuevo lote terminado
+                    const nuevoLote = {
+                        lote: lote.lote,
+                        estado: "Terminado",
+                        cantidad: guardado,
+                        producto: lote.producto                        
+                    }
+                    const loteTermiado = new StockProducto(nuevoLote);
+                    await loteTermiado.save();
+                } else {
+                    lote.estado = "Terminado";
+                    await StockProducto.findByIdAndUpdate({_id: loteID}, lote, {new: true})
+                }
+                                
                 // Crear y guardar nuevo registro
                 const registro = new CGE(input);
                 const resultado = await registro.save();

@@ -47,6 +47,7 @@ const typeDefs = gql`
 
     type lEsponjas {
         lote: String
+        loteID: String
         estado: String
         caja: String
         producto: String
