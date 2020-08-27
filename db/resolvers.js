@@ -329,6 +329,7 @@ const resolvers = {
                     if (producto.id == loteProducto.producto && producto.categoria == 'Esponjas' && loteProducto.estado != 'Terminado') {
                         lotesEsponjas.push({
                             lote: loteProducto.lote,
+                            loteID: loteProducto.id,
                             estado: loteProducto.estado,
                             cantidad: loteProducto.cantidad,
                             producto: producto.nombre,
