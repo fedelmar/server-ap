@@ -755,13 +755,11 @@ const resolvers = {
             const { cantidad, lProducto } = input;
 
             let lote = await StockProducto.findById({ _id: lProducto});
-            console.log('Lote a actualizar: ',lote)
             try {
 
                 // Actualizar info en el lote del producto                
                 if(lote.cantidad > cantidad) {
                     lote.cantidad -= cantidad;
-                    console.log('Lote actualizaro: ',lote)
                     await StockProducto.findByIdAndUpdate({_id: lProducto}, lote, {new: true})
                 } else {
                     await StockProducto.findByIdAndDelete({_id: lProducto})
