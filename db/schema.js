@@ -264,7 +264,7 @@ const typeDefs = gql`
         existeInsumoStock(id: ID!): Boolean
 
         # Planillas de control de Salidas
-        obtenerRegistosSalidas: [Salida]
+        obtenerRegistrosSalidas: [Salida]
         obtenerRegistroSalida(id: ID!): Salida 
 
         # Planillas de control de produccion de Esponjas

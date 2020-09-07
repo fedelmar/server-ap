@@ -285,7 +285,7 @@ const resolvers = {
             return productos;
         },
 
-        obtenerRegistosSalidas: async () => {
+        obtenerRegistrosSalidas: async () => {
 
             let registros = await Salida.find({});
 
