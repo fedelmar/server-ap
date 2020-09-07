@@ -92,6 +92,15 @@ const typeDefs = gql`
 
     scalar Date
 
+    type Salida {
+        id: ID
+        fecha: Date
+        cliente: ID
+        remito: String
+        lProducto: ID
+        cantidad: Int
+    }
+
     type CPE {
         id: ID
         fecha: Date
@@ -181,6 +190,13 @@ const typeDefs = gql`
         estado: EstadoPedido
     }
 
+    input SalidaInput {
+        cliente: ID!
+        remito: String!
+        lProducto: ID!
+        cantidad: Int!
+    }
+
     input CPEInput {
         fecha: Date
         operario: String!
@@ -247,6 +263,10 @@ const typeDefs = gql`
         obtenerInsumoEnStock(id: ID!): sInsumo 
         existeInsumoStock(id: ID!): Boolean
 
+        # Planillas de control de Salidas
+        obtenerRegistosSalidas: [Salida]
+        obtenerRegistroSalida(id: ID!): Salida 
+
         # Planillas de control de produccion de Esponjas
         obtenerRegistrosCE: [CPE]
         obtenerRegistroCE(id: ID!): CPE
@@ -255,8 +275,6 @@ const typeDefs = gql`
         obtenerRegistrosGE: [CGE]
         obtenerRegistroGE(id: ID!): CGE
 
-        # Consultas especificas
-         
         # Clientes
         obtenerClientes: [Cliente]
         obtenerClientesVendedor: [Cliente]
@@ -311,6 +329,11 @@ const typeDefs = gql`
         actualizarPedido(id: ID!, input: PedidoInput): Pedido
         eliminarPedido(id: ID!): String
 
+        # Control de Salidas
+        nuevoRegistroSalida(input: SalidaInput): Salida
+        actualizarRegistroSalida(id: ID!, input: SalidaInput): Salida
+        eliminarRegistroSalida(id: ID!): String
+
         # Control de produccion de Esponjas
         nuevoRegistroCE(input: CPEInput): CPE
         actualizarRegistroCE(id: ID!, input: CPEInput): CPE
@@ -320,6 +343,7 @@ const typeDefs = gql`
         nuevoRegistroGE(input: CGEInput): CGE
         actualizarRegistroGE(id: ID!, input: CGEInput): CGE
         eliminarRegistroGE(id: ID!): String
+
     }
 `;
 

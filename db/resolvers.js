@@ -7,6 +7,7 @@ const StockInsumo = require('../models/StockInsumos');
 const StockProducto = require('../models/StockProductos');
 const CPE = require('../models/CPE');
 const CGE = require('../models/CGE');
+const Salida = require('../models/Salidas');
 
 
 const { GraphQLScalarType } = require('graphql');
@@ -282,6 +283,23 @@ const resolvers = {
             const productos = await Producto.find({$text: { $search: texto }})
 
             return productos;
+        },
+
+        obtenerRegistosSalidas: async () => {
+
+            let registros = await Salida.find({});
+
+            return registros;
+        },
+
+        obtenerRegistroSalida: async (_, { id }) => {
+            let registro = await Salida.findById(id);
+
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            return registro;
         },
 
         obtenerRegistrosCE: async () => {
@@ -749,11 +767,60 @@ const resolvers = {
             return 'Pedido eliminado'
         },
 
+        nuevoRegistroSalida: async (_, {input}) => {
+
+            const { cantidad, lProducto } = input;
+
+            let lote = await StockProducto.findById({ _id: lProducto});
+            try {
+
+                // Actualizar info en el lote del producto                
+                if(lote.cantidad > cantidad) {
+                    lote.cantidad -= cantidad;
+                    await StockProducto.findByIdAndUpdate({_id: lProducto}, lote, {new: true})
+                } else {
+                    await StockProducto.findByIdAndDelete({_id: lProducto})
+                }
+                
+                // Guardar registro en DB
+                const registro = new Salida(input);
+                const resultado = await registro.save();
+                return resultado;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
+        actualizarRegistroSalida: async (_, {id, input}) => {
+            // Buscar existencia de planilla por ID
+            let registro = await Salida.findById(id);
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            //Actualizar DB
+            registro = await Salida.findByIdAndUpdate( {_id: id}, input, { new: true });
+            
+            return registro; 
+        },
+
+        eliminarRegistroSalida: async (_, { id }) => {
+            // Buscar existencia de planilla por ID
+            let registro = await Salida.findById(id);
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            registro = await Salida.findByIdAndDelete({ _id: id });
+
+            return "Registro eliminado.";
+        },
+
         nuevoRegistroCE: async (_, {input}) => {
             try {
                 const planilla = new CPE(input);
 
-                //Guardar en db
+                //Guardar en DB
                 const resultado = await planilla.save();
 
                 return resultado;
