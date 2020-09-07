@@ -265,6 +265,7 @@ const typeDefs = gql`
 
         # Planillas de control de Salidas
         obtenerRegistosSalidas: [Salida]
+        obtenerRegistroSalida(id: ID!): Salida 
 
         # Planillas de control de produccion de Esponjas
         obtenerRegistrosCE: [CPE]
