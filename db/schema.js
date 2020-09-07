@@ -263,6 +263,9 @@ const typeDefs = gql`
         obtenerInsumoEnStock(id: ID!): sInsumo 
         existeInsumoStock(id: ID!): Boolean
 
+        # Planillas de control de Salidas
+        obtenerRegistosSalidas: [Salida]
+
         # Planillas de control de produccion de Esponjas
         obtenerRegistrosCE: [CPE]
         obtenerRegistroCE(id: ID!): CPE

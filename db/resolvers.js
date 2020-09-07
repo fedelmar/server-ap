@@ -285,6 +285,13 @@ const resolvers = {
             return productos;
         },
 
+        obtenerRegistosSalidas: async () => {
+
+            let registros = await Salida.find({});
+
+            return registros;
+        },
+
         obtenerRegistrosCE: async () => {
 
             let registros = await CPE.find({});
