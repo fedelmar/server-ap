@@ -7,6 +7,7 @@ const StockInsumo = require('../models/StockInsumos');
 const StockProducto = require('../models/StockProductos');
 const CPE = require('../models/CPE');
 const CGE = require('../models/CGE');
+const Salida = require('../models/Salidas');
 
 
 const { GraphQLScalarType } = require('graphql');
@@ -749,11 +750,37 @@ const resolvers = {
             return 'Pedido eliminado'
         },
 
+        nuevoRegistroSalida: async (_, {input}) => {
+
+            const { cantidad, lProducto } = input;
+
+            let lote = await StockProducto.findById({ _id: lProducto});
+            console.log('Lote a actualizar: ',lote)
+            try {
+
+                // Actualizar info en el lote del producto                
+                if(lote.cantidad > cantidad) {
+                    lote.cantidad -= cantidad;
+                    console.log('Lote actualizaro: ',lote)
+                    await StockProducto.findByIdAndUpdate({_id: lProducto}, lote, {new: true})
+                } else {
+                    await StockProducto.findByIdAndDelete({_id: lProducto})
+                }
+                
+                // Guardar registro en DB
+                const registro = new Salida(input);
+                const resultado = await registro.save();
+                return resultado;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
         nuevoRegistroCE: async (_, {input}) => {
             try {
                 const planilla = new CPE(input);
 
-                //Guardar en db
+                //Guardar en DB
                 const resultado = await planilla.save();
 
                 return resultado;
