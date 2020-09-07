@@ -787,6 +787,18 @@ const resolvers = {
             return registro; 
         },
 
+        eliminarRegistroSalida: async (_, { id }) => {
+            // Buscar existencia de planilla por ID
+            let registro = await Salida.findById(id);
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            registro = await Salida.findByIdAndDelete({ _id: id });
+
+            return "Registro eliminado.";
+        },
+
         nuevoRegistroCE: async (_, {input}) => {
             try {
                 const planilla = new CPE(input);
