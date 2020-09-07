@@ -782,7 +782,7 @@ const resolvers = {
 
             registro = await CPE.findByIdAndDelete({ _id: id });
 
-            return "Registro eliminado del stock.";
+            return "Registro eliminado.";
         },
 
         nuevoRegistroGE: async (_, {input}) => {
@@ -843,7 +843,7 @@ const resolvers = {
 
             registro = await CGE.findByIdAndDelete({ _id: id });
 
-            return "Registro eliminado del stock.";
+            return "Registro eliminado.";
         }
     }
 
