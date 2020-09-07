@@ -327,6 +327,7 @@ const typeDefs = gql`
 
         # Control de Salidas
         nuevoRegistroSalida(input: SalidaInput): Salida
+        actualizarRegistroSalida(id: ID!, input: SalidaInput): Salida
 
         # Control de produccion de Esponjas
         nuevoRegistroCE(input: CPEInput): CPE

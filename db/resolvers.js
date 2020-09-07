@@ -774,6 +774,19 @@ const resolvers = {
             }
         },
 
+        actualizarRegistroSalida: async (_, {id, input}) => {
+            // Buscar existencia de planilla por ID
+            let registro = await Salida.findById(id);
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            //Actualizar DB
+            registro = await Salida.findByIdAndUpdate( {_id: id}, input, { new: true });
+            
+            return registro; 
+        },
+
         nuevoRegistroCE: async (_, {input}) => {
             try {
                 const planilla = new CPE(input);
