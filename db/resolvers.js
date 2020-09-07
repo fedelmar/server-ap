@@ -786,21 +786,21 @@ const resolvers = {
         },
 
         nuevoRegistroGE: async (_, {input}) => {
-            const { loteID, guardado } = input;
+            const { loteID, guardado, descarte } = input;
 
             let lote = await StockProducto.findById({ _id: loteID});
                         
             try {
                 // Actualizar info en el lote del producto                
                 if(lote.cantidad > guardado) {
-                    lote.cantidad -= guardado;
+                    lote.cantidad -= guardado - descarte;
                     await StockProducto.findByIdAndUpdate({_id: loteID}, lote, {new: true})
 
                     // Crear nuevo lote terminado
                     const nuevoLote = {
                         lote: lote.lote,
                         estado: "Terminado",
-                        cantidad: guardado,
+                        cantidad: guardado - descarte,
                         producto: lote.producto                        
                     }
                     const loteTermiado = new StockProducto(nuevoLote);
