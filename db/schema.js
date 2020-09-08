@@ -55,6 +55,16 @@ const typeDefs = gql`
         cantCaja: Int
     }
 
+    type ProductoTerminado {
+        lote: String
+        loteID: String
+        estado: String
+        caja: String
+        producto: String
+        cantidad: Int
+        cantCaja: Int
+    }
+
     type Cliente {
         id: ID
         nombre: String
@@ -253,6 +263,7 @@ const typeDefs = gql`
         obtenerProductoStock(id: ID!): sProducto
         existeProductoStock(id: ID!): Boolean
         obtenerStockEsponjas: [lEsponjas]
+        obtenerProductosTerminados: [ProductoTerminado]
 
         # Insumos
         obtenerInsumos: [Insumo]

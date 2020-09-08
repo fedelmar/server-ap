@@ -359,6 +359,31 @@ const resolvers = {
             })
 
             return lotesEsponjas;
+        },
+
+        obtenerProductosTerminados: async () => {
+            let listaProductos = await Producto.find({});
+            let stockProductos = await StockProducto.find({});
+
+            let productos = [];
+
+            stockProductos.forEach(function(loteProducto) {
+                listaProductos.forEach(function(producto) {
+                    if (producto.id == loteProducto.producto && loteProducto.estado == 'Terminado') {
+                        productos.push({
+                            lote: loteProducto.lote,
+                            loteID: loteProducto.id,
+                            estado: loteProducto.estado,
+                            cantidad: loteProducto.cantidad,
+                            producto: producto.nombre,
+                            caja: producto.caja,
+                            cantCaja: producto.cantCaja
+                        })
+                    }
+                })
+            })
+
+            return productos;
         }
     },
     
