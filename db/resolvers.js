@@ -795,44 +795,34 @@ const resolvers = {
         nuevoRegistroSalida: async (_, {input}) => {
 
             const { lotes } = input;
-            try {
-
-                lotes.forEach(async function(index) {
-
-                    let lote = await StockProducto.findById({_id: index.lote});
-
-                    if (lote.cantidad >= index.cantidad) {
-                        // Actualizar info en el lote del producto                
-                        if(lote.cantidad > index.cantidad) {
-                            lote.cantidad -= index.cantidad;
-                            await StockProducto.findByIdAndUpdate({_id: index.lote}, lote, {new: true})
+            for (let index = 0; index < lotes.length; index++) {
+                let lote = await StockProducto.findById({_id: lotes[index].lote});
+                try {
+                    if (lote && lote.cantidad >= lotes[index].cantidad) {
+                        // Actualizar info en el lote del producto         
+                        if(lote.cantidad > lotes[index].cantidad) {
+                            lote.cantidad -= lotes[index].cantidad;
+                            await StockProducto.findByIdAndUpdate({_id: lotes[index].lote}, lote, {new: true})
                         } else {
-                            await StockProducto.findByIdAndDelete({_id: index.lote})
+                            await StockProducto.findByIdAndDelete({_id: lotes[index].lote})
                         }
                     } else {
-                        throw new Error('No hay disponibilidad de producto.');
-                    }
-                
-                })                  
-
-                // Guardar registro en DB
-                const registro = new Salida(input);
-                const resultado = await registro.save();
-
-                return resultado;
-           
-            } catch (error) {
-                console.log(error)
+                        if (lote) {
+                            throw new Error(`No hay disponibilidad de producto en el Lote: ${lote.lote}.`);
+                        } else {
+                            throw new Error(`Uno de los lotes no existe.`);
+                        }                        
+                    } 
+                } catch (error) {
+                    return error;
+                }                      
             }
 
-            /*let lote = await StockProducto.findById({ _id: lProducto});
-            try {
+            // Guardar registro en DB
+            const registro = new Salida(input);
+            const resultado = await registro.save();
 
-
-                return resultado;
-            } catch (error) {
-                console.log(error);
-            }*/
+            return resultado;
         },
 
         actualizarRegistroSalida: async (_, {id, input}) => {
