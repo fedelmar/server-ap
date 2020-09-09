@@ -794,26 +794,45 @@ const resolvers = {
 
         nuevoRegistroSalida: async (_, {input}) => {
 
-            const { cantidad, lProducto } = input;
-
-            let lote = await StockProducto.findById({ _id: lProducto});
+            const { lotes } = input;
             try {
 
-                // Actualizar info en el lote del producto                
-                if(lote.cantidad > cantidad) {
-                    lote.cantidad -= cantidad;
-                    await StockProducto.findByIdAndUpdate({_id: lProducto}, lote, {new: true})
-                } else {
-                    await StockProducto.findByIdAndDelete({_id: lProducto})
-                }
+                lotes.forEach(async function(index) {
+
+                    let lote = await StockProducto.findById({_id: index.lote});
+
+                    if (lote.cantidad >= index.cantidad) {
+                        // Actualizar info en el lote del producto                
+                        if(lote.cantidad > index.cantidad) {
+                            lote.cantidad -= index.cantidad;
+                            await StockProducto.findByIdAndUpdate({_id: index.lote}, lote, {new: true})
+                        } else {
+                            await StockProducto.findByIdAndDelete({_id: index.lote})
+                        }
+                    } else {
+                        throw new Error('No hay disponibilidad de producto.');
+                    }
                 
+                })                  
+
                 // Guardar registro en DB
                 const registro = new Salida(input);
                 const resultado = await registro.save();
+
+                return resultado;
+           
+            } catch (error) {
+                console.log(error)
+            }
+
+            /*let lote = await StockProducto.findById({ _id: lProducto});
+            try {
+
+
                 return resultado;
             } catch (error) {
                 console.log(error);
-            }
+            }*/
         },
 
         actualizarRegistroSalida: async (_, {id, input}) => {

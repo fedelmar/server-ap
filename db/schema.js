@@ -102,13 +102,17 @@ const typeDefs = gql`
 
     scalar Date
 
+    type lProducto {
+        lote: ID
+        cantidad: Int
+    }
+
     type Salida {
         id: ID
         fecha: Date
         cliente: ID
         remito: String
-        lProducto: ID
-        cantidad: Int
+        lotes: [lProducto]
     }
 
     type CPE {
@@ -200,11 +204,15 @@ const typeDefs = gql`
         estado: EstadoPedido
     }
 
+    input lProductoInput {
+        lote: ID!
+        cantidad: Int!
+    }
+
     input SalidaInput {
         cliente: ID!
         remito: String!
-        lProducto: ID!
-        cantidad: Int!
+        lotes: [lProductoInput]
     }
 
     input CPEInput {

@@ -15,15 +15,18 @@ const SalidasSchema = mongoose.Schema({
         required: true,
         trim: true
     },
-    lProducto: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'StockProducto'
-    },
-    cantidad: {
-        type: Number,
-        required: true,
-    },
+    lotes: [{
+        lote: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: 'StockProducto'
+        }, 
+        cantidad: {
+            type: Number,
+            required: true,
+        },
+    }]
+    
 });
 
 module.exports = mongoose.model('Salidas', SalidasSchema);
