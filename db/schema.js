@@ -115,6 +115,12 @@ const typeDefs = gql`
         lotes: [lProducto]
     }
 
+    type LoteSalida {
+        lote: String
+        producto: String
+        cantidad: String
+    }
+
     type CPE {
         id: ID
         fecha: Date
@@ -284,7 +290,8 @@ const typeDefs = gql`
 
         # Planillas de control de Salidas
         obtenerRegistrosSalidas: [Salida]
-        obtenerRegistroSalida(id: ID!): Salida 
+        obtenerRegistroSalida(id: ID!): Salida
+        obtenerLotesPorSalida(id: ID!): [LoteSalida] 
 
         # Planillas de control de produccion de Esponjas
         obtenerRegistrosCE: [CPE]
