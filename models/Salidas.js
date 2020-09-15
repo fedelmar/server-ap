@@ -16,11 +16,19 @@ const SalidasSchema = mongoose.Schema({
         trim: true
     },
     lotes: [{
-        lote: {
+        loteID: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
             ref: 'StockProducto'
-        }, 
+        },
+        lote: {
+            type: String,
+            required: true
+        },
+        producto: {
+            type: String,
+            required: true
+        },
         cantidad: {
             type: Number,
             required: true,

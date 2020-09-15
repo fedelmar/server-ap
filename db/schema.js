@@ -102,8 +102,9 @@ const typeDefs = gql`
 
     scalar Date
 
-    type lProducto {
-        lote: ID
+    type LoteSalida {
+        lote: String
+        producto: String
         cantidad: Int
     }
 
@@ -112,13 +113,7 @@ const typeDefs = gql`
         fecha: Date
         cliente: ID
         remito: String
-        lotes: [lProducto]
-    }
-
-    type LoteSalida {
-        lote: String
-        producto: String
-        cantidad: String
+        lotes: [LoteSalida]
     }
 
     type CPE {
@@ -211,7 +206,9 @@ const typeDefs = gql`
     }
 
     input lProductoInput {
-        lote: ID!
+        loteID: ID!
+        lote: String!
+        producto: String!
         cantidad: Int!
     }
 
