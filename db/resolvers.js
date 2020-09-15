@@ -650,7 +650,7 @@ const resolvers = {
                 throw new Error('No existe el insumo en stock')
             }
 
-            lote = await Insumo.findByIdAndDelete({ _id: id });
+            lote = await StockInsumo.findByIdAndDelete({ _id: id });
 
             return "Lote eliminado del stock.";
 
