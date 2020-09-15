@@ -920,7 +920,7 @@ const resolvers = {
             try {
                 // Actualizar info en el lote del producto                
                if(infoLote.cantidad > guardado) {
-                    infoLote.cantidad -= guardado - descarte;
+                    infoLote.cantidad -= guardado;
                     await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true})
 
                     // Crear nuevo lote terminado
