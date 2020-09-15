@@ -913,35 +913,35 @@ const resolvers = {
         },
 
         nuevoRegistroGE: async (_, {input}) => {
-            const { loteID, guardado, descarte } = input;
+            const { guardado, descarte, lote } = input;
+            
+            let infoLote = await StockProducto.findOne({ lote: lote, estado: {$ne: "Terminado"} });
 
-            let lote = await StockProducto.findById({ _id: loteID});
-                        
             try {
                 // Actualizar info en el lote del producto                
-                if(lote.cantidad > guardado) {
-                    lote.cantidad -= guardado - descarte;
-                    await StockProducto.findByIdAndUpdate({_id: loteID}, lote, {new: true})
+               if(infoLote.cantidad > guardado) {
+                    infoLote.cantidad -= guardado - descarte;
+                    await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true})
 
                     // Crear nuevo lote terminado
                     const nuevoLote = {
-                        lote: lote.lote,
+                        lote: infoLote.lote,
                         estado: "Terminado",
                         cantidad: guardado - descarte,
-                        producto: lote.producto                        
+                        producto: infoLote.producto                        
                     }
                     const loteTermiado = new StockProducto(nuevoLote);
                     await loteTermiado.save();
                 } else {
-                    lote.estado = "Terminado";
-                    await StockProducto.findByIdAndUpdate({_id: loteID}, lote, {new: true})
+                    infoLote.estado = "Terminado";
+                    await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true})
                 }
                                 
                 // Crear y guardar nuevo registro
                 const registro = new CGE(input);
                 const resultado = await registro.save();
 
-                return resultado;
+            return resultado;
             } catch (error) {
                 console.log(error);
             }
