@@ -916,25 +916,37 @@ const resolvers = {
             const { guardado, descarte, lote } = input;
             
             let infoLote = await StockProducto.findOne({ lote: lote, estado: {$ne: "Terminado"} });
-
+            let loteTerminado = await StockProducto.findOne({lote: lote, estado: "Terminado"});
+            
             try {
                 // Actualizar info en el lote del producto                
-               if(infoLote.cantidad > guardado) {
+                if(infoLote.cantidad > guardado) {
                     infoLote.cantidad -= guardado;
                     await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true})
-
-                    // Crear nuevo lote terminado
-                    const nuevoLote = {
-                        lote: infoLote.lote,
-                        estado: "Terminado",
-                        cantidad: guardado - descarte,
-                        producto: infoLote.producto                        
+                    if (loteTerminado) {
+                        loteTerminado.cantidad += guardado - descarte;
+                        await StockProducto.findByIdAndUpdate({_id: loteTerminado.id}, loteTerminado, {new: true});
+                    } else {
+                        // Crear nuevo lote terminado
+                        const nuevoLote = {
+                            lote: infoLote.lote,
+                            estado: "Terminado",
+                            cantidad: guardado - descarte,
+                            producto: infoLote.producto                        
+                        }
+                        const loteTermiado = new StockProducto(nuevoLote);
+                        await loteTermiado.save();
                     }
-                    const loteTermiado = new StockProducto(nuevoLote);
-                    await loteTermiado.save();
                 } else {
-                    infoLote.estado = "Terminado";
-                    await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true})
+                    if (loteTerminado) {
+                        loteTerminado.cantidad += guardado - descarte;
+                        await StockProducto.findByIdAndUpdate({_id: loteTerminado.id}, loteTerminado, {new: true});
+                        await StockProducto.findByIdAndDelete({_id: infoLote.id});
+                    } else {
+                        infoLote.estado = "Terminado";
+                        infoLote.cantidad -= descarte;
+                        await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true});
+                    }
                 }
                                 
                 // Crear y guardar nuevo registro
