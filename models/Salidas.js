@@ -6,9 +6,8 @@ const SalidasSchema = mongoose.Schema({
         default: new Date(Date.now())
     },
     cliente: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'Cliente'
+        type: String,
+        required: true
     },
     remito: {
         type: String,
