@@ -111,7 +111,7 @@ const typeDefs = gql`
     type Salida {
         id: ID
         fecha: Date
-        cliente: ID
+        cliente: String
         remito: String
         lotes: [LoteSalida]
     }
@@ -213,7 +213,7 @@ const typeDefs = gql`
     }
 
     input SalidaInput {
-        cliente: ID!
+        cliente: String!
         remito: String!
         lotes: [lProductoInput]
     }
