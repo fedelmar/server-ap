@@ -157,17 +157,13 @@ const resolvers = {
             }
         },
 
-        obtenerCliente: async (_, {id}, ctx ) => {
+        obtenerCliente: async (_, {id}) => {
             //Verificar existencia
             const cliente = await Cliente.findById(id);
 
             if (!cliente) {
                 throw new Error('Cliente no encontrado');
             }
-
-            if(cliente.vendedor.toString() !== ctx.usuario.id ) {
-                throw new Error('No tienes las credenciales.');
-            } 
 
             return cliente;
         },
