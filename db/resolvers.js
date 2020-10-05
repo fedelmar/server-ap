@@ -870,11 +870,17 @@ const resolvers = {
         },
 
         nuevoRegistroCE: async (_, {input}) => {
+            const { lote, cantDescarte } = input;
+            let infoLote = await StockProducto.findOne({ lote: lote, estado: {$ne: "Terminado"} });
+            
             try {
-                const planilla = new CPE(input);
-
-                //Guardar en DB
-                const resultado = await planilla.save();
+                // Actualizar el lote segun las esponjas descartadas
+                infoLote.cantidad -= cantDescarte;
+                await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true})
+              
+                //Guardar registro en DB
+                const registro = new CPE(input);
+                const resultado = await registro.save();
 
                 return resultado;
             } catch (error) {
