@@ -97,6 +97,56 @@ const resolvers = {
             return lote;
         },
 
+        obtenerStockEsponjas: async () => {
+            let listaProductos = await Producto.find({});
+            let stockProductos = await StockProducto.find({});            
+    
+            let lotesEsponjas = [];
+
+            stockProductos.forEach(function(loteProducto) {
+                listaProductos.forEach(function(producto) {
+                    if (producto.id == loteProducto.producto && producto.categoria == 'Esponjas' && loteProducto.estado != 'Terminado') {
+                        lotesEsponjas.push({
+                            lote: loteProducto.lote,
+                            loteID: loteProducto.id,
+                            estado: loteProducto.estado,
+                            cantidad: loteProducto.cantidad,
+                            producto: producto.nombre,
+                            caja: producto.caja,
+                            cantCaja: producto.cantCaja
+                        })
+                    }
+                })
+            })
+
+            return lotesEsponjas;
+        },
+
+        obtenerProductosTerminados: async () => {
+            let listaProductos = await Producto.find({});
+            let stockProductos = await StockProducto.find({});
+
+            let productos = [];
+
+            stockProductos.forEach(function(loteProducto) {
+                listaProductos.forEach(function(producto) {
+                    if (producto.id == loteProducto.producto && loteProducto.estado == 'Terminado') {
+                        productos.push({
+                            lote: loteProducto.lote,
+                            loteID: loteProducto.id,
+                            estado: loteProducto.estado,
+                            cantidad: loteProducto.cantidad,
+                            producto: producto.nombre,
+                            caja: producto.caja,
+                            cantCaja: producto.cantCaja
+                        })
+                    }
+                })
+            })
+
+            return productos;
+        },
+
         existeProductoStock: async (_, { id }) => {
             // Comprobar su existencia
             const lote = await StockProducto.findOne({producto: id})
@@ -138,7 +188,7 @@ const resolvers = {
 
         obtenerInsumoEnStock: async (_, { id }) => {
             const insumo = await StockInsumo.findById(id);
-
+            
             if(!insumo) {
                 throw new Error('El insumos no existe en el Stock');
             }
@@ -154,6 +204,32 @@ const resolvers = {
                 return true
             } else {
                 return false
+            }
+        },
+
+        obtneterStockInsumosPorCategoria: async (_, { input }) => {
+            try {
+                const stock = await StockInsumo.find({});
+                const listaInsumos = await Insumo.find({});
+
+                let insumos = [];
+                stock.forEach(function(lote) {
+                    listaInsumos.forEach(function(insumo) {
+                        if (insumo.id == lote.insumo && insumo.categoria == input) {
+                            insumos.push({
+                                id: lote.id,
+                                lote: lote.lote,
+                                insumo: insumo.nombre,
+                                insumoID: insumo.id,
+                                cantidad: lote.cantidad
+                            })
+                        }
+                    })
+                })
+
+               return insumos;                
+            } catch (error) {
+                console.log(error)
             }
         },
 
@@ -353,56 +429,6 @@ const resolvers = {
 
             return registro;
         },
-
-        obtenerStockEsponjas: async () => {
-            let listaProductos = await Producto.find({});
-            let stockProductos = await StockProducto.find({});            
-    
-            let lotesEsponjas = [];
-
-            stockProductos.forEach(function(loteProducto) {
-                listaProductos.forEach(function(producto) {
-                    if (producto.id == loteProducto.producto && producto.categoria == 'Esponjas' && loteProducto.estado != 'Terminado') {
-                        lotesEsponjas.push({
-                            lote: loteProducto.lote,
-                            loteID: loteProducto.id,
-                            estado: loteProducto.estado,
-                            cantidad: loteProducto.cantidad,
-                            producto: producto.nombre,
-                            caja: producto.caja,
-                            cantCaja: producto.cantCaja
-                        })
-                    }
-                })
-            })
-
-            return lotesEsponjas;
-        },
-
-        obtenerProductosTerminados: async () => {
-            let listaProductos = await Producto.find({});
-            let stockProductos = await StockProducto.find({});
-
-            let productos = [];
-
-            stockProductos.forEach(function(loteProducto) {
-                listaProductos.forEach(function(producto) {
-                    if (producto.id == loteProducto.producto && loteProducto.estado == 'Terminado') {
-                        productos.push({
-                            lote: loteProducto.lote,
-                            loteID: loteProducto.id,
-                            estado: loteProducto.estado,
-                            cantidad: loteProducto.cantidad,
-                            producto: producto.nombre,
-                            caja: producto.caja,
-                            cantCaja: producto.cantCaja
-                        })
-                    }
-                })
-            })
-
-            return productos;
-        }
     },
     
     Mutation: {
@@ -504,7 +530,8 @@ const resolvers = {
         nuevoProductoStock: async (_, {input}) => {
 
             // Verificar la existencia del producto en stock
-            const { lote, producto } = input;
+            const { lote, producto, cantidad } = input;
+            
             const existeLote = await StockProducto.findOne({lote});
             if (existeLote && existeLote.producto == producto && existeLote.estado == "Proceso") {
 
@@ -517,12 +544,16 @@ const resolvers = {
               
             } else {
                 try {
-                    const producto = new StockProducto(input);
-
-                    //Guardar en db
-                    const resultado = await producto.save();
-
-                    return resultado;
+                    if (cantidad > 0) {
+                        const producto = new StockProducto(input);
+    
+                        //Guardar en db
+                        const resultado = await producto.save();
+    
+                        return resultado;
+                    } else {
+                        throw new Error('La cantidad debe ser mayor a 0');
+                    } 
                 } catch (error) {
                     console.log(error)
                 }

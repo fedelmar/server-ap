@@ -45,6 +45,15 @@ const typeDefs = gql`
         cantidad: Int
     }
 
+    type sInsumoCompleto {
+        id: ID
+        lote: String
+        insumo: String
+        insumoID: ID
+        cantidad: Int
+        categoria: String
+    }
+
     type lEsponjas {
         lote: String
         loteID: String
@@ -284,6 +293,7 @@ const typeDefs = gql`
         obtenerStockInsumos: [sInsumo]
         obtenerInsumoEnStock(id: ID!): sInsumo 
         existeInsumoStock(id: ID!): Boolean
+        obtneterStockInsumosPorCategoria(input: String!): [sInsumoCompleto]
 
         # Planillas de control de Salidas
         obtenerRegistrosSalidas: [Salida]
