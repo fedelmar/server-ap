@@ -504,7 +504,8 @@ const resolvers = {
         nuevoProductoStock: async (_, {input}) => {
 
             // Verificar la existencia del producto en stock
-            const { lote, producto } = input;
+            const { lote, producto, cantidad } = input;
+            
             const existeLote = await StockProducto.findOne({lote});
             if (existeLote && existeLote.producto == producto && existeLote.estado == "Proceso") {
 
@@ -517,12 +518,16 @@ const resolvers = {
               
             } else {
                 try {
-                    const producto = new StockProducto(input);
-
-                    //Guardar en db
-                    const resultado = await producto.save();
-
-                    return resultado;
+                    if (cantidad > 0) {
+                        const producto = new StockProducto(input);
+    
+                        //Guardar en db
+                        const resultado = await producto.save();
+    
+                        return resultado;
+                    } else {
+                        throw new Error('La cantidad debe ser mayor a 0');
+                    } 
                 } catch (error) {
                     console.log(error)
                 }
