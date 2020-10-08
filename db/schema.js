@@ -153,6 +153,7 @@ const typeDefs = gql`
         descCajas: Int
         guardado: Int
         descarte: Int
+        auxiliar: String
         observaciones: String
     }
 
@@ -253,6 +254,7 @@ const typeDefs = gql`
         descCajas: Int
         guardado: Int!
         descarte: Int!
+        auxiliar: String
         observaciones: String
     }
 

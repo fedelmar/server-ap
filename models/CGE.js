@@ -49,6 +49,9 @@ const CFESchema = mongoose.Schema({
         type: Number,
         required: true,
     },
+    auxiliar: {
+        type: String
+    },
     observaciones: {
         type: String
     },

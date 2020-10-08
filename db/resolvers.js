@@ -955,7 +955,11 @@ const resolvers = {
             let loteTerminado = await StockProducto.findOne({lote: lote, estado: "Terminado"});
             
             try {
-                // Actualizar info en el lote del producto                
+                if(!infoLote) {
+                    throw new Error('Lote no encontrado');
+                }
+                
+                // Actualizar info en el lote del producto
                 if(infoLote.cantidad > guardado) {
                     infoLote.cantidad -= guardado;
                     await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true})
