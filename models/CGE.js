@@ -42,12 +42,10 @@ const CFESchema = mongoose.Schema({
         type: Number
     },
     guardado: {
-        type: Number,
-        required: true,
+        type: Number
     },
     descarte: {
-        type: Number,
-        required: true,
+        type: Number
     },
     auxiliar: {
         type: String
@@ -55,6 +53,10 @@ const CFESchema = mongoose.Schema({
     observaciones: {
         type: String
     },
+    estado: {
+        type: Boolean,
+        default: true
+    }
 });
 
 module.exports = mongoose.model('CGE', CFESchema);

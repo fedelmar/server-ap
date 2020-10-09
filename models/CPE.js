@@ -39,16 +39,18 @@ const CPESchema = mongoose.Schema({
         trim: true
     },
     cantProducida: {
-        type: Number,
-        required: true,
+        type: Number
     },
     cantDescarte: {
-        type: Number,
-        required: true,
+        type: Number
     },
     observaciones: {
         type: String
     },
+    estado: {
+        type: Boolean,
+        default: true
+    }
 });
 
 module.exports = mongoose.model('CPE', CPESchema);

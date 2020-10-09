@@ -138,6 +138,7 @@ const typeDefs = gql`
         cantProducida: Int
         cantDescarte: Int
         observaciones: String
+        estado: Boolean
     }
 
     type CGE {
@@ -155,6 +156,7 @@ const typeDefs = gql`
         descarte: Int
         auxiliar: String
         observaciones: String
+        estado: Boolean
     }
 
     input UsuarioInput {
@@ -237,9 +239,10 @@ const typeDefs = gql`
         producto: String!
         lBolsa: String
         lEsponja: String
-        cantProducida: Int!
-        cantDescarte: Int!
+        cantProducida: Int
+        cantDescarte: Int
         observaciones: String
+        estado: Boolean
     }
 
     input CGEInput {
@@ -256,6 +259,7 @@ const typeDefs = gql`
         descarte: Int!
         auxiliar: String
         observaciones: String
+        estado: Boolean
     }
 
     enum EstadoPedido {
@@ -370,7 +374,7 @@ const typeDefs = gql`
         eliminarRegistroSalida(id: ID!): String
 
         # Control de produccion de Esponjas
-        nuevoRegistroCE(input: CPEInput): CPE
+        nuevoRegistroCE(id: ID, input: CPEInput): CPE
         actualizarRegistroCE(id: ID!, input: CPEInput): CPE
         eliminarRegistroCE(id: ID!): String
 
