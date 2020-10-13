@@ -900,10 +900,12 @@ const resolvers = {
             return "Registro eliminado.";
         },
 
-        nuevoRegistroCE: async (_, {input}) => {
+        nuevoRegistroCE: async (_, {id, input}) => {
+            
             const { lote, cantDescarte } = input;
             let infoLote = await StockProducto.findOne({ lote: lote, estado: {$ne: "Terminado"} });
-            
+            let resultado;
+            const finalizar = Date.now();
             try {
                 
                 // Actualizar el lote segun las esponjas descartadas
@@ -911,10 +913,16 @@ const resolvers = {
                     infoLote.cantidad -= cantDescarte;
                     await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true})
                 }
-              
+
                 //Guardar registro en DB
-                const registro = new CPE(input);
-                const resultado = await registro.save();
+                if (id && infoLote) {
+                    input.estado = false;
+                    input.modificado = finalizar;
+                    resultado = await CPE.findByIdAndUpdate({_id: id}, input, {new: true});
+                } else {                                  
+                    const registro = new CPE(input);
+                    resultado = await registro.save();
+                }
 
                 return resultado;
             } catch (error) {

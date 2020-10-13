@@ -1,9 +1,12 @@
 const mongoose = require('mongoose');
 
 const CPESchema = mongoose.Schema({
-    fecha: {
+    creado: {
         type: Date,
         default: new Date(Date.now())
+    },
+    modificado: {
+        type: Date,
     },
     operario: {
         type: String,
@@ -14,14 +17,6 @@ const CPESchema = mongoose.Schema({
         type: String,
         required: true,
         trim: true
-    },
-    horaInicio: {
-        type: String,
-        required: true
-    },
-    horaCierre: {
-        type: String,
-        required: true
     },
     producto: {
         type: String,
@@ -39,16 +34,18 @@ const CPESchema = mongoose.Schema({
         trim: true
     },
     cantProducida: {
-        type: Number,
-        required: true,
+        type: Number
     },
     cantDescarte: {
-        type: Number,
-        required: true,
+        type: Number
     },
     observaciones: {
         type: String
     },
+    estado: {
+        type: Boolean,
+        default: true
+    }
 });
 
 module.exports = mongoose.model('CPE', CPESchema);
