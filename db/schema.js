@@ -127,11 +127,10 @@ const typeDefs = gql`
 
     type CPE {
         id: ID
-        fecha: Date
+        creado: Date
+        modificado: Date
         operario: String
         lote: String
-        horaInicio: String
-        horaCierre: String
         producto: String
         lBolsa: String
         lEsponja: String
@@ -231,11 +230,8 @@ const typeDefs = gql`
     }
 
     input CPEInput {
-        fecha: Date
         operario: String!
         lote: String!
-        horaInicio: String!
-        horaCierre: String!
         producto: String!
         lBolsa: String
         lEsponja: String
@@ -243,6 +239,7 @@ const typeDefs = gql`
         cantDescarte: Int
         observaciones: String
         estado: Boolean
+        modificado: Date
     }
 
     input CGEInput {

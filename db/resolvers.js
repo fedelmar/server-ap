@@ -905,17 +905,21 @@ const resolvers = {
             const { lote, cantDescarte } = input;
             let infoLote = await StockProducto.findOne({ lote: lote, estado: {$ne: "Terminado"} });
             let resultado;
+            const finalizar = Date.now();
             try {
                 
                 // Actualizar el lote segun las esponjas descartadas
                 if (infoLote) {
                     infoLote.cantidad -= cantDescarte;
                     await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true})
+                } else {
+                    throw new Error('Lote ingresado no encontrado');
                 }
 
                 //Guardar registro en DB
-                if (id) {
+                if (id && infoLote) {
                     input.estado = false;
+                    input.modificado = finalizar;
                     resultado = await CPE.findByIdAndUpdate({_id: id}, input, {new: true});
                 } else {                                  
                     const registro = new CPE(input);
