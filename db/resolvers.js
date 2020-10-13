@@ -912,8 +912,6 @@ const resolvers = {
                 if (infoLote) {
                     infoLote.cantidad -= cantDescarte;
                     await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true})
-                } else {
-                    throw new Error('Lote ingresado no encontrado');
                 }
 
                 //Guardar registro en DB
