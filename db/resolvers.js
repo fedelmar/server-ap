@@ -233,6 +233,11 @@ const resolvers = {
             }
         },
 
+        obtenerInsumoPorLote: async (_, { input }) => {
+            const lote = await StockInsumo.findOne({lote: input});
+            return lote;
+        },
+
         obtenerCliente: async (_, {id}) => {
             //Verificar existencia
             const cliente = await Cliente.findById(id);
