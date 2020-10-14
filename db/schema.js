@@ -194,7 +194,7 @@ const typeDefs = gql`
     input sInsumoInput {
         insumo: ID
         lote: String
-        cantidad: Int    
+        cantidad: Int   
     }
 
     input ClienteInput {
@@ -297,6 +297,7 @@ const typeDefs = gql`
         obtenerInsumoEnStock(id: ID!): sInsumo 
         existeInsumoStock(id: ID!): Boolean
         obtneterStockInsumosPorCategoria(input: String!): [sInsumoCompleto]
+        obtenerInsumoPorLote(input: String!): sInsumo
 
         # Planillas de control de Salidas
         obtenerRegistrosSalidas: [Salida]
