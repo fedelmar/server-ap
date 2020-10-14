@@ -230,9 +230,9 @@ const typeDefs = gql`
     }
 
     input CPEInput {
-        operario: String!
-        lote: String!
-        producto: String!
+        operario: String
+        lote: String
+        producto: String
         lBolsa: String
         lEsponja: String
         cantProducida: Int
