@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
 
 const CFESchema = mongoose.Schema({
-    fecha: {
+    creado: {
         type: Date,
-        default: new Date(Date.now())
+    },
+    modificado: {
+        type: Date,
     },
     operario: {
         type: String,
@@ -24,14 +26,6 @@ const CFESchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'StockProducto'
-    },
-    horaInicio: {
-        type: String,
-        required: true
-    },
-    horaCierre: {
-        type: String,
-        required: true
     },
     caja: {
         type: String,
