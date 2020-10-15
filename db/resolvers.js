@@ -924,7 +924,9 @@ const resolvers = {
                     input.estado = false;
                     input.modificado = finalizar;
                     resultado = await CPE.findByIdAndUpdate({_id: id}, input, {new: true});
-                } else {                                  
+                } else {
+                    const iniciar = Date.now();
+                    input.creado = iniciar;                                  
                     const registro = new CPE(input);
                     resultado = await registro.save();
                 }
