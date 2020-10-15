@@ -142,13 +142,12 @@ const typeDefs = gql`
 
     type CGE {
         id: ID
-        fecha: Date
+        creado: Date
+        modificado: Date
         operario: String
         lote: String
         producto: String
         loteID: String
-        horaInicio: String
-        horaCierre: String
         caja: String
         descCajas: Int
         guardado: Int
@@ -243,17 +242,14 @@ const typeDefs = gql`
     }
 
     input CGEInput {
-        fecha: Date
-        operario: String!
-        lote: String!
+        operario: String
+        lote: String
         producto: String
         loteID: String
-        horaInicio: String!
-        horaCierre: String!
         caja: String
         descCajas: Int
-        guardado: Int!
-        descarte: Int!
+        guardado: Int
+        descarte: Int
         auxiliar: String
         observaciones: String
         estado: Boolean
@@ -377,7 +373,7 @@ const typeDefs = gql`
         eliminarRegistroCE(id: ID!): String
 
         # Control de guardado de Esponjas
-        nuevoRegistroGE(input: CGEInput): CGE
+        nuevoRegistroGE(id: ID, input: CGEInput): CGE
         actualizarRegistroGE(id: ID!, input: CGEInput): CGE
         eliminarRegistroGE(id: ID!): String
 

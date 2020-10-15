@@ -963,18 +963,18 @@ const resolvers = {
             return "Registro eliminado.";
         },
 
-        nuevoRegistroGE: async (_, {input}) => {
+        nuevoRegistroGE: async (_, { id, input}) => {
             const { guardado, descarte, lote } = input;
             
             let infoLote = await StockProducto.findOne({ lote: lote, estado: {$ne: "Terminado"} });
             let loteTerminado = await StockProducto.findOne({lote: lote, estado: "Terminado"});
-            
+     
             try {
                 if(!infoLote) {
                     throw new Error('Lote no encontrado');
                 }
                 
-                // Actualizar info en el lote del producto
+               if (id) { // Actualizar info en el lote del producto
                 if(infoLote.cantidad > guardado) {
                     infoLote.cantidad -= guardado;
                     await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true})
@@ -1003,12 +1003,21 @@ const resolvers = {
                         await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true});
                     }
                 }
-                                
                 // Crear y guardar nuevo registro
+                const finalizar = Date.now();
+                input.modificado = finalizar;
+                input.estado = false;
+                resultado = await CGE.findByIdAndUpdate({_id: id}, input, {new: true});
+
+            } else {
+                const iniciar = Date.now();
+                input.creado = iniciar;
                 const registro = new CGE(input);
-                const resultado = await registro.save();
+                resultado = await registro.save();
+            } 
 
             return resultado;
+         
             } catch (error) {
                 console.log(error);
             }
