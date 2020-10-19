@@ -9,27 +9,22 @@ const CFESchema = mongoose.Schema({
     },
     operario: {
         type: String,
-        required: true,
         trim: true
     },
     lote: {
         type: String,
-        required: true,
         trim: true
     },
     producto: {
         type: String,
-        required: true,
         trim: true
     },
     loteID: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
         ref: 'StockProducto'
     },
     caja: {
         type: String,
-        required: true,
         trim: true
     },
     descCajas: {
