@@ -275,6 +275,7 @@ const typeDefs = gql`
         operario: String
         lote: String
         producto: String
+        productoID: String
         lTapon: String
         lPlaca: String
         lPcm: String
@@ -413,6 +414,11 @@ const typeDefs = gql`
         nuevoRegistroGE(id: ID, input: CGEInput): CGE
         actualizarRegistroGE(id: ID!, input: CGEInput): CGE
         eliminarRegistroGE(id: ID!): String
+
+        # Control de produccion de Placas
+        nuevoRegistroPP(id: ID, input: CPPInput): CPP
+      
+
 
     }
 `;

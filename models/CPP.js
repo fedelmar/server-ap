@@ -22,15 +22,15 @@ const CPPSchema = mongoose.Schema({
         required: true,
         trim: true
     },
-    tapon: {
+    lTapon: {
         type: String,
         trim: true
     },
-    placa: {
+    lPlaca: {
         type: String,
         trim: true
     },
-    pcm: {
+    lPcm: {
         type: String,
         trim: true
     },

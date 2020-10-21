@@ -7,6 +7,7 @@ const StockInsumo = require('../models/StockInsumos');
 const StockProducto = require('../models/StockProductos');
 const CPE = require('../models/CPE');
 const CGE = require('../models/CGE');
+const CPP = require('../models/CPP');
 const Salida = require('../models/Salidas');
 
 
@@ -903,6 +904,47 @@ const resolvers = {
             registro = await Salida.findByIdAndDelete({ _id: id });
 
             return "Registro eliminado.";
+        },
+
+        nuevoRegistroPP: async (_, {id, input}) => {
+
+            const {lote, cantDescarte, cantProducida, productoID } = input;
+            let infoLote = await StockProducto.findOne({ lote: lote, estado: {$ne: "Terminado"}});
+
+            try {
+                if (id) {
+                    if (infoLote) {
+                        //Actualizar lote con datos de input
+                        infoLote.cantidad += cantProducida - cantDescarte;
+                        await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true})
+                    } else {
+                        //Crear nuevo lote
+                        const nuevoLote = {
+                            lote,
+                            estado: "Proceso",
+                            cantidad: cantProducida - cantDescarte,
+                            producto: productoID                        
+                        }
+                        const loteTermiado = new StockProducto(nuevoLote);
+                        await loteTermiado.save();
+                    }
+
+                    const modificado = Date.now();
+                    input.modificado = modificado;
+                    input.estado = false;
+                    resultado = await CPP.findByIdAndUpdate({_id: id}, input, {new: true});
+
+                } else {
+                    const creado = Date.now();
+                    input.creado = creado;                                  
+                    const registro = new CPP(input);
+                    resultado = await registro.save();
+                }
+
+                return resultado;
+            } catch (error) {
+                console.log(error)
+            }
         },
 
         nuevoRegistroCE: async (_, {id, input}) => {
