@@ -157,6 +157,22 @@ const typeDefs = gql`
         estado: Boolean
     }
 
+    type CPP {
+        id: ID
+        creado: Date
+        modificado: Date
+        operario: String
+        lote: String
+        producto: String
+        lTapon: String
+        lPlaca: String
+        lPcm: String
+        cantProducida: Int
+        cantDescarte: Int
+        observaciones: String
+        estado: Boolean
+    }
+
     input UsuarioInput {
         nombre: String!
         apellido: String!
@@ -255,6 +271,19 @@ const typeDefs = gql`
         estado: Boolean
     }
 
+    input CPPInput {
+        operario: String
+        lote: String
+        producto: String
+        lTapon: String
+        lPlaca: String
+        lPcm: String
+        cantProducida: Int
+        cantDescarte: Int
+        observaciones: String
+        estado: Boolean
+    }
+
     enum EstadoPedido {
         PENDIENTE
         COMPLETADO
@@ -332,6 +361,10 @@ const typeDefs = gql`
         nuevoUsuario(input: UsuarioInput): Usuario
         autenticarUsuario(input: AutenticarInput): Token
 
+        #-------------------------------#
+        ###### PRODUCTOS E INSUMOS ######
+        #-------------------------------#
+
         # Productos
         nuevoProducto(input: ProductoInput): Producto
         actualizarProducto(id: ID!, input: ProductoInput): Producto
@@ -361,6 +394,10 @@ const typeDefs = gql`
         nuevoPedido(input: PedidoInput): Pedido
         actualizarPedido(id: ID!, input: PedidoInput): Pedido
         eliminarPedido(id: ID!): String
+
+        #---------------------#
+        ###### REGISTROS ######
+        #---------------------#
 
         # Control de Salidas
         nuevoRegistroSalida(input: SalidaInput): Salida
