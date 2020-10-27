@@ -183,6 +183,22 @@ const typeDefs = gql`
         estado: Boolean
     }
 
+    type CGP {
+        id: ID
+        creado: Date
+        modificado: Date
+        operario: String
+        lote: String
+        producto: String
+        loteID: String
+        guardado: Int
+        descarte: Int
+        pallet: String
+        auxiliar: String
+        observaciones: String
+        estado: Boolean
+    }
+
     input UsuarioInput {
         nombre: String!
         apellido: String!
@@ -291,6 +307,19 @@ const typeDefs = gql`
         lPcm: String
         cantProducida: Int
         cantDescarte: Int
+        observaciones: String
+        estado: Boolean
+    }
+
+    input CGPInput {
+        operario: String
+        lote: String
+        producto: String
+        loteID: String
+        guardado: Int
+        descarte: Int
+        pallet: String
+        auxiliar: String
         observaciones: String
         estado: Boolean
     }
@@ -434,8 +463,13 @@ const typeDefs = gql`
 
         # Control de produccion de Placas
         nuevoRegistroPP(id: ID, input: CPPInput): CPP
-        actualizarRegistroPP(id: ID, input: CPPInput): CPP
+        actualizarRegistroPP(id: ID!, input: CPPInput): CPP
         eliminarRegistroPP(id: ID!): String
+
+        # Control de guardado de Placas
+        nuevoRegistroGP(id: ID, input: CGPInput): CGP
+        actualizarRegistroGP(id: ID, input: CGPInput): CGP
+        eliminarRegistroGP(id: ID!): String
 
         #---------------------#
         ######## Otros ########

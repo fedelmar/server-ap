@@ -8,6 +8,7 @@ const StockProducto = require('../models/StockProductos');
 const CPE = require('../models/CPE');
 const CGE = require('../models/CGE');
 const CPP = require('../models/CPP');
+const CGP = require('../models/CGP');
 const Salida = require('../models/Salidas');
 
 
