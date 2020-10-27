@@ -44,4 +44,4 @@ const CGPSchema = mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('CGP', CFESchema);
+module.exports = mongoose.model('CGP', CGPSchema);

@@ -1016,6 +1016,67 @@ const resolvers = {
             return "Registro eliminado.";
         },
 
+        nuevoRegistroGP: async (_, { id, input}) => {
+            const { guardado, descarte, lote } = input;
+            
+            let infoLote = await StockProducto.findOne({ lote: lote, estado: {$ne: "Terminado"} });
+            let loteTerminado = await StockProducto.findOne({lote: lote, estado: "Terminado"});
+     
+            try {
+                if(!infoLote) {
+                    throw new Error('Lote no encontrado');
+                }
+                
+                if (id) { // Actualizar info en el lote del producto
+                    if(infoLote.cantidad > guardado) {
+                        infoLote.cantidad -= guardado;
+                        await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true})
+                        if (loteTerminado) {
+                            loteTerminado.cantidad += guardado - descarte;
+                            await StockProducto.findByIdAndUpdate({_id: loteTerminado.id}, loteTerminado, {new: true});
+                        } else {
+                            // Crear nuevo lote terminado
+                            const nuevoLote = {
+                                lote: infoLote.lote,
+                                estado: "Terminado",
+                                cantidad: guardado - descarte,
+                                producto: infoLote.producto                        
+                            }
+                            const loteTermiado = new StockProducto(nuevoLote);
+                            await loteTermiado.save();
+                        }
+                    } else {
+                        if (loteTerminado) {
+                            loteTerminado.cantidad += guardado - descarte;
+                            await StockProducto.findByIdAndUpdate({_id: loteTerminado.id}, loteTerminado, {new: true});
+                            await StockProducto.findByIdAndDelete({_id: infoLote.id});
+                        } else {
+                            infoLote.estado = "Terminado";
+                            infoLote.cantidad -= descarte;
+                            await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true});
+                        }
+                    }
+                    // Crear y guardar nuevo registro
+                    const finalizar = Date.now();
+                    input.modificado = finalizar;
+                    input.estado = false;
+                    resultado = await CGP.findByIdAndUpdate({_id: id}, input, {new: true});
+
+                } else {
+                    const iniciar = Date.now();
+                    input.creado = iniciar;
+                    const registro = new CGP(input);
+                    resultado = await registro.save();
+                } 
+
+                return resultado;
+         
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
+
         nuevoRegistroCE: async (_, {id, input}) => {
             
             const { lote, cantDescarte } = input;
@@ -1085,49 +1146,49 @@ const resolvers = {
                     throw new Error('Lote no encontrado');
                 }
                 
-               if (id) { // Actualizar info en el lote del producto
-                if(infoLote.cantidad > guardado) {
-                    infoLote.cantidad -= guardado;
-                    await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true})
-                    if (loteTerminado) {
-                        loteTerminado.cantidad += guardado - descarte;
-                        await StockProducto.findByIdAndUpdate({_id: loteTerminado.id}, loteTerminado, {new: true});
-                    } else {
-                        // Crear nuevo lote terminado
-                        const nuevoLote = {
-                            lote: infoLote.lote,
-                            estado: "Terminado",
-                            cantidad: guardado - descarte,
-                            producto: infoLote.producto                        
+                if (id) { // Actualizar info en el lote del producto
+                    if(infoLote.cantidad > guardado) {
+                        infoLote.cantidad -= guardado;
+                        await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true})
+                        if (loteTerminado) {
+                            loteTerminado.cantidad += guardado - descarte;
+                            await StockProducto.findByIdAndUpdate({_id: loteTerminado.id}, loteTerminado, {new: true});
+                        } else {
+                            // Crear nuevo lote terminado
+                            const nuevoLote = {
+                                lote: infoLote.lote,
+                                estado: "Terminado",
+                                cantidad: guardado - descarte,
+                                producto: infoLote.producto                        
+                            }
+                            const loteTermiado = new StockProducto(nuevoLote);
+                            await loteTermiado.save();
                         }
-                        const loteTermiado = new StockProducto(nuevoLote);
-                        await loteTermiado.save();
-                    }
-                } else {
-                    if (loteTerminado) {
-                        loteTerminado.cantidad += guardado - descarte;
-                        await StockProducto.findByIdAndUpdate({_id: loteTerminado.id}, loteTerminado, {new: true});
-                        await StockProducto.findByIdAndDelete({_id: infoLote.id});
                     } else {
-                        infoLote.estado = "Terminado";
-                        infoLote.cantidad -= descarte;
-                        await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true});
+                        if (loteTerminado) {
+                            loteTerminado.cantidad += guardado - descarte;
+                            await StockProducto.findByIdAndUpdate({_id: loteTerminado.id}, loteTerminado, {new: true});
+                            await StockProducto.findByIdAndDelete({_id: infoLote.id});
+                        } else {
+                            infoLote.estado = "Terminado";
+                            infoLote.cantidad -= descarte;
+                            await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true});
+                        }
                     }
-                }
-                // Crear y guardar nuevo registro
-                const finalizar = Date.now();
-                input.modificado = finalizar;
-                input.estado = false;
-                resultado = await CGE.findByIdAndUpdate({_id: id}, input, {new: true});
+                    // Crear y guardar nuevo registro
+                    const finalizar = Date.now();
+                    input.modificado = finalizar;
+                    input.estado = false;
+                    resultado = await CGE.findByIdAndUpdate({_id: id}, input, {new: true});
 
-            } else {
-                const iniciar = Date.now();
-                input.creado = iniciar;
-                const registro = new CGE(input);
-                resultado = await registro.save();
-            } 
+                } else {
+                    const iniciar = Date.now();
+                    input.creado = iniciar;
+                    const registro = new CGE(input);
+                    resultado = await registro.save();
+                } 
 
-            return resultado;
+                return resultado;
          
             } catch (error) {
                 console.log(error);
@@ -1160,7 +1221,6 @@ const resolvers = {
             return "Registro eliminado.";
         }
     }
-
 }
 
 module.exports = resolvers;
