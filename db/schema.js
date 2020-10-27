@@ -64,6 +64,16 @@ const typeDefs = gql`
         cantCaja: Int
     }
 
+    type lPlacas {
+        lote: String
+        loteID: String
+        estado: String
+        caja: String
+        producto: String
+        catidad: Int
+        cantCaja: Int
+    }
+
     type ProductoTerminado {
         lote: String
         loteID: String
@@ -152,6 +162,38 @@ const typeDefs = gql`
         descCajas: Int
         guardado: Int
         descarte: Int
+        auxiliar: String
+        observaciones: String
+        estado: Boolean
+    }
+
+    type CPP {
+        id: ID
+        creado: Date
+        modificado: Date
+        operario: String
+        lote: String
+        producto: String
+        lTapon: String
+        lPlaca: String
+        lPcm: String
+        cantProducida: Int
+        cantDescarte: Int
+        observaciones: String
+        estado: Boolean
+    }
+
+    type CGP {
+        id: ID
+        creado: Date
+        modificado: Date
+        operario: String
+        lote: String
+        producto: String
+        loteID: String
+        guardado: Int
+        descarte: Int
+        pallet: String
         auxiliar: String
         observaciones: String
         estado: Boolean
@@ -255,6 +297,33 @@ const typeDefs = gql`
         estado: Boolean
     }
 
+    input CPPInput {
+        operario: String
+        lote: String
+        producto: String
+        productoID: String
+        lTapon: String
+        lPlaca: String
+        lPcm: String
+        cantProducida: Int
+        cantDescarte: Int
+        observaciones: String
+        estado: Boolean
+    }
+
+    input CGPInput {
+        operario: String
+        lote: String
+        producto: String
+        loteID: String
+        guardado: Int
+        descarte: Int
+        pallet: String
+        auxiliar: String
+        observaciones: String
+        estado: Boolean
+    }
+
     enum EstadoPedido {
         PENDIENTE
         COMPLETADO
@@ -273,6 +342,10 @@ const typeDefs = gql`
         obtenerUsuario: Usuario
         obtenerUsuarios: [Usuario]
 
+        #-------------------------------#
+        ###### PRODUCTOS E INSUMOS ######
+        #-------------------------------#
+
         # Productos
         obtenerProductos: [Producto]
         obtenerProducto(id: ID!): Producto
@@ -282,6 +355,7 @@ const typeDefs = gql`
         obtenerProductoStock(id: ID!): sProducto
         existeProductoStock(id: ID!): Boolean
         obtenerStockEsponjas: [lEsponjas]
+        obtenerStockPlacas: [lPlacas]
         obtenerProductosTerminados: [ProductoTerminado]
 
         # Insumos
@@ -295,6 +369,10 @@ const typeDefs = gql`
         obtneterStockInsumosPorCategoria(input: String!): [sInsumoCompleto]
         obtenerInsumoPorLote(input: String!): sInsumo
 
+        #---------------------#
+        ###### REGISTROS ######
+        #---------------------#
+
         # Planillas de control de Salidas
         obtenerRegistrosSalidas: [Salida]
         obtenerRegistroSalida(id: ID!): Salida
@@ -307,6 +385,18 @@ const typeDefs = gql`
         # Planillas de contol de guardado de Esponjas
         obtenerRegistrosGE: [CGE]
         obtenerRegistroGE(id: ID!): CGE
+
+        # Planillas de control de produccion de Placas
+        obtenerRegistrosPP: [CPP]
+        obtenerRegistroPP(id: ID!): CPP
+
+        # Planillas de contol de guardado de Placas
+        obtenerRegistrosGP: [CGP]
+        obtenerRegistroGP(id: ID!): CGP
+
+        #---------------------#
+        ######## Otros ########
+        #---------------------#
 
         # Clientes
         obtenerClientes: [Cliente]
@@ -332,6 +422,10 @@ const typeDefs = gql`
         nuevoUsuario(input: UsuarioInput): Usuario
         autenticarUsuario(input: AutenticarInput): Token
 
+        #-------------------------------#
+        ###### PRODUCTOS E INSUMOS ######
+        #-------------------------------#
+
         # Productos
         nuevoProducto(input: ProductoInput): Producto
         actualizarProducto(id: ID!, input: ProductoInput): Producto
@@ -352,15 +446,9 @@ const typeDefs = gql`
         actualizarInsumoStock(id: ID!, input: sInsumoInput): sInsumo
         eliminarInsumoStock(id: ID!): String
 
-        # Clientes
-        nuevoCliente(input: ClienteInput): Cliente
-        actualizarCliente(id: ID!, input: ClienteInput): Cliente
-        eliminarCliente(id: ID!): String
-
-        # Pedidos
-        nuevoPedido(input: PedidoInput): Pedido
-        actualizarPedido(id: ID!, input: PedidoInput): Pedido
-        eliminarPedido(id: ID!): String
+        #---------------------#
+        ###### REGISTROS ######
+        #---------------------#
 
         # Control de Salidas
         nuevoRegistroSalida(input: SalidaInput): Salida
@@ -377,6 +465,29 @@ const typeDefs = gql`
         actualizarRegistroGE(id: ID!, input: CGEInput): CGE
         eliminarRegistroGE(id: ID!): String
 
+        # Control de produccion de Placas
+        nuevoRegistroPP(id: ID, input: CPPInput): CPP
+        actualizarRegistroPP(id: ID!, input: CPPInput): CPP
+        eliminarRegistroPP(id: ID!): String
+
+        # Control de guardado de Placas
+        nuevoRegistroGP(id: ID, input: CGPInput): CGP
+        actualizarRegistroGP(id: ID, input: CGPInput): CGP
+        eliminarRegistroGP(id: ID!): String
+
+        #---------------------#
+        ######## Otros ########
+        #---------------------#
+
+        # Clientes
+        nuevoCliente(input: ClienteInput): Cliente
+        actualizarCliente(id: ID!, input: ClienteInput): Cliente
+        eliminarCliente(id: ID!): String
+
+        # Pedidos
+        nuevoPedido(input: PedidoInput): Pedido
+        actualizarPedido(id: ID!, input: PedidoInput): Pedido
+        eliminarPedido(id: ID!): String
     }
 `;
 
