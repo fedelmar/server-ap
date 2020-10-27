@@ -64,6 +64,16 @@ const typeDefs = gql`
         cantCaja: Int
     }
 
+    type lPlacas {
+        lote: String
+        loteID: String
+        estado: String
+        caja: String
+        producto: String
+        catidad: Int
+        cantCaja: Int
+    }
+
     type ProductoTerminado {
         lote: String
         loteID: String
@@ -316,6 +326,7 @@ const typeDefs = gql`
         obtenerProductoStock(id: ID!): sProducto
         existeProductoStock(id: ID!): Boolean
         obtenerStockEsponjas: [lEsponjas]
+        obtenerStockPlacas: [lPlacas]
         obtenerProductosTerminados: [ProductoTerminado]
 
         # Insumos
@@ -402,16 +413,6 @@ const typeDefs = gql`
         actualizarInsumoStock(id: ID!, input: sInsumoInput): sInsumo
         eliminarInsumoStock(id: ID!): String
 
-        # Clientes
-        nuevoCliente(input: ClienteInput): Cliente
-        actualizarCliente(id: ID!, input: ClienteInput): Cliente
-        eliminarCliente(id: ID!): String
-
-        # Pedidos
-        nuevoPedido(input: PedidoInput): Pedido
-        actualizarPedido(id: ID!, input: PedidoInput): Pedido
-        eliminarPedido(id: ID!): String
-
         #---------------------#
         ###### REGISTROS ######
         #---------------------#
@@ -435,6 +436,20 @@ const typeDefs = gql`
         nuevoRegistroPP(id: ID, input: CPPInput): CPP
         actualizarRegistroPP(id: ID, input: CPPInput): CPP
         eliminarRegistroPP(id: ID!): String
+
+        #---------------------#
+        ######## Otros ########
+        #---------------------#
+
+        # Clientes
+        nuevoCliente(input: ClienteInput): Cliente
+        actualizarCliente(id: ID!, input: ClienteInput): Cliente
+        eliminarCliente(id: ID!): String
+
+        # Pedidos
+        nuevoPedido(input: PedidoInput): Pedido
+        actualizarPedido(id: ID!, input: PedidoInput): Pedido
+        eliminarPedido(id: ID!): String
     }
 `;
 

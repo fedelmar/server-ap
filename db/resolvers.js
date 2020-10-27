@@ -123,6 +123,31 @@ const resolvers = {
             return lotesEsponjas;
         },
 
+        obtenerStockPlacas: async () => {
+            let listaProductos = await Producto.find({});
+            let stockProductos = await StockProducto.find({});            
+    
+            let lotesPlacas = [];
+
+            stockProductos.forEach(function(loteProducto) {
+                listaProductos.forEach(function(producto) {
+                    if (producto.id == loteProducto.producto && producto.categoria == 'Placas' && loteProducto.estado != 'Terminado') {
+                        lotesPlacas.push({
+                            lote: loteProducto.lote,
+                            loteID: loteProducto.id,
+                            estado: loteProducto.estado,
+                            cantidad: loteProducto.cantidad,
+                            producto: producto.nombre,
+                            caja: producto.caja,
+                            cantCaja: producto.cantCaja
+                        })
+                    }
+                })
+            })
+
+            return lotesPlacas;
+        },
+
         obtenerProductosTerminados: async () => {
             let listaProductos = await Producto.find({});
             let stockProductos = await StockProducto.find({});
