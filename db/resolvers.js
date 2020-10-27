@@ -1076,6 +1076,31 @@ const resolvers = {
             }
         },
 
+        actualizarRegistroGP: async (_, { id, input }) => {
+            // Buscar existencia de planilla por ID
+            let registro = await CGP.findById(id);
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            //Actualizar DB
+            registro = await CGP.findByIdAndUpdate( {_id: id}, input, { new: true });
+            
+            return registro; 
+        },
+
+        eliminarRegistroGP: async(_, { id }) => {
+            // Buscar existencia de planilla por ID
+            let registro = await CGP.findById(id);
+
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            registro = await CGP.findByIdAndDelete({ _id: id });
+
+            return "Registro eliminado.";
+        },
 
         nuevoRegistroCE: async (_, {id, input}) => {
             
