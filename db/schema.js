@@ -390,6 +390,10 @@ const typeDefs = gql`
         obtenerRegistrosPP: [CPP]
         obtenerRegistroPP(id: ID!): CPP
 
+        # Planillas de contol de guardado de Placas
+        obtenerRegistrosGP: [CGP]
+        obtenerRegistroGP(id: ID!): CGP
+
         #---------------------#
         ######## Otros ########
         #---------------------#

@@ -462,7 +462,6 @@ const resolvers = {
             return registro;
         },
 
-
         obtenerRegistrosPP: async () => {
 
             let registros = await CPP.find({});
@@ -472,6 +471,23 @@ const resolvers = {
 
         obtenerRegistroPP: async (_, {id}) => {
             let registro = await CPP.findById(id);
+            
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            return registro;
+        },
+
+        obtenerRegistrosGP: async () => {
+
+            let registros = await CGP.find({});
+            
+            return registros;
+        },
+
+        obtenerRegistroGP: async (_, {id}) => {
+            let registro = await CGP.findById(id);
             
             if(!registro) {
                 throw new Error('Registro no encontrado');
