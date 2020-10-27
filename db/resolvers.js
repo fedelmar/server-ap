@@ -435,6 +435,24 @@ const resolvers = {
 
             return registro;
         },
+
+
+        obtenerRegistrosPP: async () => {
+
+            let registros = await CPP.find({});
+            
+            return registros;
+        },
+
+        obtenerRegistroPP: async (_, {id}) => {
+            let registro = await CPP.findById(id);
+            
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            return registro;
+        },
     },
     
     Mutation: {
@@ -945,6 +963,31 @@ const resolvers = {
             } catch (error) {
                 console.log(error)
             }
+        },
+
+        actualizarRegistroPP: async (_, {id, input}) => {
+            // Buscar existencia de planilla por ID
+            let registro = await CPP.findById(id);
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            //Actualizar DB
+            registro = await CPE.findByIdAndUpdate( {_id: id}, input, { new: true });
+            
+            return registro; 
+        },
+
+        eliminarRegistroPP: async (_, { id }) => {
+            // Buscar existencia de planilla por ID
+            let registro = await CPP.findById(id);
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            registro = await CPP.findByIdAndDelete({ _id: id });
+
+            return "Registro eliminado.";
         },
 
         nuevoRegistroCE: async (_, {id, input}) => {

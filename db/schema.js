@@ -303,6 +303,10 @@ const typeDefs = gql`
         obtenerUsuario: Usuario
         obtenerUsuarios: [Usuario]
 
+        #-------------------------------#
+        ###### PRODUCTOS E INSUMOS ######
+        #-------------------------------#
+
         # Productos
         obtenerProductos: [Producto]
         obtenerProducto(id: ID!): Producto
@@ -325,6 +329,10 @@ const typeDefs = gql`
         obtneterStockInsumosPorCategoria(input: String!): [sInsumoCompleto]
         obtenerInsumoPorLote(input: String!): sInsumo
 
+        #---------------------#
+        ###### REGISTROS ######
+        #---------------------#
+
         # Planillas de control de Salidas
         obtenerRegistrosSalidas: [Salida]
         obtenerRegistroSalida(id: ID!): Salida
@@ -337,6 +345,14 @@ const typeDefs = gql`
         # Planillas de contol de guardado de Esponjas
         obtenerRegistrosGE: [CGE]
         obtenerRegistroGE(id: ID!): CGE
+
+        # Planillas de control de produccion de Placas
+        obtenerRegistrosPP: [CPP]
+        obtenerRegistroPP(id: ID!): CPP
+
+        #---------------------#
+        ######## Otros ########
+        #---------------------#
 
         # Clientes
         obtenerClientes: [Cliente]
@@ -417,9 +433,8 @@ const typeDefs = gql`
 
         # Control de produccion de Placas
         nuevoRegistroPP(id: ID, input: CPPInput): CPP
-      
-
-
+        actualizarRegistroPP(id: ID, input: CPPInput): CPP
+        eliminarRegistroPP(id: ID!): String
     }
 `;
 
