@@ -968,7 +968,6 @@ const resolvers = {
         },
 
         nuevoRegistroPP: async (_, {id, input}) => {
-            console.log(input)
             const {lote, cantDescarte, cantProducida, productoID, lPlacaID, lTaponID } = input;
             let infoLote = await StockProducto.findOne({ lote: lote, estado: {$ne: "Terminado"}});
 
