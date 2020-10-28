@@ -16,6 +16,7 @@ const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { findByIdAndUpdate } = require('../models/Usuarios');
 require('dotenv').config({ path:'variables.env' });
 
 const crearToken = (usuario, secreta, expiresIn) => {
@@ -967,12 +968,22 @@ const resolvers = {
         },
 
         nuevoRegistroPP: async (_, {id, input}) => {
-
-            const {lote, cantDescarte, cantProducida, productoID } = input;
+            console.log(input)
+            const {lote, cantDescarte, cantProducida, productoID, lPlacaID, lTaponID } = input;
             let infoLote = await StockProducto.findOne({ lote: lote, estado: {$ne: "Terminado"}});
 
             try {
                 if (id) {
+                    // Actualizar Stock de Insumos
+                    if (lPlacaID && lTaponID) {
+                        let lotePlacas = await StockInsumo.findById(lPlacaID);
+                        let loteTapon = await StockInsumo.findById(lTaponID);
+                        lotePlacas.cantidad -= cantProducida;
+                        loteTapon.cantidad -= cantProducida;
+                        await StockInsumo.findByIdAndUpdate({_id: lPlacaID}, lotePlacas, {new: true});
+                        await StockInsumo.findByIdAndUpdate({_id: lTaponID}, loteTapon, {new: true});
+                    }
+        
                     if (infoLote) {
                         //Actualizar lote con datos de input
                         infoLote.cantidad += cantProducida - cantDescarte;

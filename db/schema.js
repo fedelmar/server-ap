@@ -303,7 +303,9 @@ const typeDefs = gql`
         producto: String
         productoID: String
         lTapon: String
+        lTaponID: String
         lPlaca: String
+        lPlacaID: String
         lPcm: String
         cantProducida: Int
         cantDescarte: Int
