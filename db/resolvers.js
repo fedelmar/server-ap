@@ -1198,17 +1198,17 @@ const resolvers = {
                 
                 if (id) { // Actualizar info en el lote del producto
                     if(infoLote.cantidad > guardado) {
-                        infoLote.cantidad -= guardado;
+                        infoLote.cantidad -= guardado + descarte;
                         await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true})
                         if (loteTerminado) {
-                            loteTerminado.cantidad += guardado - descarte;
+                            loteTerminado.cantidad += guardado;
                             await StockProducto.findByIdAndUpdate({_id: loteTerminado.id}, loteTerminado, {new: true});
                         } else {
                             // Crear nuevo lote terminado
                             const nuevoLote = {
                                 lote: infoLote.lote,
                                 estado: "Terminado",
-                                cantidad: guardado - descarte,
+                                cantidad: guardado,
                                 producto: infoLote.producto                        
                             }
                             const loteTermiado = new StockProducto(nuevoLote);
@@ -1216,12 +1216,11 @@ const resolvers = {
                         }
                     } else {
                         if (loteTerminado) {
-                            loteTerminado.cantidad += guardado - descarte;
+                            loteTerminado.cantidad += guardado;
                             await StockProducto.findByIdAndUpdate({_id: loteTerminado.id}, loteTerminado, {new: true});
                             await StockProducto.findByIdAndDelete({_id: infoLote.id});
                         } else {
                             infoLote.estado = "Terminado";
-                            infoLote.cantidad -= descarte;
                             await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true});
                         }
                     }
