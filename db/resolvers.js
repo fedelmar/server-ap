@@ -1054,7 +1054,7 @@ const resolvers = {
                 }
                 
                 if (id) { // Actualizar info en el lote del producto
-                    if(infoLote.cantidad > guardado) {
+                    if(infoLote.cantidad > guardado + descarte) {
                         infoLote.cantidad -= guardado + descarte;
                         await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true})
                         if (loteTerminado) {
@@ -1197,7 +1197,7 @@ const resolvers = {
                 }
                 
                 if (id) { // Actualizar info en el lote del producto
-                    if(infoLote.cantidad > guardado) {
+                    if(infoLote.cantidad > guardado + descarte) {
                         infoLote.cantidad -= guardado + descarte;
                         await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true})
                         if (loteTerminado) {
