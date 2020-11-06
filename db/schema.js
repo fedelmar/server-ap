@@ -199,6 +199,13 @@ const typeDefs = gql`
         estado: Boolean
     }
 
+    type cantInsumo {
+        insumo: String
+        categoria: String
+        cantidad: Int
+        lotes: Int
+    }
+
     input UsuarioInput {
         nombre: String!
         apellido: String!
@@ -370,6 +377,7 @@ const typeDefs = gql`
         existeInsumoStock(id: ID!): Boolean
         obtneterStockInsumosPorCategoria(input: String!): [sInsumoCompleto]
         obtenerInsumoPorLote(input: String!): sInsumo
+        obtenerInsumosPorInsumo: [cantInsumo]
 
         #---------------------#
         ###### REGISTROS ######

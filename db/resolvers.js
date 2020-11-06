@@ -17,6 +17,7 @@ const { Kind } = require('graphql/language');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { findByIdAndUpdate } = require('../models/Usuarios');
+const StockInsumos = require('../models/StockInsumos');
 require('dotenv').config({ path:'variables.env' });
 
 const crearToken = (usuario, secreta, expiresIn) => {
@@ -264,6 +265,35 @@ const resolvers = {
         obtenerInsumoPorLote: async (_, { input }) => {
             const lote = await StockInsumo.findOne({lote: input});
             return lote;
+        },
+
+        obtenerInsumosPorInsumo: async () => {
+            const stockInsumos = await StockInsumo.find({});
+            const insumos = await Insumo.find({});
+            let respuesta = [];
+
+            insumos.forEach(function(insumo){
+                if (stockInsumos.find(i => i.insumo == insumo.id)) {
+                    respuesta.push({
+                        id: insumo.id,
+                        insumo: insumo.nombre,
+                        categoria: insumo.categoria,
+                        cantidad: 0,
+                        lotes: 0
+                    })
+                }
+            });
+
+            respuesta.forEach(function(insumo) {
+                stockInsumos.forEach(function(lote) {
+                    if(insumo.id == lote.insumo) {
+                        insumo.cantidad += lote.cantidad;
+                        insumo.lotes += 1;
+                    }
+                })
+            });
+
+            return respuesta;
         },
 
         obtenerCliente: async (_, {id}) => {
