@@ -1251,6 +1251,7 @@ const resolvers = {
                             await StockProducto.findByIdAndDelete({_id: infoLote.id});
                         } else {
                             infoLote.estado = "Terminado";
+                            infoLote.cantidad = guardado;
                             await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true});
                         }
                     }
