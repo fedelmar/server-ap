@@ -13,6 +13,10 @@ const StockInsumosSchema = mongoose.Schema({
     },
     cantidad: {
         type: Number
+    },
+    creado: {
+        type: Date,
+        default: Date.now()
     }
 });
 

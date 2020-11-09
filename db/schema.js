@@ -43,6 +43,7 @@ const typeDefs = gql`
         lote: String
         insumo: ID
         cantidad: Int
+        creado: Date
     }
 
     type sInsumoCompleto {
