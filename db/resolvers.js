@@ -629,8 +629,8 @@ const resolvers = {
             // Verificar la existencia del producto en stock
             const { lote, producto, cantidad } = input;
             
-            const existeLote = await StockProducto.findOne({lote});
-            if (existeLote && existeLote.producto == producto && existeLote.estado == "Proceso") {
+            const existeLote = await StockProducto.findOne({lote: lote, estado: {$ne: "Terminado"}});
+            if (existeLote && existeLote.producto == producto) {
 
                     // Si ya hay un lote en existencia, sumar la cantidad producida
                     let nuevoInput = input;
