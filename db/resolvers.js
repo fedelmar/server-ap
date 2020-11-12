@@ -1172,7 +1172,7 @@ const resolvers = {
                 }
 
                 //Guardar registro en DB
-                if (id && infoLote) {
+                if (id) {
                     input.estado = false;
                     input.modificado = finalizar;
                     resultado = await CPE.findByIdAndUpdate({_id: id}, input, {new: true});
