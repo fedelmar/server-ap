@@ -186,6 +186,53 @@ const resolvers = {
             }
         },
 
+        obtenerProductosTotal: async () => {
+            const stockProducto = await StockProducto.find({});
+            const productos = await Producto.find({});
+            let respuesta = [];
+
+            productos.forEach(function(producto){
+                if (stockProducto.find(i => i.producto == producto.id && i.estado === 'Terminado')) {
+                    respuesta.push({
+                        id: producto.id,
+                        producto: producto.nombre,
+                        cantidad: 0,
+                        lotes: 0,
+                        estado: 'Terminado'
+                    })
+                }
+                if (stockProducto.find(i => i.producto == producto.id && i.estado === 'Proceso')) {
+                    respuesta.push({
+                        id: producto.id,
+                        producto: producto.nombre,
+                        cantidad: 0,
+                        lotes: 0,
+                        estado: 'Proceso'
+                    })
+                }
+                if (stockProducto.find(i => i.producto == producto.id && i.estado === 'Reproceso')) {
+                    respuesta.push({
+                        id: producto.id,
+                        producto: producto.nombre,
+                        cantidad: 0,
+                        lotes: 0,
+                        estado: 'Reproceso'
+                    })
+                }
+            });
+
+            respuesta.forEach(function(producto) {
+                stockProducto.forEach(function(lote) {
+                    if(producto.id == lote.producto && producto.estado === lote.estado) {
+                        producto.cantidad += lote.cantidad;
+                        producto.lotes += 1;
+                    }
+                })
+            });
+
+            return respuesta;
+        },
+
         obtenerInsumos: async () => {
             try {
                 const insumos = await Insumo.find({});
