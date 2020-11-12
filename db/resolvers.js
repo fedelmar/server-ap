@@ -1250,9 +1250,11 @@ const resolvers = {
                             await StockProducto.findByIdAndUpdate({_id: loteTerminado.id}, loteTerminado, {new: true});
                             await StockProducto.findByIdAndDelete({_id: infoLote.id});
                         } else {
-                            infoLote.estado = "Terminado";
-                            infoLote.cantidad = guardado;
-                            await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true});
+                            if (guardado !== 0) {
+                                infoLote.estado = "Terminado";
+                                infoLote.cantidad = guardado;
+                                await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true});
+                            }
                         }
                     }
                     // Crear y guardar nuevo registro
