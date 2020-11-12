@@ -945,6 +945,21 @@ const resolvers = {
             for (let index = 0; index < lotes.length; index++) {
                 let lote = await StockProducto.findById({_id: lotes[index].loteID});
                 try {
+                    if (lote && lote.cantidad < lotes[index].cantidad) {
+                        if (lote) {
+                            throw new Error(`No hay disponibilidad de producto en el Lote: ${lote.lote}.`);
+                        } else {
+                            throw new Error(`Uno de los lotes no existe.`);
+                        }
+                    }
+                } catch (error) {
+                    return error;
+                }                      
+            }
+
+            for (let index = 0; index < lotes.length; index++) {
+                let lote = await StockProducto.findById({_id: lotes[index].loteID});
+                try {
                     if (lote && lote.cantidad >= lotes[index].cantidad) {
                         // Actualizar info en el lote del producto         
                         if(lote.cantidad > lotes[index].cantidad) {
