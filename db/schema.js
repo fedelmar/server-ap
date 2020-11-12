@@ -207,6 +207,13 @@ const typeDefs = gql`
         lotes: Int
     }
 
+    type cantProducto {
+        producto: String
+        estado: EstadoProducto
+        cantidad: Int
+        lotes: Int
+    }
+
     input UsuarioInput {
         nombre: String!
         apellido: String!
@@ -367,6 +374,7 @@ const typeDefs = gql`
         obtenerStockEsponjas: [lEsponjas]
         obtenerStockPlacas: [lPlacas]
         obtenerProductosTerminados: [ProductoTerminado]
+        obtenerProductosTotal: [cantProducto]
 
         # Insumos
         obtenerInsumos: [Insumo]
