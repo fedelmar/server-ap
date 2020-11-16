@@ -214,6 +214,16 @@ const typeDefs = gql`
         lotes: Int
     }
 
+    input Ingreso {
+        id: ID
+        lote: String
+        insumo: ID
+        cantidad: Int
+        remito: String
+        proveedor: String
+        creado: Date
+    }
+
     input UsuarioInput {
         nombre: String!
         apellido: String!
@@ -339,6 +349,14 @@ const typeDefs = gql`
         auxiliar: String
         observaciones: String
         estado: Boolean
+    }
+
+    input IngresoInput {
+        lote: String
+        insumo: ID
+        cantidad: Int
+        remito: String
+        proveedor: String
     }
 
     enum EstadoPedido {
@@ -473,6 +491,9 @@ const typeDefs = gql`
         nuevoRegistroSalida(input: SalidaInput): Salida
         actualizarRegistroSalida(id: ID!, input: SalidaInput): Salida
         eliminarRegistroSalida(id: ID!): String
+
+        # Control de Ingresos
+        nuevoRegistroIngreso(input: IngresoInput): Ingreso
 
         # Control de produccion de Esponjas
         nuevoRegistroCE(id: ID, input: CPEInput): CPE

@@ -10,6 +10,7 @@ const CGE = require('../models/CGE');
 const CPP = require('../models/CPP');
 const CGP = require('../models/CGP');
 const Salida = require('../models/Salidas');
+const Ingreso = require('../models/Ingresos');
 
 
 const { GraphQLScalarType } = require('graphql');
