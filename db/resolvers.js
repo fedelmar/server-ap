@@ -1090,6 +1090,18 @@ const resolvers = {
             return resultado;
         },
 
+        eliminarRegistroIngreso: async (_, { id }) => {
+            // Buscar existencia de planilla por ID
+            let registro = await Ingreso.findById(id);
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            registro = await Ingreso.findByIdAndDelete({ _id: id });
+
+            return "Registro eliminado.";
+        },
+
         nuevoRegistroPP: async (_, {id, input}) => {
             const {lote, cantDescarte, cantProducida, productoID, lPlacaID, lTaponID } = input;
             let infoLote = await StockProducto.findOne({ lote: lote, estado: {$ne: "Terminado"}});
