@@ -507,6 +507,24 @@ const resolvers = {
             return lotesSalidas;
         },
 
+
+        obtenerRegistrosIngresos: async () => {
+
+            let registros = await Ingreso.find({});
+
+            return registros;
+        },
+
+        obtenerRegistroIngreso: async (_, { id }) => {
+            let registro = await Ingreso.findById(id);
+
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            return registro;
+        },
+
         obtenerRegistrosCE: async () => {
 
             let registros = await CPE.find({});

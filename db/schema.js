@@ -413,7 +413,11 @@ const typeDefs = gql`
         # Planillas de control de Salidas
         obtenerRegistrosSalidas: [Salida]
         obtenerRegistroSalida(id: ID!): Salida
-        obtenerLotesPorSalida(id: ID!): [LoteSalida] 
+        obtenerLotesPorSalida(id: ID!): [LoteSalida]
+
+        # Planillas de control de Ingresos
+        obtenerRegistrosIngresos: [Ingreso]
+        obtenerRegistroIngreso(id: ID!): Ingreso 
 
         # Planillas de control de produccion de Esponjas
         obtenerRegistrosCE: [CPE]
