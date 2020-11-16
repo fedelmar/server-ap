@@ -214,7 +214,7 @@ const typeDefs = gql`
         lotes: Int
     }
 
-    input Ingreso {
+    type Ingreso {
         id: ID
         lote: String
         insumo: ID

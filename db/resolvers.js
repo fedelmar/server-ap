@@ -1060,6 +1060,36 @@ const resolvers = {
             return "Registro eliminado.";
         },
 
+        nuevoRegistroIngreso: async (_, { input }) => {
+
+            // Verificar del la existencia del insumo en Stock
+            const { lote, insumo, cantidad } = input;
+            const NuevoLote = {
+                insumo: insumo,
+                lote: lote,
+                cantidad: cantidad
+            }
+            const existeInsumo = await StockInsumo.findOne({lote});
+            if (existeInsumo) {
+                throw new Error('Ya existe ese lote');
+            }
+
+            try {
+                const respuesta = new StockInsumo(NuevoLote);
+
+                await respuesta.save();
+        
+            } catch (error) {
+                console.lot(error);
+            }
+            
+            // Guardar registro en DB
+            const registro = new Ingreso(input);
+            const resultado = await registro.save();
+
+            return resultado;
+        },
+
         nuevoRegistroPP: async (_, {id, input}) => {
             const {lote, cantDescarte, cantProducida, productoID, lPlacaID, lTaponID } = input;
             let infoLote = await StockProducto.findOne({ lote: lote, estado: {$ne: "Terminado"}});
