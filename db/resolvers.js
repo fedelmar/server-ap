@@ -1081,23 +1081,26 @@ const resolvers = {
 
             // Verificar del la existencia del insumo en Stock
             const { lote, cantidad, insumoID } = input;
-            const NuevoLote = {
-                insumo: insumoID,
-                lote: lote,
-                cantidad: cantidad
-            }
-            const existeInsumo = await StockInsumo.findOne({lote});
-            if (existeInsumo) {
-                throw new Error('Ya existe ese lote');
-            }
 
-            try {
-                const respuesta = new StockInsumo(NuevoLote);
-
-                await respuesta.save();
-        
-            } catch (error) {
-                console.lot(error);
+            if (lote) {
+                const NuevoLote = {
+                    insumo: insumoID,
+                    lote: lote,
+                    cantidad: cantidad
+                }
+                const existeInsumo = await StockInsumo.findOne({lote});
+                if (existeInsumo) {
+                    throw new Error('Ya existe ese lote');
+                }
+    
+                try {
+                    const respuesta = new StockInsumo(NuevoLote);
+    
+                    await respuesta.save();
+            
+                } catch (error) {
+                    console.log(error);
+                }   
             }
             
             // Guardar registro en DB
