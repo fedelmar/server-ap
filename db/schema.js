@@ -214,6 +214,17 @@ const typeDefs = gql`
         lotes: Int
     }
 
+    type Ingreso {
+        id: ID
+        lote: String
+        insumoID: ID
+        insumo: String
+        cantidad: Int
+        remito: String
+        proveedor: String
+        creado: Date
+    }
+
     input UsuarioInput {
         nombre: String!
         apellido: String!
@@ -341,6 +352,15 @@ const typeDefs = gql`
         estado: Boolean
     }
 
+    input IngresoInput {
+        lote: String
+        insumoID: ID
+        insumo: String
+        cantidad: Int
+        remito: String
+        proveedor: String
+    }
+
     enum EstadoPedido {
         PENDIENTE
         COMPLETADO
@@ -395,7 +415,11 @@ const typeDefs = gql`
         # Planillas de control de Salidas
         obtenerRegistrosSalidas: [Salida]
         obtenerRegistroSalida(id: ID!): Salida
-        obtenerLotesPorSalida(id: ID!): [LoteSalida] 
+        obtenerLotesPorSalida(id: ID!): [LoteSalida]
+
+        # Planillas de control de Ingresos
+        obtenerRegistrosIngresos: [Ingreso]
+        obtenerRegistroIngreso(id: ID!): Ingreso 
 
         # Planillas de control de produccion de Esponjas
         obtenerRegistrosCE: [CPE]
@@ -473,6 +497,10 @@ const typeDefs = gql`
         nuevoRegistroSalida(input: SalidaInput): Salida
         actualizarRegistroSalida(id: ID!, input: SalidaInput): Salida
         eliminarRegistroSalida(id: ID!): String
+
+        # Control de Ingresos
+        nuevoRegistroIngreso(input: IngresoInput): Ingreso
+        eliminarRegistroIngreso(id: ID!): String
 
         # Control de produccion de Esponjas
         nuevoRegistroCE(id: ID, input: CPEInput): CPE

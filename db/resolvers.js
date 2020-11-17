@@ -10,6 +10,7 @@ const CGE = require('../models/CGE');
 const CPP = require('../models/CPP');
 const CGP = require('../models/CGP');
 const Salida = require('../models/Salidas');
+const Ingreso = require('../models/Ingresos');
 
 
 const { GraphQLScalarType } = require('graphql');
@@ -504,6 +505,23 @@ const resolvers = {
             })
             
             return lotesSalidas;
+        },
+
+        obtenerRegistrosIngresos: async () => {
+
+            let registros = await Ingreso.find({});
+
+            return registros;
+        },
+
+        obtenerRegistroIngreso: async (_, { id }) => {
+            let registro = await Ingreso.findById(id);
+
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            return registro;
         },
 
         obtenerRegistrosCE: async () => {
@@ -1055,6 +1073,51 @@ const resolvers = {
             }
 
             registro = await Salida.findByIdAndDelete({ _id: id });
+
+            return "Registro eliminado.";
+        },
+
+        nuevoRegistroIngreso: async (_, { input }) => {
+
+            // Verificar del la existencia del insumo en Stock
+            const { lote, cantidad, insumoID } = input;
+
+            if (lote) {
+                const NuevoLote = {
+                    insumo: insumoID,
+                    lote: lote,
+                    cantidad: cantidad
+                }
+                const existeInsumo = await StockInsumo.findOne({lote});
+                if (existeInsumo) {
+                    throw new Error('Ya existe ese lote');
+                }
+    
+                try {
+                    const respuesta = new StockInsumo(NuevoLote);
+    
+                    await respuesta.save();
+            
+                } catch (error) {
+                    console.log(error);
+                }   
+            }
+            
+            // Guardar registro en DB
+            const registro = new Ingreso(input);
+            const resultado = await registro.save();
+
+            return resultado;
+        },
+
+        eliminarRegistroIngreso: async (_, { id }) => {
+            // Buscar existencia de planilla por ID
+            let registro = await Ingreso.findById(id);
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            registro = await Ingreso.findByIdAndDelete({ _id: id });
 
             return "Registro eliminado.";
         },
