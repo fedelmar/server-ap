@@ -217,7 +217,8 @@ const typeDefs = gql`
     type Ingreso {
         id: ID
         lote: String
-        insumo: ID
+        insumoID: ID
+        insumo: String
         cantidad: Int
         remito: String
         proveedor: String
@@ -353,7 +354,8 @@ const typeDefs = gql`
 
     input IngresoInput {
         lote: String
-        insumo: ID
+        insumoID: ID
+        insumo: String
         cantidad: Int
         remito: String
         proveedor: String

@@ -5,10 +5,14 @@ const IngresosSchema = mongoose.Schema({
         type: String,
         trim: true
     },
-    insumo: {
+    insumoID: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'Insumo'
+    },
+    insumo: {
+        type: String,
+        trim: true
     },
     cantidad: {
         type: Number

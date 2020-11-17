@@ -507,7 +507,6 @@ const resolvers = {
             return lotesSalidas;
         },
 
-
         obtenerRegistrosIngresos: async () => {
 
             let registros = await Ingreso.find({});
@@ -1081,9 +1080,9 @@ const resolvers = {
         nuevoRegistroIngreso: async (_, { input }) => {
 
             // Verificar del la existencia del insumo en Stock
-            const { lote, insumo, cantidad } = input;
+            const { lote, cantidad, insumoID } = input;
             const NuevoLote = {
-                insumo: insumo,
+                insumo: insumoID,
                 lote: lote,
                 cantidad: cantidad
             }
