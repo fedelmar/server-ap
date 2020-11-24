@@ -71,7 +71,7 @@ const typeDefs = gql`
         estado: String
         caja: String
         producto: String
-        catidad: Int
+        cantidad: Int
         cantCaja: Int
     }
 
