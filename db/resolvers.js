@@ -1178,10 +1178,9 @@ const resolvers = {
             if(!registro) {
                 throw new Error('Registro no encontrado');
             }
-
             //Actualizar DB
-            registro = await CPE.findByIdAndUpdate( {_id: id}, input, { new: true });
-            
+            registro = await CPP.findByIdAndUpdate( {_id: id}, input, { new: true });
+
             return registro; 
         },
 
