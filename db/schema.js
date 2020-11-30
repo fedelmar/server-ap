@@ -333,6 +333,7 @@ const typeDefs = gql`
         lPlaca: String
         lPlacaID: String
         lPcm: String
+        lPcmID: String
         cantProducida: Int
         cantDescarte: Int
         observaciones: String

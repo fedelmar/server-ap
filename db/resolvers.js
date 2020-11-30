@@ -1123,19 +1123,27 @@ const resolvers = {
         },
 
         nuevoRegistroPP: async (_, {id, input}) => {
-            const {lote, cantDescarte, cantProducida, productoID, lPlacaID, lTaponID } = input;
+            const {lote, cantDescarte, cantProducida, productoID, lPlacaID, lTaponID, lPcmID } = input;
             let infoLote = await StockProducto.findOne({ lote: lote, estado: {$ne: "Terminado"}});
-
             try {
                 if (id) {
                     // Actualizar Stock de Insumos
                     if (lPlacaID && lTaponID) {
                         let lotePlacas = await StockInsumo.findById(lPlacaID);
                         let loteTapon = await StockInsumo.findById(lTaponID);
-                        lotePlacas.cantidad -= cantProducida;
-                        loteTapon.cantidad -= cantProducida;
-                        await StockInsumo.findByIdAndUpdate({_id: lPlacaID}, lotePlacas, {new: true});
-                        await StockInsumo.findByIdAndUpdate({_id: lTaponID}, loteTapon, {new: true});
+                        await StockInsumo.findByIdAndDelete(lPcmID);
+                        if (lotePlacas.cantidad > cantProducida) {
+                            lotePlacas.cantidad -= cantProducida;
+                            await StockInsumo.findByIdAndUpdate({_id: lPlacaID}, lotePlacas, {new: true});    
+                        } else {
+                            await StockInsumo.findByIdAndDelete(lPlacaID)
+                        }
+                        if (loteTapon.cantidad > cantProducida) {
+                            loteTapon.cantidad -= cantProducida;
+                            await StockInsumo.findByIdAndUpdate({_id: lTaponID}, loteTapon, {new: true});
+                        } else {
+                            await StockInsumo.findByIdAndDelete(lTaponID)
+                        }                        
                     }
         
                     if (infoLote) {
