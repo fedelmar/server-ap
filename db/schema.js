@@ -338,6 +338,7 @@ const typeDefs = gql`
         cantDescarte: Int
         observaciones: String
         estado: Boolean
+        pcmFinalizado: Boolean
     }
 
     input CGPInput {

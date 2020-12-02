@@ -1123,15 +1123,17 @@ const resolvers = {
         },
 
         nuevoRegistroPP: async (_, {id, input}) => {
-            const {lote, cantDescarte, cantProducida, productoID, lPlacaID, lTaponID, lPcmID } = input;
+            const {lote, cantDescarte, cantProducida, productoID, lPlacaID, lTaponID, lPcmID, pcmFinalizado } = input;
             let infoLote = await StockProducto.findOne({ lote: lote, estado: {$ne: "Terminado"}});
             try {
                 if (id) {
                     // Actualizar Stock de Insumos
                     if (lPlacaID && lTaponID) {
                         let lotePlacas = await StockInsumo.findById(lPlacaID);
-                        let loteTapon = await StockInsumo.findById(lTaponID);
-                        await StockInsumo.findByIdAndDelete(lPcmID);
+                        let loteTapon = await StockInsumo.findById(lTaponID); 
+                        if (pcmFinalizado) {
+                            await StockInsumo.findByIdAndDelete(lPcmID);
+                        }
                         if (lotePlacas.cantidad > cantProducida) {
                             lotePlacas.cantidad -= cantProducida;
                             await StockInsumo.findByIdAndUpdate({_id: lPlacaID}, lotePlacas, {new: true});    
