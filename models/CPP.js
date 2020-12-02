@@ -40,6 +40,9 @@ const CPPSchema = mongoose.Schema({
     cantDescarte: {
         type: Number
     },
+    auxiliar: {
+        type: String
+    },
     observaciones: {
         type: String
     },

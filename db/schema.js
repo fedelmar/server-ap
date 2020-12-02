@@ -180,6 +180,7 @@ const typeDefs = gql`
         lPcm: String
         cantProducida: Int
         cantDescarte: Int
+        auxiliar: String
         observaciones: String
         estado: Boolean
     }
@@ -336,6 +337,7 @@ const typeDefs = gql`
         lPcmID: String
         cantProducida: Int
         cantDescarte: Int
+        auxiliar: String
         observaciones: String
         estado: Boolean
         pcmFinalizado: Boolean
