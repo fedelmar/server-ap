@@ -64,7 +64,7 @@ const resolvers = {
 
         obtenerProductos: async () => {
             try {
-                const productos = await Producto.find({});
+                const productos = await Producto.find({}).sort({$natural:-1});
                 return productos;
             } catch (error) {
                 console.log(error);
@@ -84,7 +84,7 @@ const resolvers = {
 
         obtenerProductosStock: async () => {
             try {
-                const lote = await StockProducto.find({});
+                const lote = await StockProducto.find({}).sort({$natural:-1});
                 return lote;
             } catch (error) {
                 console.log(error);
@@ -236,7 +236,7 @@ const resolvers = {
 
         obtenerInsumos: async () => {
             try {
-                const insumos = await Insumo.find({});
+                const insumos = await Insumo.find({}).sort({$natural:-1});
                 return insumos;
             } catch (error) {
                 console.log(error);
@@ -256,7 +256,7 @@ const resolvers = {
 
         obtenerStockInsumos: async () => {
             try {
-                const insumos = await StockInsumo.find({});
+                const insumos = await StockInsumo.find({}).sort({$natural:-1});
                 return insumos;
             } catch (error) {
                 console.log(error)
@@ -470,7 +470,7 @@ const resolvers = {
 
         obtenerRegistrosSalidas: async () => {
 
-            let registros = await Salida.find({});
+            let registros = await Salida.find({}).sort({$natural:-1});
 
             return registros;
         },
@@ -509,7 +509,7 @@ const resolvers = {
 
         obtenerRegistrosIngresos: async () => {
 
-            let registros = await Ingreso.find({});
+            let registros = await Ingreso.find({}).sort({$natural:-1});
 
             return registros;
         },
@@ -526,7 +526,7 @@ const resolvers = {
 
         obtenerRegistrosCE: async () => {
 
-            let registros = await CPE.find({});
+            let registros = await CPE.find({}).sort({$natural:-1});
             
             return registros;
         },
@@ -543,7 +543,7 @@ const resolvers = {
 
         obtenerRegistrosGE: async () => {
 
-            let registros = await CGE.find({});
+            let registros = await CGE.find({}).sort({$natural:-1});
             
             return registros;
         },
@@ -560,7 +560,7 @@ const resolvers = {
 
         obtenerRegistrosPP: async () => {
 
-            let registros = await CPP.find({});
+            let registros = await CPP.find({}).sort({$natural:-1});
             
             return registros;
         },
@@ -577,7 +577,7 @@ const resolvers = {
 
         obtenerRegistrosGP: async () => {
 
-            let registros = await CGP.find({});
+            let registros = await CGP.find({}).sort({$natural:-1});
             
             return registros;
         },
