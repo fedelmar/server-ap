@@ -26,6 +26,9 @@ const typeDefs = gql`
         producto: ID
         estado: EstadoProducto
         cantidad: Int
+        creado: Date
+        modificado: Date
+        responsable: String
     }
 
     type Token {
@@ -252,6 +255,8 @@ const typeDefs = gql`
         producto: ID
         estado: EstadoProducto
         cantidad: Int
+        modificado: Date
+        responsable: String
     }
 
     input InsumoInput {
