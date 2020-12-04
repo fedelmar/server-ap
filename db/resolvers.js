@@ -1121,7 +1121,7 @@ const resolvers = {
         },
 
         nuevoRegistroPP: async (_, {id, input}) => {
-            const {lote, cantDescarte, cantProducida, productoID, lPlacaID, lTaponID, lPcmID, pcmFinalizado } = input;
+            const {lote, cantDescarte, cantProducida, productoID, lPlacaID, lTaponID, lPcmID, pcmFinalizado, operario } = input;
             let infoLote = await StockProducto.findOne({ lote: lote, estado: {$ne: "Terminado"}});
             try {
                 if (id) {
@@ -1149,6 +1149,8 @@ const resolvers = {
                     if (infoLote) {
                         //Actualizar lote con datos de input
                         infoLote.cantidad += cantProducida - cantDescarte;
+                        infoLote.modificado = Date.now();
+                        infoLote.responsable = operario;
                         await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true})
                     } else {
                         //Crear nuevo lote
@@ -1156,20 +1158,20 @@ const resolvers = {
                             lote,
                             estado: "Proceso",
                             cantidad: cantProducida - cantDescarte,
-                            producto: productoID                        
+                            producto: productoID,
+                            responsable: operario,
+                            modificado: Date.now()                        
                         }
                         const loteTermiado = new StockProducto(nuevoLote);
                         await loteTermiado.save();
                     }
 
-                    const modificado = Date.now();
-                    input.modificado = modificado;
+                    input.modificado = Date.now();;
                     input.estado = false;
                     resultado = await CPP.findByIdAndUpdate({_id: id}, input, {new: true});
 
                 } else {
-                    const creado = Date.now();
-                    input.creado = creado;                                  
+                    input.creado = Date.now();                                  
                     const registro = new CPP(input);
                     resultado = await registro.save();
                 }
