@@ -17,8 +17,6 @@ const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { findByIdAndUpdate } = require('../models/Usuarios');
-const StockInsumos = require('../models/StockInsumos');
 require('dotenv').config({ path:'variables.env' });
 
 const crearToken = (usuario, secreta, expiresIn) => {
@@ -1005,8 +1003,7 @@ const resolvers = {
 
         nuevoRegistroSalida: async (_, {input}) => {
 
-            const { lotes } = input;
-
+            const { lotes, operario } = input;
             for (let index = 0; index < lotes.length; index++) {
                 let lote = await StockProducto.findById({_id: lotes[index].loteID});
                 try {
@@ -1029,6 +1026,8 @@ const resolvers = {
                         // Actualizar info en el lote del producto         
                         if(lote.cantidad > lotes[index].cantidad) {
                             lote.cantidad -= lotes[index].cantidad;
+                            lote.modificado = Date.now();
+                            lote.responsable = operario;
                             await StockProducto.findByIdAndUpdate({_id: lotes[index].loteID}, lote, {new: true})
                         } else {
                             await StockProducto.findByIdAndDelete({_id: lotes[index].loteID})
@@ -1123,7 +1122,7 @@ const resolvers = {
         },
 
         nuevoRegistroPP: async (_, {id, input}) => {
-            const {lote, cantDescarte, cantProducida, productoID, lPlacaID, lTaponID, lPcmID, pcmFinalizado } = input;
+            const {lote, cantDescarte, cantProducida, productoID, lPlacaID, lTaponID, lPcmID, pcmFinalizado, operario } = input;
             let infoLote = await StockProducto.findOne({ lote: lote, estado: {$ne: "Terminado"}});
             try {
                 if (id) {
@@ -1151,6 +1150,8 @@ const resolvers = {
                     if (infoLote) {
                         //Actualizar lote con datos de input
                         infoLote.cantidad += cantProducida - cantDescarte;
+                        infoLote.modificado = Date.now();
+                        infoLote.responsable = operario;
                         await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true})
                     } else {
                         //Crear nuevo lote
@@ -1158,20 +1159,20 @@ const resolvers = {
                             lote,
                             estado: "Proceso",
                             cantidad: cantProducida - cantDescarte,
-                            producto: productoID                        
+                            producto: productoID,
+                            responsable: operario,
+                            modificado: Date.now()                        
                         }
                         const loteTermiado = new StockProducto(nuevoLote);
                         await loteTermiado.save();
                     }
 
-                    const modificado = Date.now();
-                    input.modificado = modificado;
+                    input.modificado = Date.now();;
                     input.estado = false;
                     resultado = await CPP.findByIdAndUpdate({_id: id}, input, {new: true});
 
                 } else {
-                    const creado = Date.now();
-                    input.creado = creado;                                  
+                    input.creado = Date.now();                                  
                     const registro = new CPP(input);
                     resultado = await registro.save();
                 }
@@ -1207,7 +1208,7 @@ const resolvers = {
         },
 
         nuevoRegistroGP: async (_, { id, input}) => {
-            const { guardado, descarte, lote } = input;
+            const { guardado, descarte, lote, operario } = input;
             
             let infoLote = await StockProducto.findOne({ lote: lote, estado: {$ne: "Terminado"} });
             let loteTerminado = await StockProducto.findOne({lote: lote, estado: "Terminado"});
@@ -1217,12 +1218,17 @@ const resolvers = {
                     throw new Error('Lote no encontrado');
                 }
                 
-                if (id) { // Actualizar info en el lote del producto
+                if (id) { 
+                    infoLote.responsable = operario;
+                    infoLote.modificado = Date.now();
+                    // Actualizar info en el lote del producto
                     if(infoLote.cantidad > guardado + descarte) {
                         infoLote.cantidad -= guardado + descarte;
                         await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true})
                         if (loteTerminado) {
                             loteTerminado.cantidad += guardado;
+                            loteTerminado.modificado = Date.now();
+                            loteTerminado.responsable = operario;
                             await StockProducto.findByIdAndUpdate({_id: loteTerminado.id}, loteTerminado, {new: true});
                         } else {
                             // Crear nuevo lote terminado
@@ -1230,7 +1236,9 @@ const resolvers = {
                                 lote: infoLote.lote,
                                 estado: "Terminado",
                                 cantidad: guardado,
-                                producto: infoLote.producto                        
+                                producto: infoLote.producto,
+                                responsable: operario,
+                                modificado: Date.now()                        
                             }
                             const loteTermiado = new StockProducto(nuevoLote);
                             await loteTermiado.save();
@@ -1238,6 +1246,8 @@ const resolvers = {
                     } else {
                         if (loteTerminado) {
                             loteTerminado.cantidad += guardado;
+                            loteTerminado.modificado = Date.now();
+                            loteTerminado.responsable = operario;
                             await StockProducto.findByIdAndUpdate({_id: loteTerminado.id}, loteTerminado, {new: true});
                             await StockProducto.findByIdAndDelete({_id: infoLote.id});
                         } else {
@@ -1293,7 +1303,7 @@ const resolvers = {
 
         nuevoRegistroCE: async (_, {id, input}) => {
             
-            const { lote, cantDescarte } = input;
+            const { lote, cantDescarte, operario } = input;
             let infoLote = await StockProducto.findOne({ lote: lote, estado: {$ne: "Terminado"} });
             let resultado;
             const finalizar = Date.now();
@@ -1302,6 +1312,8 @@ const resolvers = {
                 // Actualizar el lote segun las esponjas descartadas
                 if (infoLote) {
                     infoLote.cantidad -= cantDescarte;
+                    infoLote.modificado = Date.now();
+                    infoLote.responsable = operario;
                     await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true})
                 }
 
@@ -1350,21 +1362,28 @@ const resolvers = {
         },
 
         nuevoRegistroGE: async (_, { id, input}) => {
-            const { guardado, descarte, lote } = input;
+            const { guardado, descarte, lote, operario } = input;
             
             let infoLote = await StockProducto.findOne({ lote: lote, estado: {$ne: "Terminado"} });
             let loteTerminado = await StockProducto.findOne({lote: lote, estado: "Terminado"});
-     
+
             try {
                 if(!infoLote) {
                     throw new Error('Lote no encontrado');
                 }
                 
-                if (id) { // Actualizar info en el lote del producto
+                if (id) {
+
+                    infoLote.modificado = Date.now();
+                    infoLote.responsable = operario;
+             
+                    // Actualizar info en el lote del producto
                     if(infoLote.cantidad > guardado + descarte) {
                         infoLote.cantidad -= guardado + descarte;
                         await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true})
                         if (loteTerminado) {
+                            loteTerminado.modificado = Date.now();
+                            loteTerminado.responsable = operario;                        
                             loteTerminado.cantidad += guardado;
                             await StockProducto.findByIdAndUpdate({_id: loteTerminado.id}, loteTerminado, {new: true});
                         } else {
@@ -1373,7 +1392,9 @@ const resolvers = {
                                 lote: infoLote.lote,
                                 estado: "Terminado",
                                 cantidad: guardado,
-                                producto: infoLote.producto                        
+                                producto: infoLote.producto,
+                                modificado: Date.now(),
+                                responsable: operario                        
                             }
                             const loteTermiado = new StockProducto(nuevoLote);
                             await loteTermiado.save();
@@ -1381,6 +1402,8 @@ const resolvers = {
                     } else {
                         if (loteTerminado) {
                             loteTerminado.cantidad += guardado;
+                            loteTerminado.modificado = Date.now();
+                            loteTerminado.responsable = operario;
                             await StockProducto.findByIdAndUpdate({_id: loteTerminado.id}, loteTerminado, {new: true});
                             await StockProducto.findByIdAndDelete({_id: infoLote.id});
                         } else {

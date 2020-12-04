@@ -16,7 +16,18 @@ const StockProductoSchema = mongoose.Schema({
     },
     cantidad: {
         type: Number
-    }    
+    },    
+    creado: {
+        type: Date,
+        default: Date.now()
+    },
+    modificado: {
+        type: Date,
+        default: Date.now()
+    },
+    responsable: {
+        type: String
+    }
 });
 
 module.exports = mongoose.model('StockProducto', StockProductoSchema);
