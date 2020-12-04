@@ -1302,7 +1302,7 @@ const resolvers = {
 
         nuevoRegistroCE: async (_, {id, input}) => {
             
-            const { lote, cantDescarte } = input;
+            const { lote, cantDescarte, operario } = input;
             let infoLote = await StockProducto.findOne({ lote: lote, estado: {$ne: "Terminado"} });
             let resultado;
             const finalizar = Date.now();
@@ -1311,6 +1311,8 @@ const resolvers = {
                 // Actualizar el lote segun las esponjas descartadas
                 if (infoLote) {
                     infoLote.cantidad -= cantDescarte;
+                    infoLote.modificado = Date.now();
+                    infoLote.responsable = operario;
                     await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true})
                 }
 
