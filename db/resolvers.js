@@ -1003,8 +1003,7 @@ const resolvers = {
 
         nuevoRegistroSalida: async (_, {input}) => {
 
-            const { lotes } = input;
-
+            const { lotes, operario } = input;
             for (let index = 0; index < lotes.length; index++) {
                 let lote = await StockProducto.findById({_id: lotes[index].loteID});
                 try {
@@ -1027,6 +1026,8 @@ const resolvers = {
                         // Actualizar info en el lote del producto         
                         if(lote.cantidad > lotes[index].cantidad) {
                             lote.cantidad -= lotes[index].cantidad;
+                            lote.modificado = Date.now();
+                            lote.responsable = operario;
                             await StockProducto.findByIdAndUpdate({_id: lotes[index].loteID}, lote, {new: true})
                         } else {
                             await StockProducto.findByIdAndDelete({_id: lotes[index].loteID})

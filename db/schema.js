@@ -297,6 +297,7 @@ const typeDefs = gql`
     }
 
     input SalidaInput {
+        operario: String
         cliente: String!
         remito: String!
         lotes: [lProductoInput]
