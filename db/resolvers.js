@@ -17,8 +17,6 @@ const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { findByIdAndUpdate } = require('../models/Usuarios');
-const StockInsumos = require('../models/StockInsumos');
 require('dotenv').config({ path:'variables.env' });
 
 const crearToken = (usuario, secreta, expiresIn) => {
@@ -1350,21 +1348,28 @@ const resolvers = {
         },
 
         nuevoRegistroGE: async (_, { id, input}) => {
-            const { guardado, descarte, lote } = input;
+            const { guardado, descarte, lote, operario } = input;
             
             let infoLote = await StockProducto.findOne({ lote: lote, estado: {$ne: "Terminado"} });
             let loteTerminado = await StockProducto.findOne({lote: lote, estado: "Terminado"});
-     
+
             try {
                 if(!infoLote) {
                     throw new Error('Lote no encontrado');
                 }
                 
-                if (id) { // Actualizar info en el lote del producto
+                if (id) {
+
+                    infoLote.modificado = Date.now();
+                    infoLote.responsable = operario;
+             
+                    // Actualizar info en el lote del producto
                     if(infoLote.cantidad > guardado + descarte) {
                         infoLote.cantidad -= guardado + descarte;
                         await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true})
                         if (loteTerminado) {
+                            loteTerminado.modificado = Date.now();
+                            loteTerminado.responsable = operario;                        
                             loteTerminado.cantidad += guardado;
                             await StockProducto.findByIdAndUpdate({_id: loteTerminado.id}, loteTerminado, {new: true});
                         } else {
@@ -1373,7 +1378,9 @@ const resolvers = {
                                 lote: infoLote.lote,
                                 estado: "Terminado",
                                 cantidad: guardado,
-                                producto: infoLote.producto                        
+                                producto: infoLote.producto,
+                                modificado: Date.now(),
+                                responsable: operario                        
                             }
                             const loteTermiado = new StockProducto(nuevoLote);
                             await loteTermiado.save();
@@ -1381,6 +1388,8 @@ const resolvers = {
                     } else {
                         if (loteTerminado) {
                             loteTerminado.cantidad += guardado;
+                            loteTerminado.modificado = Date.now();
+                            loteTerminado.responsable = operario;
                             await StockProducto.findByIdAndUpdate({_id: loteTerminado.id}, loteTerminado, {new: true});
                             await StockProducto.findByIdAndDelete({_id: infoLote.id});
                         } else {
