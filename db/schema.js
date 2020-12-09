@@ -238,8 +238,20 @@ const typeDefs = gql`
     }
 
     input AutenticarInput {
-        email: String!
+        nombre: String!
         password: String!
+    }
+    
+    input ActualizarUsuarioInput {
+        nombre: String
+        apellido: String
+        email: String
+        password: String!
+    }
+
+    input passwordInput {
+        password: String!
+        newPassword: String!
     }
 
     input ProductoInput {
@@ -475,6 +487,8 @@ const typeDefs = gql`
         # Usuarios
         nuevoUsuario(input: UsuarioInput): Usuario
         autenticarUsuario(input: AutenticarInput): Token
+        actualizarUsuario(id: ID!, input: ActualizarUsuarioInput): Usuario
+        modificarPassword(id: ID!, input: passwordInput): String
 
         #-------------------------------#
         ###### PRODUCTOS E INSUMOS ######
