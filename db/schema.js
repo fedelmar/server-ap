@@ -405,6 +405,7 @@ const typeDefs = gql`
         obtenerStockPlacas: [lPlacas]
         obtenerProductosTerminados: [ProductoTerminado]
         obtenerProductosTotal: [cantProducto]
+        obtenerUltimosModificados: [sProducto]
 
         # Insumos
         obtenerInsumos: [Insumo]

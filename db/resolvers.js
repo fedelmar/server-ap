@@ -232,6 +232,13 @@ const resolvers = {
             return respuesta;
         },
 
+        obtenerUltimosModificados: async () => {
+            const lote = await StockProducto.find({"creado":{$gt:new Date(Date.now() - 24*60*60 * 1000)}})
+                .sort({$natural:-1})
+                .limit(10);
+            return lote;
+        },
+
         obtenerInsumos: async () => {
             try {
                 const insumos = await Insumo.find({}).sort({$natural:-1});
