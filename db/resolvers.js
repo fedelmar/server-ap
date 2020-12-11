@@ -741,13 +741,15 @@ const resolvers = {
         nuevoProductoStock: async (_, {input}) => {
 
             // Verificar la existencia del producto en stock
-            const { lote, producto, cantidad } = input;
+            const { lote, producto, cantidad, responsable } = input;
             
             const existeLote = await StockProducto.findOne({lote: lote, estado: {$ne: "Terminado"}});
             if (existeLote && existeLote.producto == producto) {
 
                     // Si ya hay un lote en existencia, sumar la cantidad producida
                     let nuevoInput = input;
+                    nuevoInput.modificado = Date.now();
+                    nuevoInput.responsable = responsable;
                     nuevoInput.cantidad += existeLote.cantidad;
                     nuevoLote = await StockProducto.findByIdAndUpdate( {_id: existeLote.id },  nuevoInput, { new: true });  
                     
@@ -757,7 +759,8 @@ const resolvers = {
                 try {
                     if (cantidad > 0) {
                         const producto = new StockProducto(input);
-    
+                        input.responsable = responsable;
+                        input.modificado = Date.now();
                         //Guardar en db
                         const resultado = await producto.save();
     
@@ -1182,7 +1185,7 @@ const resolvers = {
                         let lotePlacas = await StockInsumo.findById(lPlacaID);
                         let loteTapon = await StockInsumo.findById(lTaponID); 
                         if (pcmFinalizado) {
-                            await StockInsumo.findByIdAndDelete(lPcmID);
+                            const prueba = await StockInsumo.findByIdAndDelete(lPcmID);
                         }
                         if (lotePlacas.cantidad > cantProducida) {
                             lotePlacas.cantidad -= cantProducida;

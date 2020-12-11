@@ -181,6 +181,7 @@ const typeDefs = gql`
         lTapon: String
         lPlaca: String
         lPcm: String
+        lPcmID: ID
         cantProducida: Int
         cantDescarte: Int
         auxiliar: String
