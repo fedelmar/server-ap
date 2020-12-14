@@ -1142,15 +1142,15 @@ const resolvers = {
                     cantidad: cantidad
                 }
                 const existeInsumo = await StockInsumo.findOne({lote});
-                if (existeInsumo) {
-                    throw new Error('Ya existe ese lote');
-                }
-    
                 try {
-                    const respuesta = new StockInsumo(NuevoLote);
-    
-                    await respuesta.save();
-            
+                    if (existeInsumo) {
+                        existeInsumo.cantidad += cantidad;
+                        await StockInsumo.findByIdAndUpdate({_id: existeInsumo.id}, existeInsumo, {new: true})
+                    } else {
+                        const respuesta = new StockInsumo(NuevoLote);
+        
+                        await respuesta.save();
+                    }           
                 } catch (error) {
                     console.log(error);
                 }   
