@@ -488,6 +488,10 @@ const typeDefs = gql`
         obtenerRegistrosGP: [CGP]
         obtenerRegistroGP(id: ID!): CGP
 
+        # Planillas de contol de sellado de Placas
+        obtenerRegistrosSP: [CSP]
+        obtenerRegistroSP(id: ID!): CSP
+
         #---------------------#
         ######## Otros ########
         #---------------------#

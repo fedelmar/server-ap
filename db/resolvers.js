@@ -597,6 +597,23 @@ const resolvers = {
 
             return registro;
         },
+
+        obtenerRegistrosSP: async () => {
+
+            let registros = await CSP.find({}).sort({$natural:-1});
+            
+            return registros;
+        },
+
+        obtenerRegistroSP: async (_, {id}) => {
+            let registro = await CSP.findById(id);
+            
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            return registro;
+        },
     },
     
     Mutation: {
