@@ -205,6 +205,21 @@ const typeDefs = gql`
         estado: Boolean
     }
 
+    type CSP {
+        id: ID
+        creado: Date
+        modificado: Date
+        operario: String
+        lote: String
+        producto: String
+        loteID: String
+        sellado: Int
+        descarte: Int
+        auxiliar: String
+        observaciones: String
+        estado: Boolean
+    }
+
     type cantInsumo {
         insumo: String
         categoria: String
@@ -370,6 +385,18 @@ const typeDefs = gql`
         guardado: Int
         descarte: Int
         pallet: String
+        auxiliar: String
+        observaciones: String
+        estado: Boolean
+    }
+
+    input CSPInput {
+        operario: String
+        lote: String
+        producto: String
+        loteID: String
+        sellado: Int
+        descarte: Int
         auxiliar: String
         observaciones: String
         estado: Boolean
@@ -547,6 +574,11 @@ const typeDefs = gql`
         nuevoRegistroGP(id: ID, input: CGPInput): CGP
         actualizarRegistroGP(id: ID, input: CGPInput): CGP
         eliminarRegistroGP(id: ID!): String
+
+        # Control de sellado de Placas
+        nuevoRegistroSP(id: ID, input: CSPInput): CSP
+        actualizarRegistroSP(id: ID, input: CSPInput): CSP
+        eliminarRegistroSP(id: ID!): String
 
         #---------------------#
         ######## Otros ########
