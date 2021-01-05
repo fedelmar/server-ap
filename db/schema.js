@@ -443,6 +443,7 @@ const typeDefs = gql`
         existeProductoStock(id: ID!): Boolean
         obtenerStockEsponjas: [lEsponjas]
         obtenerStockPlacas: [lPlacas]
+        obtenerStockPlacasEnProceso: [lPlacas]
         obtenerProductosTerminados: [ProductoTerminado]
         obtenerProductosTotal: [cantProducto]
         obtenerUltimosModificados: [sProducto]
