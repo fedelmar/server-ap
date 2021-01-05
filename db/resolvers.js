@@ -9,6 +9,7 @@ const CPE = require('../models/CPE');
 const CGE = require('../models/CGE');
 const CPP = require('../models/CPP');
 const CGP = require('../models/CGP');
+const CSP = require('../models/CSP');
 const Salida = require('../models/Salidas');
 const Ingreso = require('../models/Ingresos');
 
@@ -134,6 +135,31 @@ const resolvers = {
             stockProductos.forEach(function(loteProducto) {
                 listaProductos.forEach(function(producto) {
                     if (producto.id == loteProducto.producto && producto.categoria == 'Placas' && loteProducto.estado != 'Terminado') {
+                        lotesPlacas.push({
+                            lote: loteProducto.lote,
+                            loteID: loteProducto.id,
+                            estado: loteProducto.estado,
+                            cantidad: loteProducto.cantidad,
+                            producto: producto.nombre,
+                            caja: producto.caja,
+                            cantCaja: producto.cantCaja
+                        })
+                    }
+                })
+            })
+
+            return lotesPlacas;
+        },
+
+        obtenerStockPlacasEnProceso: async () => {
+            let listaProductos = await Producto.find({});
+            let stockProductos = await StockProducto.find({});            
+    
+            let lotesPlacas = [];
+
+            stockProductos.forEach(function(loteProducto) {
+                listaProductos.forEach(function(producto) {
+                    if (producto.id == loteProducto.producto && producto.categoria == 'Placas' && loteProducto.estado == 'Proceso') {
                         lotesPlacas.push({
                             lote: loteProducto.lote,
                             loteID: loteProducto.id,
@@ -589,6 +615,23 @@ const resolvers = {
 
         obtenerRegistroGP: async (_, {id}) => {
             let registro = await CGP.findById(id);
+            
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            return registro;
+        },
+
+        obtenerRegistrosSP: async () => {
+
+            let registros = await CSP.find({}).sort({$natural:-1});
+            
+            return registros;
+        },
+
+        obtenerRegistroSP: async (_, {id}) => {
+            let registro = await CSP.findById(id);
             
             if(!registro) {
                 throw new Error('Registro no encontrado');
@@ -1427,7 +1470,6 @@ const resolvers = {
                 }
                 
                 if (id) {
-
                     infoLote.modificado = Date.now();
                     infoLote.responsable = operario;
              
@@ -1501,7 +1543,7 @@ const resolvers = {
             return registro; 
         },
 
-        eliminarRegistroGE: async(_, { id }) => {
+        eliminarRegistroGE: async (_, { id }) => {
             // Buscar existencia de planilla por ID
             let registro = await CGE.findById(id);
 
@@ -1512,7 +1554,99 @@ const resolvers = {
             registro = await CGE.findByIdAndDelete({ _id: id });
 
             return "Registro eliminado.";
-        }
+        },
+
+        nuevoRegistroSP: async (_, { id, input}) => {
+            const { sellado, descarte, lote, operario } = input;
+            let infoLote = await StockProducto.findOne({ lote: lote, estado: "Proceso" });
+            let loteReproceso = await StockProducto.findOne({lote: lote, estado: "Reproceso"});
+
+            try {
+                if(!infoLote) {
+                    throw new Error('Lote no encontrado');
+                }
+                if (id) {
+                    infoLote.modificado = Date.now();
+                    infoLote.responsable = operario;
+                    if (infoLote.cantidad > sellado + descarte) {
+                        infoLote.cantidad -= sellado + descarte;
+                        await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true})
+                        if (loteReproceso) {
+                            loteReproceso.modificado = Date.now();
+                            loteReproceso.responsable = operario;                        
+                            loteReproceso.cantidad += sellado;
+                            await StockProducto.findByIdAndUpdate({_id: loteReproceso.id}, loteReproceso, {new: true});
+                        } else {
+                            // Crear nuevo lote terminado
+                            const nuevoLote = {
+                                lote: infoLote.lote,
+                                estado: "Reproceso",
+                                cantidad: sellado,
+                                producto: infoLote.producto,
+                                modificado: Date.now(),
+                                responsable: operario                        
+                            }
+                            const loteReproceso = new StockProducto(nuevoLote);
+                            await loteReproceso.save();
+                        }
+                    } else {
+                        if (loteReproceso) {
+                            loteReproceso.cantidad += sellado;
+                            loteReproceso.modificado = Date.now();
+                            loteReproceso.responsable = operario;
+                            await StockProducto.findByIdAndUpdate({_id: loteReproceso.id}, loteReproceso, {new: true});
+                            await StockProducto.findByIdAndDelete({_id: infoLote.id});
+                        } else {
+                            if (sellado !== 0) {
+                                infoLote.estado = "Reproceso";
+                                infoLote.cantidad = sellado;
+                                await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true});
+                            }
+                        }
+                    }
+                    // Crear y guardar nuevo registro
+                    input.modificado = Date.now();
+                    input.estado = false;
+                    resultado = await CSP.findByIdAndUpdate({_id: id}, input, {new: true});
+
+                } else {
+                    input.creado = Date.now();
+                    const registro = new CSP(input);
+                    resultado = await registro.save();
+                }
+
+                return resultado;               
+                
+            } catch (error) {
+                console.log(error)
+            }
+        },
+
+        actualizarRegistroSP: async (_, { id, input }) => {
+            // Buscar existencia de planilla por ID
+            let registro = await CSP.findById(id);
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            //Actualizar DB
+            registro = await CSP.findByIdAndUpdate( {_id: id}, input, { new: true });
+            
+            return registro; 
+        },
+
+        eliminarRegistroSP: async (_, { id }) => {
+            // Buscar existencia de planilla por ID
+            let registro = await CSP.findById(id);
+
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            registro = await CSP.findByIdAndDelete({ _id: id });
+
+            return "Registro eliminado.";
+        },
     }
 }
 

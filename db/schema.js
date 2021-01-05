@@ -205,6 +205,21 @@ const typeDefs = gql`
         estado: Boolean
     }
 
+    type CSP {
+        id: ID
+        creado: Date
+        modificado: Date
+        operario: String
+        lote: String
+        producto: String
+        loteID: String
+        sellado: Int
+        descarte: Int
+        auxiliar: String
+        observaciones: String
+        estado: Boolean
+    }
+
     type cantInsumo {
         insumo: String
         categoria: String
@@ -375,6 +390,18 @@ const typeDefs = gql`
         estado: Boolean
     }
 
+    input CSPInput {
+        operario: String
+        lote: String
+        producto: String
+        loteID: String
+        sellado: Int
+        descarte: Int
+        auxiliar: String
+        observaciones: String
+        estado: Boolean
+    }
+
     input IngresoInput {
         lote: String
         insumoID: ID
@@ -416,6 +443,7 @@ const typeDefs = gql`
         existeProductoStock(id: ID!): Boolean
         obtenerStockEsponjas: [lEsponjas]
         obtenerStockPlacas: [lPlacas]
+        obtenerStockPlacasEnProceso: [lPlacas]
         obtenerProductosTerminados: [ProductoTerminado]
         obtenerProductosTotal: [cantProducto]
         obtenerUltimosModificados: [sProducto]
@@ -460,6 +488,10 @@ const typeDefs = gql`
         # Planillas de contol de guardado de Placas
         obtenerRegistrosGP: [CGP]
         obtenerRegistroGP(id: ID!): CGP
+
+        # Planillas de contol de sellado de Placas
+        obtenerRegistrosSP: [CSP]
+        obtenerRegistroSP(id: ID!): CSP
 
         #---------------------#
         ######## Otros ########
@@ -547,6 +579,11 @@ const typeDefs = gql`
         nuevoRegistroGP(id: ID, input: CGPInput): CGP
         actualizarRegistroGP(id: ID, input: CGPInput): CGP
         eliminarRegistroGP(id: ID!): String
+
+        # Control de sellado de Placas
+        nuevoRegistroSP(id: ID, input: CSPInput): CSP
+        actualizarRegistroSP(id: ID, input: CSPInput): CSP
+        eliminarRegistroSP(id: ID!): String
 
         #---------------------#
         ######## Otros ########
