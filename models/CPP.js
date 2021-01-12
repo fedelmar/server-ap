@@ -36,7 +36,6 @@ const CPPSchema = mongoose.Schema({
     },
     lPcmID: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
         ref: 'StockInsumo'
     },
     cantProducida: {
