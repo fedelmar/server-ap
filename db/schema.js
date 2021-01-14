@@ -180,6 +180,7 @@ const typeDefs = gql`
         producto: String
         lTapon: String
         lPlaca: String
+        tipoPCM: String
         lPcm: String
         lPcmID: ID
         cantProducida: Int
@@ -367,6 +368,7 @@ const typeDefs = gql`
         lTaponID: String
         lPlaca: String
         lPlacaID: String
+        tipoPCM: String
         lPcm: String
         lPcmID: String
         cantProducida: Int

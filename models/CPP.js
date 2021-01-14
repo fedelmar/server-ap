@@ -30,6 +30,10 @@ const CPPSchema = mongoose.Schema({
         type: String,
         trim: true
     },
+    tipoPCM: {
+        type: String,
+        trim: true
+    },
     lPcm: {
         type: String,
         trim: true
