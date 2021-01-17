@@ -221,6 +221,20 @@ const typeDefs = gql`
         estado: Boolean
     }
 
+    type PG {
+        id: ID
+        creado: Date
+        modificado: Date
+        operario: String
+        lote: String
+        llenado: Boolean
+        cantidad: Int
+        loteInsumo: ID
+        tanque: Int
+        observaciones: String
+        estado: Boolean
+    }
+
     type cantInsumo {
         insumo: String
         categoria: String
@@ -400,6 +414,17 @@ const typeDefs = gql`
         sellado: Int
         descarte: Int
         auxiliar: String
+        observaciones: String
+        estado: Boolean
+    }
+
+    input PGInput {
+        operario: String
+        lote: String
+        llenado: Boolean
+        cantidad: Int
+        loteInsumo: ID
+        tanque: Int
         observaciones: String
         estado: Boolean
     }

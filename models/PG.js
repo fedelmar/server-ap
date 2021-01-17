@@ -16,7 +16,8 @@ const PGSchema = mongoose.Schema({
         trim: true
     },
     llenado: {
-        type: Boolean
+        type: Boolean,
+        default: true
     },
     cantidad: {
         type: Number,
