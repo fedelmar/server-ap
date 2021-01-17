@@ -520,6 +520,10 @@ const typeDefs = gql`
         obtenerRegistrosSP: [CSP]
         obtenerRegistroSP(id: ID!): CSP
 
+        # Planillas de contol de Preparacion de Gel
+        obtenerRegistrosPG: [PG]
+        obtenerRegistroPG(id: ID!): PG
+
         #---------------------#
         ######## Otros ########
         #---------------------#
