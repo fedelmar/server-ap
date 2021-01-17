@@ -229,7 +229,8 @@ const typeDefs = gql`
         lote: String
         llenado: Boolean
         cantidad: Int
-        loteInsumo: ID
+        loteInsumo: String
+        loteInsumoID: ID
         tanque: Int
         observaciones: String
     }
@@ -422,7 +423,8 @@ const typeDefs = gql`
         lote: String
         llenado: Boolean
         cantidad: Int
-        loteInsumo: ID
+        loteInsumo: String
+        loteInsumoID: ID
         tanque: Int
         observaciones: String
     }

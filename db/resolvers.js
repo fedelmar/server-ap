@@ -1668,7 +1668,6 @@ const resolvers = {
 
         nuevoRegistroPG: async (_, { input }) => {
             const { loteInsumo, cantidad } = input;
-
             try {                
                 // Actualizar Lote de Gel
                 let loteGel = await StockInsumo.findById(loteInsumo);
@@ -1682,6 +1681,8 @@ const resolvers = {
             } catch (error) {
                 console.log(error)
             }
+
+            return resultado;
         },
 
         actualizarRegistroPG: async (_, { id, input }) => {
