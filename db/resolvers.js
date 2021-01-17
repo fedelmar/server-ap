@@ -640,6 +640,23 @@ const resolvers = {
 
             return registro;
         },
+
+        obtenerRegistrosPG: async () => {
+
+            let registros = await PG.find({}).sort({$natural:-1});
+            
+            return registros;
+        },
+
+        obtenerRegistroPG: async (_, {id}) => {
+            let registro = await PG.findById(id);
+            
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            return registro;
+        },
     },
     
     Mutation: {
