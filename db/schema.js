@@ -221,6 +221,20 @@ const typeDefs = gql`
         estado: Boolean
     }
 
+    type PG {
+        id: ID
+        creado: Date
+        modificado: Date
+        operario: String
+        lote: String
+        llenado: Boolean
+        cantidad: Int
+        loteInsumo: String
+        loteInsumoID: ID
+        tanque: Int
+        observaciones: String
+    }
+
     type cantInsumo {
         insumo: String
         categoria: String
@@ -404,6 +418,17 @@ const typeDefs = gql`
         estado: Boolean
     }
 
+    input PGInput {
+        operario: String
+        lote: String
+        llenado: Boolean
+        cantidad: Int
+        loteInsumo: String
+        loteInsumoID: ID
+        tanque: Int
+        observaciones: String
+    }
+
     input IngresoInput {
         lote: String
         insumoID: ID
@@ -494,6 +519,10 @@ const typeDefs = gql`
         # Planillas de contol de sellado de Placas
         obtenerRegistrosSP: [CSP]
         obtenerRegistroSP(id: ID!): CSP
+
+        # Planillas de contol de Preparacion de Gel
+        obtenerRegistrosPG: [PG]
+        obtenerRegistroPG(id: ID!): PG
 
         #---------------------#
         ######## Otros ########
@@ -586,6 +615,11 @@ const typeDefs = gql`
         nuevoRegistroSP(id: ID, input: CSPInput): CSP
         actualizarRegistroSP(id: ID, input: CSPInput): CSP
         eliminarRegistroSP(id: ID!): String
+
+        # Control de Preparacion de Gel
+        nuevoRegistroPG(input: PGInput): PG
+        actualizarRegistroPG(id: ID!, input: PGInput): PG
+        eliminarRegistroPG(id: ID!): String
 
         #---------------------#
         ######## Otros ########

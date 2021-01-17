@@ -10,6 +10,7 @@ const CGE = require('../models/CGE');
 const CPP = require('../models/CPP');
 const CGP = require('../models/CGP');
 const CSP = require('../models/CSP');
+const PG = require('../models/PG');
 const Salida = require('../models/Salidas');
 const Ingreso = require('../models/Ingresos');
 
@@ -632,6 +633,23 @@ const resolvers = {
 
         obtenerRegistroSP: async (_, {id}) => {
             let registro = await CSP.findById(id);
+            
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            return registro;
+        },
+
+        obtenerRegistrosPG: async () => {
+
+            let registros = await PG.find({}).sort({$natural:-1});
+            
+            return registros;
+        },
+
+        obtenerRegistroPG: async (_, {id}) => {
+            let registro = await PG.findById(id);
             
             if(!registro) {
                 throw new Error('Registro no encontrado');
@@ -1644,6 +1662,51 @@ const resolvers = {
             }
 
             registro = await CSP.findByIdAndDelete({ _id: id });
+
+            return "Registro eliminado.";
+        },
+
+        nuevoRegistroPG: async (_, { input }) => {
+            const { loteInsumoID, cantidad } = input;
+            try {                
+                // Actualizar Lote de Gel
+                let loteGel = await StockInsumo.findById(loteInsumoID);
+                loteGel.cantidad -= cantidad  
+                await StockInsumo.findByIdAndUpdate({_id: loteInsumoID}, loteGel, {new: true});
+
+                input.creado = Date.now();
+                const registro = new PG(input);
+                resultado = await registro.save();
+                
+            } catch (error) {
+                console.log(error)
+            }
+
+            return resultado;
+        },
+
+        actualizarRegistroPG: async (_, { id, input }) => {
+            // Buscar existencia de planilla por ID
+            let registro = await PG.findById(id);
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            //Actualizar DB
+            registro = await PG.findByIdAndUpdate( {_id: id}, input, { new: true });
+            
+            return registro; 
+        },
+
+        eliminarRegistroPG: async (_, { id }) => {
+            // Buscar existencia de planilla por ID
+            let registro = await PG.findById(id);
+
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            registro = await PG.findByIdAndDelete({ _id: id });
 
             return "Registro eliminado.";
         },
