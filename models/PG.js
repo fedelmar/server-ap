@@ -23,6 +23,9 @@ const PGSchema = mongoose.Schema({
         type: Number,
     },
     loteInsumo: {
+        type: String,
+    },
+    loteInsumoID: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'StockInsumo'
     },
