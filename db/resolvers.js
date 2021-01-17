@@ -10,6 +10,7 @@ const CGE = require('../models/CGE');
 const CPP = require('../models/CPP');
 const CGP = require('../models/CGP');
 const CSP = require('../models/CSP');
+const PG = require('../models/PG');
 const Salida = require('../models/Salidas');
 const Ingreso = require('../models/Ingresos');
 
@@ -1646,6 +1647,28 @@ const resolvers = {
             registro = await CSP.findByIdAndDelete({ _id: id });
 
             return "Registro eliminado.";
+        },
+
+        nuevoRegistroPG: async (_, { id, input }) => {
+            const { loteInsumo, cantidad } = input;
+
+            try {                
+                if (id) {
+                    let loteGel = await StockInsumo.findById(loteInsumo);
+                    loteGel.cantidad -= cantidad  
+                    await StockInsumo.findByIdAndUpdate({_id: loteInsumo}, loteGel, {new: true});
+
+                    input.modificado = Date.now();
+                    input.estado = false;
+                    resultado = await PG.findByIdAndUpdate({_id: id}, input, {new: true});
+                } else {
+                    input.creado = Date.now();
+                    const registro = new PG(input);
+                    resultado = await registro.save();
+                }
+            } catch (error) {
+                console.log(error)
+            }
         },
     }
 }
