@@ -232,7 +232,6 @@ const typeDefs = gql`
         loteInsumo: ID
         tanque: Int
         observaciones: String
-        estado: Boolean
     }
 
     type cantInsumo {
@@ -426,7 +425,6 @@ const typeDefs = gql`
         loteInsumo: ID
         tanque: Int
         observaciones: String
-        estado: Boolean
     }
 
     input IngresoInput {
@@ -617,7 +615,7 @@ const typeDefs = gql`
         eliminarRegistroSP(id: ID!): String
 
         # Control de Preparacion de Gel
-        nuevoRegistroPG(id: ID, input: PGInput): PG
+        nuevoRegistroPG(input: PGInput): PG
         actualizarRegistroPG(id: ID!, input: PGInput): PG
         eliminarRegistroPG(id: ID!): String
 
