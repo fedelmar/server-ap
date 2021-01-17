@@ -1684,15 +1684,15 @@ const resolvers = {
             return registro; 
         },
 
-        eliminarRegistroGP: async (_, { id }) => {
+        eliminarRegistroPG: async (_, { id }) => {
             // Buscar existencia de planilla por ID
-            let registro = await GP.findById(id);
+            let registro = await PG.findById(id);
 
             if(!registro) {
                 throw new Error('Registro no encontrado');
             }
 
-            registro = await GP.findByIdAndDelete({ _id: id });
+            registro = await PG.findByIdAndDelete({ _id: id });
 
             return "Registro eliminado.";
         },
