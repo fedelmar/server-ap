@@ -1670,6 +1670,32 @@ const resolvers = {
                 console.log(error)
             }
         },
+
+        actualizarRegistroPG: async (_, { id, input }) => {
+            // Buscar existencia de planilla por ID
+            let registro = await PG.findById(id);
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            //Actualizar DB
+            registro = await PG.findByIdAndUpdate( {_id: id}, input, { new: true });
+            
+            return registro; 
+        },
+
+        eliminarRegistroGP: async (_, { id }) => {
+            // Buscar existencia de planilla por ID
+            let registro = await GP.findById(id);
+
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            registro = await GP.findByIdAndDelete({ _id: id });
+
+            return "Registro eliminado.";
+        },
     }
 }
 
