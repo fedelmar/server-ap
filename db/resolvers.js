@@ -1667,12 +1667,12 @@ const resolvers = {
         },
 
         nuevoRegistroPG: async (_, { input }) => {
-            const { loteInsumo, cantidad } = input;
+            const { loteInsumoID, cantidad } = input;
             try {                
                 // Actualizar Lote de Gel
-                let loteGel = await StockInsumo.findById(loteInsumo);
+                let loteGel = await StockInsumo.findById(loteInsumoID);
                 loteGel.cantidad -= cantidad  
-                await StockInsumo.findByIdAndUpdate({_id: loteInsumo}, loteGel, {new: true});
+                await StockInsumo.findByIdAndUpdate({_id: loteInsumoID}, loteGel, {new: true});
 
                 input.creado = Date.now();
                 const registro = new PG(input);
