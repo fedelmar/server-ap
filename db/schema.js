@@ -612,6 +612,11 @@ const typeDefs = gql`
         actualizarRegistroSP(id: ID, input: CSPInput): CSP
         eliminarRegistroSP(id: ID!): String
 
+        # Control de Preparacion de Gel
+        nuevoRegistroPG(id: ID, input: PGInput): PG
+        actualizarRegistroPG(id: ID!, input: PGInput): PG
+        eliminarRegistroPG(id: ID!): String
+
         #---------------------#
         ######## Otros ########
         #---------------------#
