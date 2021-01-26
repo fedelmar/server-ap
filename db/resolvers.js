@@ -1711,6 +1711,55 @@ const resolvers = {
 
             return "Registro eliminado.";
         },
+
+        nuevoRegistroCPG: async (_, { input }) => {
+            const { lote, loteBolsaID, cantProducida, cantDescarte } = input;
+            let bolsaStock = await StockInsumo.findById(loteBolsaID);
+
+            try {
+                bolsaStock.cantidad -= cantProducida + cantDescarte;
+                await StockInsumo.findByIdAndUpdate( {_id: loteBolsaID}, bolsaStock, { new: true })
+
+
+                input.creado = Date.now();
+                const registro = new CPG(input);
+                resultado = await registro.save();
+
+            } catch (error) {
+                console.log(error)
+            }
+
+            return resultado;
+        },
+
+
+        actualizarRegistroCPG: async (_, { id, input }) => {
+            // Buscar existencia de planilla por ID
+            let registro = await CPG.findById(id);
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            //Actualizar DB
+            registro = await CPG.findByIdAndUpdate( {_id: id}, input, { new: true });
+            
+            return registro; 
+        },
+
+        eliminarRegistroCPG: async (_, { id }) => {
+            // Buscar existencia de planilla por ID
+            let registro = await CPG.findById(id);
+
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            registro = await CPG.findByIdAndDelete({ _id: id });
+
+            return "Registro eliminado.";
+        },
+
+
     }
 }
 

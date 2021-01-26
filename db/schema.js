@@ -235,6 +235,25 @@ const typeDefs = gql`
         observaciones: String
     }
 
+    type CPG {
+        id: ID,
+        creado: Date,
+        modificado: Date,
+        operario: String
+        lote: String,
+        cliente: String,
+        loteBolsa: String,
+        loteBolsaID: ID,
+        loteGel: String,
+        dobleBolsa: Boolean,
+        manta: Boolean,
+        cantProducida: Int,
+        cantDescarte: Int,
+        auxiliar: String,
+        observaciones: String,
+        estado: Boolean
+    }
+
     type cantInsumo {
         insumo: String
         categoria: String
@@ -429,6 +448,21 @@ const typeDefs = gql`
         observaciones: String
     }
 
+    input CPGInput {
+        operario: String
+        lote: String,
+        cliente: String,
+        loteBolsa: String,
+        loteBolsaID: ID,
+        loteGel: String,
+        dobleBolsa: Boolean,
+        manta: Boolean,
+        cantProducida: Int,
+        cantDescarte: Int,
+        auxiliar: String,
+        observaciones: String
+    }
+
     input IngresoInput {
         lote: String
         insumoID: ID
@@ -620,6 +654,11 @@ const typeDefs = gql`
         nuevoRegistroPG(input: PGInput): PG
         actualizarRegistroPG(id: ID!, input: PGInput): PG
         eliminarRegistroPG(id: ID!): String
+
+        # Control de Produccion de Gel
+        nuevoRegistroCPG(input: CPGInput): CPG
+        actualizarRegistroCPG(id: ID!, input: CPGInput): CPG
+        eliminarRegistroCPG(id: ID!): String
 
         #---------------------#
         ######## Otros ########
