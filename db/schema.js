@@ -558,6 +558,10 @@ const typeDefs = gql`
         obtenerRegistrosPG: [PG]
         obtenerRegistroPG(id: ID!): PG
 
+        # Planillas de contol de Produccion de Gel
+        obtenerRegistrosCPG: [CPG]
+        obtenerRegistroCPG(id: ID!): CPG
+
         #---------------------#
         ######## Otros ########
         #---------------------#

@@ -658,6 +658,23 @@ const resolvers = {
 
             return registro;
         },
+
+        obtenerRegistrosCPG: async () => {
+
+            let registros = await CPG.find({}).sort({$natural:-1});
+            
+            return registros;
+        },
+
+        obtenerRegistroCPG: async (_, {id}) => {
+            let registro = await CPG.findById(id);
+            
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            return registro;
+        },
     },
     
     Mutation: {
