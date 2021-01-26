@@ -11,6 +11,7 @@ const CPP = require('../models/CPP');
 const CGP = require('../models/CGP');
 const CSP = require('../models/CSP');
 const PG = require('../models/PG');
+const CPG = require('../models/CPG');
 const Salida = require('../models/Salidas');
 const Ingreso = require('../models/Ingresos');
 
