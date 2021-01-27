@@ -242,6 +242,8 @@ const typeDefs = gql`
         operario: String
         lote: String,
         cliente: String,
+        producto: String,
+        productoID: ID,
         loteBolsa: String,
         loteBolsaID: ID,
         loteGel: String,
@@ -452,6 +454,8 @@ const typeDefs = gql`
         operario: String
         lote: String,
         cliente: String,
+        producto: String,
+        productoID: ID,
         loteBolsa: String,
         loteBolsaID: ID,
         loteGel: String,
@@ -660,7 +664,7 @@ const typeDefs = gql`
         eliminarRegistroPG(id: ID!): String
 
         # Control de Produccion de Gel
-        nuevoRegistroCPG(input: CPGInput): CPG
+        nuevoRegistroCPG(id: ID, input: CPGInput): CPG
         actualizarRegistroCPG(id: ID!, input: CPGInput): CPG
         eliminarRegistroCPG(id: ID!): String
 

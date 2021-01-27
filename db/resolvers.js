@@ -1729,18 +1729,51 @@ const resolvers = {
             return "Registro eliminado.";
         },
 
-        nuevoRegistroCPG: async (_, { input }) => {
-            const { lote, loteBolsaID, cantProducida, cantDescarte } = input;
+        nuevoRegistroCPG: async (_, { id, input }) => {
+            const { lote, loteBolsaID, cantProducida, cantDescarte, operario, productoID } = input;
+            
+            // Obtener informacion en Insumos y Productos en Stock
             let bolsaStock = await StockInsumo.findById(loteBolsaID);
+            let loteStock = await StockProducto.findOne({lote: lote});
 
             try {
-                bolsaStock.cantidad -= cantProducida + cantDescarte;
-                await StockInsumo.findByIdAndUpdate( {_id: loteBolsaID}, bolsaStock, { new: true })
+                if (id) {
+                    // Actualizar la cantidad de Insumo
+                    bolsaStock.cantidad -= cantProducida + cantDescarte;
+                    await StockInsumo.findByIdAndUpdate( {_id: loteBolsaID}, bolsaStock, { new: true });
+
+                    // Actualizar o crear nuevo lote de producto en el Stock
+                    if (loteStock){
+                        loteStock.modificado = Date.now();
+                        loteStock.responsable = operario;
+                        loteStock.cantidad += cantProducida;
+                        await StockProducto.findByIdAndUpdate( {_id: loteStock.id}, loteStock, { new: true });
+                    } else {
+                        const nuevoLote = {
+                            lote: lote,
+                            estado: "Terminado",
+                            cantidad: cantProducida,
+                            producto: productoID,
+                            responsable: operario,
+                            modificado: Date.now()                        
+                        }
+                        const loteTermiado = new StockProducto(nuevoLote);
+                        await loteTermiado.save();
+                    }
+
+                    // Actualizar los datos del registro y finalizarlo
+                    input.modificado = Date.now();
+                    input.estado = false;
+                    resultado = await CPG.findByIdAndUpdate( {_id: id}, input, { new: true })
 
 
-                input.creado = Date.now();
-                const registro = new CPG(input);
-                resultado = await registro.save();
+                } else {
+
+                    // Abrir un nuevo rejistro activo
+                    input.creado = Date.now();
+                    const registro = new CPG(input);
+                    resultado = await registro.save();
+                }
 
             } catch (error) {
                 console.log(error)

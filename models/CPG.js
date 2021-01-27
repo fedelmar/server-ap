@@ -21,6 +21,13 @@ const CPGSchema = mongoose.Schema({
         type: String,
         trim: true
     },
+    producto: {
+        type: String,
+    },
+    productoID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Producto'
+    },
     loteBolsa: {
         type: String,
     },
