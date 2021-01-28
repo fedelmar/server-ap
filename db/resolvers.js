@@ -11,6 +11,7 @@ const CPP = require('../models/CPP');
 const CGP = require('../models/CGP');
 const CSP = require('../models/CSP');
 const PG = require('../models/PG');
+const CPG = require('../models/CPG');
 const Salida = require('../models/Salidas');
 const Ingreso = require('../models/Ingresos');
 
@@ -650,6 +651,23 @@ const resolvers = {
 
         obtenerRegistroPG: async (_, {id}) => {
             let registro = await PG.findById(id);
+            
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            return registro;
+        },
+
+        obtenerRegistrosCPG: async () => {
+
+            let registros = await CPG.find({}).sort({$natural:-1});
+            
+            return registros;
+        },
+
+        obtenerRegistroCPG: async (_, {id}) => {
+            let registro = await CPG.findById(id);
             
             if(!registro) {
                 throw new Error('Registro no encontrado');
@@ -1710,6 +1728,88 @@ const resolvers = {
 
             return "Registro eliminado.";
         },
+
+        nuevoRegistroCPG: async (_, { id, input }) => {
+            const { lote, loteBolsaID, cantProducida, cantDescarte, operario, productoID } = input;
+            
+            // Obtener informacion en Insumos y Productos en Stock
+            let bolsaStock = await StockInsumo.findById(loteBolsaID);
+            let loteStock = await StockProducto.findOne({lote: lote});
+
+            try {
+                if (id) {
+                    // Actualizar la cantidad de Insumo
+                    bolsaStock.cantidad -= cantProducida + cantDescarte;
+                    await StockInsumo.findByIdAndUpdate( {_id: loteBolsaID}, bolsaStock, { new: true });
+
+                    // Actualizar o crear nuevo lote de producto en el Stock
+                    if (loteStock){
+                        loteStock.modificado = Date.now();
+                        loteStock.responsable = operario;
+                        loteStock.cantidad += cantProducida;
+                        await StockProducto.findByIdAndUpdate( {_id: loteStock.id}, loteStock, { new: true });
+                    } else {
+                        const nuevoLote = {
+                            lote: lote,
+                            estado: "Terminado",
+                            cantidad: cantProducida,
+                            producto: productoID,
+                            responsable: operario,
+                            modificado: Date.now()                        
+                        }
+                        const loteTermiado = new StockProducto(nuevoLote);
+                        await loteTermiado.save();
+                    }
+
+                    // Actualizar los datos del registro y finalizarlo
+                    input.modificado = Date.now();
+                    input.estado = false;
+                    resultado = await CPG.findByIdAndUpdate( {_id: id}, input, { new: true })
+
+
+                } else {
+
+                    // Abrir un nuevo rejistro activo
+                    input.creado = Date.now();
+                    const registro = new CPG(input);
+                    resultado = await registro.save();
+                }
+
+            } catch (error) {
+                console.log(error)
+            }
+
+            return resultado;
+        },
+
+
+        actualizarRegistroCPG: async (_, { id, input }) => {
+            // Buscar existencia de planilla por ID
+            let registro = await CPG.findById(id);
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            //Actualizar DB
+            registro = await CPG.findByIdAndUpdate( {_id: id}, input, { new: true });
+            
+            return registro; 
+        },
+
+        eliminarRegistroCPG: async (_, { id }) => {
+            // Buscar existencia de planilla por ID
+            let registro = await CPG.findById(id);
+
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            registro = await CPG.findByIdAndDelete({ _id: id });
+
+            return "Registro eliminado.";
+        },
+
+
     }
 }
 

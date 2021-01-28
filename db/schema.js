@@ -235,6 +235,28 @@ const typeDefs = gql`
         observaciones: String
     }
 
+    type CPG {
+        id: ID,
+        creado: Date,
+        modificado: Date,
+        operario: String
+        lote: String,
+        cliente: String,
+        producto: String,
+        productoID: ID,
+        loteBolsa: String,
+        loteBolsaID: ID,
+        loteGel: String,
+        dobleBolsa: Boolean,
+        manta: Boolean,
+        cantProducida: Int,
+        cantDescarte: Int,
+        puesto1: String,
+        puesto2: String,
+        observaciones: String,
+        estado: Boolean
+    }
+
     type cantInsumo {
         insumo: String
         categoria: String
@@ -429,6 +451,24 @@ const typeDefs = gql`
         observaciones: String
     }
 
+    input CPGInput {
+        operario: String
+        lote: String,
+        cliente: String,
+        producto: String,
+        productoID: ID,
+        loteBolsa: String,
+        loteBolsaID: ID,
+        loteGel: String,
+        dobleBolsa: Boolean,
+        manta: Boolean,
+        cantProducida: Int,
+        cantDescarte: Int,
+        puesto1: String,
+        puesto2: String,
+        observaciones: String
+    }
+
     input IngresoInput {
         lote: String
         insumoID: ID
@@ -523,6 +563,10 @@ const typeDefs = gql`
         # Planillas de contol de Preparacion de Gel
         obtenerRegistrosPG: [PG]
         obtenerRegistroPG(id: ID!): PG
+
+        # Planillas de contol de Produccion de Gel
+        obtenerRegistrosCPG: [CPG]
+        obtenerRegistroCPG(id: ID!): CPG
 
         #---------------------#
         ######## Otros ########
@@ -620,6 +664,11 @@ const typeDefs = gql`
         nuevoRegistroPG(input: PGInput): PG
         actualizarRegistroPG(id: ID!, input: PGInput): PG
         eliminarRegistroPG(id: ID!): String
+
+        # Control de Produccion de Gel
+        nuevoRegistroCPG(id: ID, input: CPGInput): CPG
+        actualizarRegistroCPG(id: ID!, input: CPGInput): CPG
+        eliminarRegistroCPG(id: ID!): String
 
         #---------------------#
         ######## Otros ########
