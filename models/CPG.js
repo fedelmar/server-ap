@@ -50,7 +50,10 @@ const CPGSchema = mongoose.Schema({
     cantDescarte: {
         type: Number
     },
-    auxiliar: {
+    puesto1: {
+        type: String
+    },
+    puesto2: {
         type: String
     },
     observaciones: {

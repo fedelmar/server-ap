@@ -251,7 +251,8 @@ const typeDefs = gql`
         manta: Boolean,
         cantProducida: Int,
         cantDescarte: Int,
-        auxiliar: String,
+        puesto1: String,
+        puesto2: String,
         observaciones: String,
         estado: Boolean
     }
@@ -463,7 +464,8 @@ const typeDefs = gql`
         manta: Boolean,
         cantProducida: Int,
         cantDescarte: Int,
-        auxiliar: String,
+        puesto1: String,
+        puesto2: String,
         observaciones: String
     }
 
