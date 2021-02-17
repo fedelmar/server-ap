@@ -1242,6 +1242,19 @@ const resolvers = {
             return resultado;
         },
 
+        actualizarRegistroIngreso: async (_, {id, input}) => {
+            // Buscar existencia de planilla por ID
+            let registro = await Ingreso.findById(id);
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            //Actualizar DB
+            registro = await Ingreso.findByIdAndUpdate( {_id: id}, input, { new: true });
+            
+            return registro; 
+        },
+
         eliminarRegistroIngreso: async (_, { id }) => {
             // Buscar existencia de planilla por ID
             let registro = await Ingreso.findById(id);
