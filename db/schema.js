@@ -633,7 +633,7 @@ const typeDefs = gql`
 
         # Control de Ingresos
         nuevoRegistroIngreso(input: IngresoInput): Ingreso
-        actualizarRegistroIngreso(id: ID!, input: IngresoInput): Salida
+        actualizarRegistroIngreso(id: ID!, input: IngresoInput): Ingreso
         eliminarRegistroIngreso(id: ID!): String
 
         # Control de produccion de Esponjas
