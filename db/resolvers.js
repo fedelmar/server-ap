@@ -952,11 +952,9 @@ const resolvers = {
             if (!insumo) {
                 throw new Error('No existe el insumo en stock')
             }
-            if (input.cantidad !== 0) {
-                insumo = await StockInsumo.findByIdAndUpdate( {_id: id}, input, { new: true });
-            } else {
-                insumo = await StockInsumo.findByIdAndDelete({_id: id})
-            }          
+
+            insumo = await StockInsumo.findByIdAndUpdate( {_id: id}, input, { new: true });
+       
             
             return insumo;            
         },
