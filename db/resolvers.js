@@ -83,6 +83,16 @@ const resolvers = {
             return producto;
         },
 
+        obtenerProductosPorCategoria: async (_, { input }) => {
+            try {
+                const productos = await Producto.find({categoria: input});
+
+                return productos;
+            } catch (error) {
+                console.log(error)
+            }
+        },
+
         obtenerProductosStock: async () => {
             try {
                 const lote = await StockProducto.find({}).sort({$natural:-1});
