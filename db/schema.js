@@ -503,6 +503,7 @@ const typeDefs = gql`
         # Productos
         obtenerProductos: [Producto]
         obtenerProducto(id: ID!): Producto
+        obtenerProductosPorCategoria(input: String!): [Producto]
 
         # Stock Productos
         obtenerProductosStock: [sProducto]
