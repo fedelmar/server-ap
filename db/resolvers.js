@@ -395,7 +395,7 @@ const resolvers = {
 
             const insumosPorProducto = [];
 
-            insumos.forEach(function(insumo){
+            insumos.forEach(async function(insumo){
                 const stockInsumos = await StockInsumos.find({insumo: insumo});
                 if (stockInsumos) {
                     insumosPorProducto.push(stockInsumos)
