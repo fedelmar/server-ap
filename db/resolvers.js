@@ -20,6 +20,7 @@ const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const StockInsumos = require('../models/StockInsumos');
 require('dotenv').config({ path:'variables.env' });
 
 const crearToken = (usuario, secreta, expiresIn) => {
@@ -385,6 +386,24 @@ const resolvers = {
             });
 
             return respuesta;
+        },
+
+        obtenerStockInsumosPorProducto: async (_ , { id }) => {
+
+            const producto = await Producto.findById(id);
+            const { insumos } = producto;
+
+            const insumosPorProducto = [];
+
+            insumos.forEach(function(insumo){
+                const stockInsumos = await StockInsumos.find({insumo: insumo});
+                if (stockInsumos) {
+                    insumosPorProducto.push(stockInsumos)
+                }
+            });
+
+            return insumosPorProducto;
+            
         },
 
         obtenerCliente: async (_, {id}) => {
