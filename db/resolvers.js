@@ -391,11 +391,10 @@ const resolvers = {
         obtenerStockInsumosPorProducto: async (_ , { id }) => {
 
             const producto = await Producto.findById(id);
-            console.log(producto);
 
             const insumosPorProducto = [];
 
-            /*            
+                      
             for await (const insumo of producto.insumos ) {
                 const stockInsumo = await StockInsumos.find({insumo: insumo});
                 if (stockInsumo){
@@ -404,9 +403,9 @@ const resolvers = {
                     insumosPorProducto.push(stockInsumo);
                 }
             }
-
-            */           
-
+            
+                       
+            /*
             const { insumos } = producto;          
 
             insumos.forEach(async function(insumo){
@@ -414,9 +413,10 @@ const resolvers = {
                 if (stockInsumos) {
                     console.log(insumo);
                     console.log(stockInsumos);
-                    insumosPorProducto.push(stockInsumos)
+                    insumosPorProducto.push(stockInsumos);
                 }
             });
+            */
 
             return insumosPorProducto;
             
