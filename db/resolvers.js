@@ -1,3 +1,9 @@
+require('dotenv').config({ path:'variables.env' });
+const { GraphQLScalarType } = require('graphql');
+const { Kind } = require('graphql/language');
+const bcryptjs = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
 const Usuario = require('../models/Usuarios');
 const Producto = require('../models/Productos');
 const Insumo = require('../models/Insumos');
@@ -14,18 +20,14 @@ const PG = require('../models/PG');
 const CPG = require('../models/CPG');
 const Salida = require('../models/Salidas');
 const Ingreso = require('../models/Ingresos');
+const StockInsumos = require('../models/StockInsumos');
 
 
-const { GraphQLScalarType } = require('graphql');
-const { Kind } = require('graphql/language');
-const bcryptjs = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-require('dotenv').config({ path:'variables.env' });
 
 const crearToken = (usuario, secreta, expiresIn) => {
     //console.log(usuario);
     const { id, email, nombre, apellido, rol } = usuario;
-    return jwt.sign( {id, email, nombre, apellido, rol }, secreta, { expiresIn } )
+    return jwt.sign( {id, email, nombre, apellido, rol }, secreta)
 }
 
 //RESOLVERS
@@ -385,6 +387,24 @@ const resolvers = {
             });
 
             return respuesta;
+        },
+
+        obtenerStockInsumosPorProducto: async (_ , { id }) => {
+
+            const producto = await Producto.findById(id);
+
+            let insumosPorProducto = [];
+
+            for (const insumo of producto.insumos ) {
+                const stockInsumo = await StockInsumos.find({insumo: insumo});
+                if (insumosPorProducto.length > 0) {
+                    insumosPorProducto = insumosPorProducto.concat(stockInsumo);
+                } else {
+                    insumosPorProducto = stockInsumo;
+                }                    
+            };
+
+            return insumosPorProducto;
         },
 
         obtenerCliente: async (_, {id}) => {
