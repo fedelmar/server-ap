@@ -1,3 +1,9 @@
+require('dotenv').config({ path:'variables.env' });
+const { GraphQLScalarType } = require('graphql');
+const { Kind } = require('graphql/language');
+const bcryptjs = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
 const Usuario = require('../models/Usuarios');
 const Producto = require('../models/Productos');
 const Insumo = require('../models/Insumos');
@@ -14,14 +20,9 @@ const PG = require('../models/PG');
 const CPG = require('../models/CPG');
 const Salida = require('../models/Salidas');
 const Ingreso = require('../models/Ingresos');
-
-
-const { GraphQLScalarType } = require('graphql');
-const { Kind } = require('graphql/language');
-const bcryptjs = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const StockInsumos = require('../models/StockInsumos');
-require('dotenv').config({ path:'variables.env' });
+
+
 
 const crearToken = (usuario, secreta, expiresIn) => {
     //console.log(usuario);
