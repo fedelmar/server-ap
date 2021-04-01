@@ -397,11 +397,7 @@ const resolvers = {
 
             for (const insumo of producto.insumos ) {
                 const stockInsumo = await StockInsumos.find({insumo: insumo});
-                if (insumosPorProducto.length > 0) {
-                    insumosPorProducto = insumosPorProducto.concat(stockInsumo);
-                } else {
-                    insumosPorProducto = stockInsumo;
-                }                    
+                insumosPorProducto = insumosPorProducto.concat(stockInsumo);             
             };
 
             return insumosPorProducto;
