@@ -527,7 +527,7 @@ const typeDefs = gql`
         obtneterStockInsumosPorCategoria(input: String!): [sInsumoCompleto]
         obtenerInsumoPorLote(input: String!): sInsumo
         obtenerInsumosPorInsumo: [cantInsumo]
-        obtenerStockInsumosPorProducto(input: ID!): [sInsumo]
+        obtenerStockInsumosPorProducto(id: ID!): [sInsumo] #Producto 
 
         #---------------------#
         ###### REGISTROS ######
