@@ -26,7 +26,7 @@ require('dotenv').config({ path:'variables.env' });
 const crearToken = (usuario, secreta, expiresIn) => {
     //console.log(usuario);
     const { id, email, nombre, apellido, rol } = usuario;
-    return jwt.sign( {id, email, nombre, apellido, rol }, secreta, { expiresIn } )
+    return jwt.sign( {id, email, nombre, apellido, rol }, secreta)
 }
 
 //RESOLVERS
@@ -392,35 +392,18 @@ const resolvers = {
 
             const producto = await Producto.findById(id);
 
-            const insumosPorProducto = [];
+            let insumosPorProducto = [];
 
-                      
-            for await (const insumo of producto.insumos ) {
+            for (const insumo of producto.insumos ) {
                 const stockInsumo = await StockInsumos.find({insumo: insumo});
-                if (stockInsumo){
-                    console.log(insumo);
-                    console.log(stockInsumo);
-                    insumosPorProducto.push(stockInsumo);
-                }
-            }
-            
-                       
-            /*
-            const { insumos } = producto;          
-
-            insumos.forEach(async function(insumo){
-                const stockInsumos = await StockInsumos.find({insumo: insumo});
-                if (stockInsumos) {
-                    console.log(insumo);
-                    console.log(stockInsumos);
-                    insumosPorProducto.push(stockInsumos);
-                }
-            });
-            */
+                if (insumosPorProducto.length > 0) {
+                    insumosPorProducto = insumosPorProducto.concat(stockInsumo);
+                } else {
+                    insumosPorProducto = stockInsumo;
+                }                    
+            };
 
             return insumosPorProducto;
-            
-            
         },
 
         obtenerCliente: async (_, {id}) => {
