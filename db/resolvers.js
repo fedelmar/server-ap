@@ -397,7 +397,17 @@ const resolvers = {
 
             for (const insumo of producto.insumos ) {
                 const stockInsumo = await StockInsumos.find({insumo: insumo});
-                insumosPorProducto = insumosPorProducto.concat(stockInsumo);             
+                const infoInsumo = await Insumo.findById(insumo);
+                stockInsumo.forEach(function(index){
+                    insumosPorProducto.push({
+                        id: index.id,
+                        insumoID: index.insumo,
+                        cantidad: index.cantidad,
+                        lote: index.lote,
+                        insumo: infoInsumo.nombre,
+                        categoria: infoInsumo.categoria
+                    })
+                })          
             };
 
             return insumosPorProducto;
