@@ -856,9 +856,8 @@ const resolvers = {
         nuevoProductoStock: async (_, {input}) => {
 
             // Verificar la existencia del producto en stock
-            const { lote, producto, cantidad, responsable } = input;
-            
-            const existeLote = await StockProducto.findOne({lote: lote, estado: {$ne: "Terminado"}});
+            const { lote, producto, cantidad, responsable, estado } = input;
+            const existeLote = await StockProducto.findOne({lote: lote, estado: estado});
             if (existeLote && existeLote.producto == producto) {
 
                     // Si ya hay un lote en existencia, sumar la cantidad producida
@@ -1303,7 +1302,7 @@ const resolvers = {
 
         nuevoRegistroPP: async (_, {id, input}) => {
             const {lote, cantDescarte, cantProducida, productoID, lPlacaID, lTaponID, lPcmID, pcmFinalizado, operario } = input;
-            let infoLote = await StockProducto.findOne({ lote: lote, estado: {$ne: "Terminado"}});
+            let infoLote = await StockProducto.findOne({ lote: lote, estado: "Proceso", producto: productoID});
             try {
                 if (id) {
                     // Actualizar Stock de Insumos
@@ -1781,8 +1780,7 @@ const resolvers = {
             
             // Obtener informacion en Insumos y Productos en Stock
             let bolsaStock = await StockInsumo.findById(loteBolsaID);
-            let loteStock = await StockProducto.findOne({lote: lote});
-
+            let loteStock = await StockProducto.findOne({lote: lote, producto: productoID});
             try {
                 if (id) {
                     // Actualizar la cantidad de Insumo
