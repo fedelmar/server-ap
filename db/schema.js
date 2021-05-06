@@ -149,7 +149,8 @@ const typeDefs = gql`
         lBolsa: String
         lEsponja: String
         cantProducida: Int
-        cantDescarte: Int
+        descarteBolsa: Int
+        descarteEsponja: Int
         observaciones: String
         estado: Boolean
     }
@@ -375,7 +376,8 @@ const typeDefs = gql`
         lBolsa: String
         lEsponja: String
         cantProducida: Int
-        cantDescarte: Int
+        descarteBolsa: Int
+        descarteEsponja: Int
         observaciones: String
         estado: Boolean
         modificado: Date

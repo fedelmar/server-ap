@@ -4,25 +4,23 @@ const { Kind } = require('graphql/language');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const Usuario = require('../models/Usuarios');
-const Producto = require('../models/Productos');
-const Insumo = require('../models/Insumos');
-const Cliente = require('../models/Clientes');
-const Pedido = require('../models/Pedidos');
-const StockInsumo = require('../models/StockInsumos');
-const StockProducto = require('../models/StockProductos');
+const PG = require('../models/PG');
 const CPE = require('../models/CPE');
 const CGE = require('../models/CGE');
 const CPP = require('../models/CPP');
 const CGP = require('../models/CGP');
 const CSP = require('../models/CSP');
-const PG = require('../models/PG');
 const CPG = require('../models/CPG');
+const Insumo = require('../models/Insumos');
+const Pedido = require('../models/Pedidos');
 const Salida = require('../models/Salidas');
+const Usuario = require('../models/Usuarios');
+const Cliente = require('../models/Clientes');
 const Ingreso = require('../models/Ingresos');
+const Producto = require('../models/Productos');
+const StockInsumo = require('../models/StockInsumos');
 const StockInsumos = require('../models/StockInsumos');
-
-
+const StockProducto = require('../models/StockProductos');
 
 const crearToken = (usuario, secreta, expiresIn) => {
     //console.log(usuario);
@@ -1482,25 +1480,33 @@ const resolvers = {
 
         nuevoRegistroCE: async (_, {id, input}) => {
             
-            const { lote, cantDescarte, operario } = input;
-            let infoLote = await StockProducto.findOne({ lote: lote, estado: {$ne: "Terminado"} });
+            const { descarteBolsa, descarteEsponja, lBolsa, lEsponja, cantProducida } = input;
+
             let resultado;
             const finalizar = Date.now();
-            try {
-                
-                // Actualizar el lote segun las esponjas descartadas
-                if (infoLote) {
-                    infoLote.cantidad -= cantDescarte;
-                    infoLote.modificado = Date.now();
-                    infoLote.responsable = operario;
-                    await StockProducto.findByIdAndUpdate({_id: infoLote.id}, infoLote, {new: true})
-                }
+            try {   
+
 
                 //Guardar registro en DB
-                if (id) {
+                if (id) {                    
+                    // Actualizar el lotes de insumos
+                    const loteBolsa = await StockInsumo.findOne({ lote: lBolsa});
+                    const loteEsponja = await StockInsumo.findOne({ lote: lEsponja});
+                    if (descarteBolsa > 0) {
+                        loteBolsa.cantidad -= cantProducida;
+                        loteBolsa.cantidad -= descarteBolsa;
+                        await StockInsumo.findByIdAndUpdate({_id: loteBolsa.id}, loteBolsa, {new: true})
+                    }
+                    if (descarteEsponja > 0) {
+                        loteEsponja.cantidad -= cantProducida
+                        loteEsponja.cantidad -= descarteEsponja;
+                        await StockInsumo.findByIdAndUpdate({_id: loteEsponja.id}, loteEsponja, {new: true})
+                    }
+
                     input.estado = false;
                     input.modificado = finalizar;
                     resultado = await CPE.findByIdAndUpdate({_id: id}, input, {new: true});
+
                 } else {
                     const iniciar = Date.now();
                     input.creado = iniciar;                                  
