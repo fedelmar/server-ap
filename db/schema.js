@@ -149,6 +149,7 @@ const typeDefs = gql`
         lBolsa: String
         lEsponja: String
         cantProducida: Int
+        cantDescarte: Int
         descarteBolsa: Int
         descarteEsponja: Int
         observaciones: String
@@ -376,6 +377,7 @@ const typeDefs = gql`
         lBolsa: String
         lEsponja: String
         cantProducida: Int
+        cantDescarte: Int
         descarteBolsa: Int
         descarteEsponja: Int
         observaciones: String
@@ -641,7 +643,7 @@ const typeDefs = gql`
         eliminarRegistroIngreso(id: ID!): String
 
         # Control de produccion de Esponjas
-        nuevoRegistroCE(id: ID, input: CPEInput): CPE
+        nuevoRegistroPE(id: ID, input: CPEInput): CPE
         actualizarRegistroCE(id: ID!, input: CPEInput): CPE
         eliminarRegistroCE(id: ID!): String
 

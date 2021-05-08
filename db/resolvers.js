@@ -1478,7 +1478,7 @@ const resolvers = {
             return "Registro eliminado.";
         },
 
-        nuevoRegistroCE: async (_, {id, input}) => {
+        nuevoRegistroPE: async (_, {id, input}) => {
             
             const { descarteBolsa, descarteEsponja, lBolsa, lEsponja, cantProducida } = input;
 
