@@ -1486,22 +1486,21 @@ const resolvers = {
             const finalizar = Date.now();
             try {   
 
-
                 //Guardar registro en DB
                 if (id) {                    
                     // Actualizar el lotes de insumos
                     const loteBolsa = await StockInsumo.findOne({ lote: lBolsa});
                     const loteEsponja = await StockInsumo.findOne({ lote: lEsponja});
-                    if (descarteBolsa > 0) {
-                        loteBolsa.cantidad -= cantProducida;
-                        loteBolsa.cantidad -= descarteBolsa;
-                        await StockInsumo.findByIdAndUpdate({_id: loteBolsa.id}, loteBolsa, {new: true})
-                    }
-                    if (descarteEsponja > 0) {
-                        loteEsponja.cantidad -= cantProducida
-                        loteEsponja.cantidad -= descarteEsponja;
-                        await StockInsumo.findByIdAndUpdate({_id: loteEsponja.id}, loteEsponja, {new: true})
-                    }
+
+                    loteBolsa.cantidad -= cantProducida;
+                    loteBolsa.cantidad -= descarteBolsa;
+                    await StockInsumo.findByIdAndUpdate({_id: loteBolsa.id}, loteBolsa, {new: true})
+
+
+                    loteEsponja.cantidad -= cantProducida
+                    loteEsponja.cantidad -= descarteEsponja;
+                    await StockInsumo.findByIdAndUpdate({_id: loteEsponja.id}, loteEsponja, {new: true})
+
 
                     input.estado = false;
                     input.modificado = finalizar;
@@ -1520,18 +1519,57 @@ const resolvers = {
             }
         },
 
-        actualizarRegistroCE: async (_, {id, input}) => {
+        actualizarRegistroCE: async (_, { id, input }) => {
+            const {
+              lote, cantProducida, descarteBolsa, descarteEsponja,
+            } = input;
+            
             // Buscar existencia de planilla por ID
             let registro = await CPE.findById(id);
-            if(!registro) {
+            if (!registro) {
                 throw new Error('Registro no encontrado');
-            }
-
-            //Actualizar DB
-            registro = await CPE.findByIdAndUpdate( {_id: id}, input, { new: true });
+            }   
             
-            return registro; 
+            // Obtener informacion de Registros
+            const regLotes = await StockProducto.find({ lote: registro.lote });
+            const regLote = await StockProducto.findOne({ lote: registro.lote, estado: 'Proceso' });
+            const regBolsa = await StockInsumo.findOne({ lote: registro.lBolsa });
+            const regEsponja = await StockInsumo.findOne({ lote: registro.lEsponja }); 
 
+            // Calcular Diferencias
+            let difCantidadProducida = registro.cantProducida - cantProducida;
+            let difDescarteBolsa = registro.descarteBolsa - descarteBolsa;
+            let difDescarteEsponja = registro.descarteEsponja - descarteEsponja;   
+
+            // Actualizar Stock de Insumos
+            regBolsa.cantidad += difCantidadProducida + difDescarteBolsa;
+            regEsponja.cantidad += difCantidadProducida + difDescarteEsponja;
+            await StockInsumo.findByIdAndUpdate({ _id: regBolsa.id }, regBolsa, { new: true });
+            await StockInsumo.findByIdAndUpdate({ _id: regEsponja.id }, regEsponja, { new: true });
+            
+
+            // Si el Lote de producto continua en Proceso modificarlo
+              regLote.cantidad = cantProducida;
+              await StockProducto.findByIdAndUpdate({ _id: regLote.id }, regLote, { new: true });
+        
+            // Si cambia el nombre del lote actualizarlo en el stock
+            if (registro.lote !== lote) {
+                if (regLotes.length > 1) {
+                    regLotes.forEach(async function(l){
+                        l.lote = lote;
+                        l.modificado = Date.now();
+                        await StockProducto.findByIdAndUpdate({ _id: l.id }, l, { new: true });
+                    });
+                } else {
+                    regLote.lote = lote;
+                    regLote.modificado = Date.now();
+                    await StockProducto.findByIdAndUpdate({ _id: regLote.id }, regLote, { new: true });
+                };
+            };
+            // Actualizar DB
+            registro = await CPE.findByIdAndUpdate({ _id: id }, input, { new: true });
+
+            return registro;
         },
 
         eliminarRegistroCE: async (_, { id }) => {
