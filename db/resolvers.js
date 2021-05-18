@@ -1551,12 +1551,12 @@ const resolvers = {
 
             // Calcular Diferencias
             let difCantidadProducida = cantProducida - registro.cantProducida;
-            let difDescarteBolsa = registro.descarteBolsa - descarteBolsa;
-            let difDescarteEsponja = registro.descarteEsponja - descarteEsponja;   
+            let difDescarteBolsa = registro.descarteBolsa - descarteBolsa - difCantidadProducida;
+            let difDescarteEsponja = registro.descarteEsponja - descarteEsponja - difCantidadProducida;   
 
             // Actualizar Stock de Insumos
-            regBolsa.cantidad += difCantidadProducida + difDescarteBolsa;
-            regEsponja.cantidad += difCantidadProducida + difDescarteEsponja;
+            regBolsa.cantidad += difDescarteBolsa;
+            regEsponja.cantidad += difDescarteEsponja;
             await StockInsumo.findByIdAndUpdate({ _id: regBolsa.id }, regBolsa, { new: true });
             await StockInsumo.findByIdAndUpdate({ _id: regEsponja.id }, regEsponja, { new: true });
             
