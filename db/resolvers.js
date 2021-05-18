@@ -1519,7 +1519,20 @@ const resolvers = {
             }
         },
 
-        actualizarRegistroCE: async (_, { id, input }) => {
+        actualizarRegistroPE: async (_, { id, input }) => {
+            // Buscar existencia de planilla por ID
+            let registro = await CPE.findById(id);
+            if(!registro) {
+                throw new Error('Registro no encontrado');
+            }
+
+            //Actualizar DB
+            registro = await CPE.findByIdAndUpdate( {_id: id}, input, { new: true });
+            
+            return registro; 
+        },
+
+        actualizarRegistroStockPE: async (_, { id, input }) => {
             const {
               lote, cantProducida, descarteBolsa, descarteEsponja,
             } = input;
@@ -1537,7 +1550,7 @@ const resolvers = {
             const regEsponja = await StockInsumo.findOne({ lote: registro.lEsponja }); 
 
             // Calcular Diferencias
-            let difCantidadProducida = registro.cantProducida - cantProducida;
+            let difCantidadProducida = cantProducida - registro.cantProducida;
             let difDescarteBolsa = registro.descarteBolsa - descarteBolsa;
             let difDescarteEsponja = registro.descarteEsponja - descarteEsponja;   
 
@@ -1549,8 +1562,8 @@ const resolvers = {
             
 
             // Si el Lote de producto continua en Proceso modificarlo
-              regLote.cantidad = cantProducida;
-              await StockProducto.findByIdAndUpdate({ _id: regLote.id }, regLote, { new: true });
+            regLote.cantidad += difCantidadProducida;
+            await StockProducto.findByIdAndUpdate({ _id: regLote.id }, regLote, { new: true });
         
             // Si cambia el nombre del lote actualizarlo en el stock
             if (registro.lote !== lote) {
