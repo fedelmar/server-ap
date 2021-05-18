@@ -644,7 +644,8 @@ const typeDefs = gql`
 
         # Control de produccion de Esponjas
         nuevoRegistroPE(id: ID, input: CPEInput): CPE
-        actualizarRegistroCE(id: ID!, input: CPEInput): CPE
+        actualizarRegistroPE(id: ID!, input: CPEInput): CPE
+        actualizarRegistroStockPE(id: ID!, input: CPEInput): CPE
         eliminarRegistroCE(id: ID!): String
 
         # Control de guardado de Esponjas
