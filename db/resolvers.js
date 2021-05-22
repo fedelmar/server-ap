@@ -1670,15 +1670,58 @@ const resolvers = {
         },
 
         actualizarRegistroGE: async (_, { id, input }) => {
+            const { lote, guardado } = input;
+            
             // Buscar existencia de planilla por ID
             let registro = await CGE.findById(id);
             if(!registro) {
                 throw new Error('Registro no encontrado');
             }
+            let regLotes = await StockProducto.find({ lote: registro.lote });
 
+            let difGuardado = guardado - registro.guardado;
+
+            if (regLotes.length > 1) {
+                let enProceso = regLotes.find(l => l.estado === 'Proceso')
+                let terminado = regLotes.find(l => l.estado === 'Terminado')    
+                
+                // Actualizar cada registro y guardar cambios en la base de datos
+                enProceso.cantidad -= difGuardado;
+                terminado.cantidad += difGuardado;
+                enProceso.lote = lote
+                terminado.lote = lote
+                await StockProducto.findByIdAndUpdate({ _id: terminado.id }, terminado, { new: true });
+                if (enProceso.cantidad === 0) {
+                    await StockProducto.findByIdAndDelete({ _id: enProceso.id });
+                } else {
+                    await StockProducto.findByIdAndUpdate({ _id: enProceso.id }, enProceso, { new: true });
+                }
+     
+
+            } else {
+                if (regLotes[0].estado === 'Terminado') {
+                    regLotes[0].lote = lote;
+                    regLotes[0].cantidad += difGuardado;
+                    regLotes[0].modificado = Date.now();
+                    await StockProducto.findByIdAndUpdate({ _id: regLotes[0].id }, regLotes[0], { new: true });
+
+                    if (difGuardado < 0) {
+                        // Crear nuevo lote en proceso
+                        const nuevoLote = {
+                            lote: regLotes[0].lote,
+                            producto: regLotes[0].producto,
+                            responsable: regLotes[0].responsable,                        
+                            estado: "Proceso",
+                            cantidad: -difGuardado,
+                            modificado: Date.now(),
+                        }
+                        const loteEnProceso = new StockProducto(nuevoLote);
+                        const result = await loteEnProceso.save();
+                    }
+                }                
+            }
             //Actualizar DB
-            registro = await CGE.findByIdAndUpdate( {_id: id}, input, { new: true });
-            
+            registro = await CGE.findByIdAndUpdate( {_id: id}, input, { new: true });            
             return registro; 
         },
 
