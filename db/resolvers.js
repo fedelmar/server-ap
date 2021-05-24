@@ -1361,11 +1361,46 @@ const resolvers = {
         },
 
         actualizarRegistroPP: async (_, {id, input}) => {
+            const { lote, cantDescarte, cantProducida, lPlaca, lTapon } = input;
+
             // Buscar existencia de planilla por ID
             let registro = await CPP.findById(id);
             if(!registro) {
                 throw new Error('Registro no encontrado');
             }
+
+            let regLotes = await StockProducto.find({ lote: registro.lote });
+            let regPlaca = await StockInsumo.findOne({ lote: lPlaca });
+            let regTapon = await StockInsumo.findOne({ lote: lTapon });
+            
+            const difPlacas = cantProducida - registro.cantProducida;
+            const difDescarte = cantDescarte - registro.cantDescarte;
+
+            regPlaca.cantidad -= difPlacas + difDescarte;
+            regTapon.cantidad -= difPlacas + difDescarte;
+
+            await StockInsumo.findByIdAndUpdate({_id: regPlaca.id}, regPlaca, {new: true});
+            await StockInsumo.findByIdAndUpdate({_id: regTapon.id}, regTapon, {new: true});
+            
+            regLotes.forEach(async function(reg){
+                reg.lote = lote;
+                await StockProducto.findByIdAndUpdate({_id: reg.id}, reg, {new: true});
+                switch (reg.estado) {
+                    case 'Proceso':
+                        reg.cantidad += difPlacas;
+                        reg.modificado= Date.now();
+                        await StockProducto.findByIdAndUpdate({_id: reg.id}, reg, {new: true});
+                        break
+                    case 'Reproceso':
+                        reg.cantidad += difPlacas;
+                        reg.modificado= Date.now();
+                        await StockProducto.findByIdAndUpdate({_id: reg.id}, reg, {new: true});
+                        break
+                    default:
+                        break
+                }
+            })
+
             //Actualizar DB
             registro = await CPP.findByIdAndUpdate( {_id: id}, input, { new: true });
 
@@ -1716,7 +1751,7 @@ const resolvers = {
                             modificado: Date.now(),
                         }
                         const loteEnProceso = new StockProducto(nuevoLote);
-                        const result = await loteEnProceso.save();
+                        await loteEnProceso.save();
                     }
                 }                
             }
