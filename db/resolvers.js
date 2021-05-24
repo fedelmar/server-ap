@@ -1376,6 +1376,23 @@ const resolvers = {
             const difPlacas = cantProducida - registro.cantProducida;
             const difDescarte = cantDescarte - registro.cantDescarte;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             regPlaca.cantidad -= difPlacas + difDescarte;
             regTapon.cantidad -= difPlacas + difDescarte;
 
@@ -1488,15 +1505,44 @@ const resolvers = {
         },
 
         actualizarRegistroGP: async (_, { id, input }) => {
+            const { lote, guardado, descarte } = input;
+
             // Buscar existencia de planilla por ID
             let registro = await CGP.findById(id);
             if(!registro) {
                 throw new Error('Registro no encontrado');
             }
+            const regLotes = await StockProducto.find({ lote: registro.lote });
+
+            const difPlacas = guardado - registro.guardado;
+            const difDescarte = descarte - registro.descarte;
+
+            regLotes.forEach(async function(reg){
+                reg.lote = lote;
+                await StockProducto.findByIdAndUpdate({_id: reg.id}, reg, {new: true});
+                switch (reg.estado) {
+                    case 'Proceso':
+                        reg.cantidad -= difPlacas + difDescarte;
+                        reg.modificado= Date.now();
+                        await StockProducto.findByIdAndUpdate({_id: reg.id}, reg, {new: true});
+                        break
+                    case 'Reproceso':
+                        reg.cantidad -= difPlacas  + difDescarte;
+                        reg.modificado= Date.now();
+                        await StockProducto.findByIdAndUpdate({_id: reg.id}, reg, {new: true});
+                        break
+                    case 'Terminado':
+                        reg.cantidad += difPlacas;
+                        reg.modificado= Date.now();
+                        await StockProducto.findByIdAndUpdate({_id: reg.id}, reg, {new: true});
+                        break
+                    default:
+                        break
+                }
+            })
 
             //Actualizar DB
             registro = await CGP.findByIdAndUpdate( {_id: id}, input, { new: true });
-            
             return registro; 
         },
 
