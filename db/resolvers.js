@@ -1376,23 +1376,6 @@ const resolvers = {
             const difPlacas = cantProducida - registro.cantProducida;
             const difDescarte = cantDescarte - registro.cantDescarte;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             regPlaca.cantidad -= difPlacas + difDescarte;
             regTapon.cantidad -= difPlacas + difDescarte;
 
@@ -1760,7 +1743,7 @@ const resolvers = {
             }
             let regLotes = await StockProducto.find({ lote: registro.lote });
 
-            let difGuardado = guardado - registro.guardado;
+            let difPlacas = guardado - registro.guardado;
 
             if (regLotes.length > 1) {
                 let enProceso = regLotes.find(l => l.estado === 'Proceso')
@@ -1820,10 +1803,10 @@ const resolvers = {
         },
 
         nuevoRegistroSP: async (_, { id, input}) => {
+
             const { sellado, descarte, lote, operario } = input;
             let infoLote = await StockProducto.findOne({ lote: lote, estado: "Proceso" });
             let loteReproceso = await StockProducto.findOne({lote: lote, estado: "Reproceso"});
-
             try {
                 if(!infoLote) {
                     throw new Error('Lote no encontrado');
@@ -1886,11 +1869,56 @@ const resolvers = {
         },
 
         actualizarRegistroSP: async (_, { id, input }) => {
+            const { lote, sellado, descarte } = input;
             // Buscar existencia de planilla por ID
             let registro = await CSP.findById(id);
             if(!registro) {
                 throw new Error('Registro no encontrado');
             }
+
+            let regLotes = await StockProducto.find({ lote: registro.lote });
+            console.log(regLotes)
+
+            const difPlacas = sellado - registro.sellado;
+            const difDescarte = descarte - registro.descarte;
+            console.log(difPlacas)
+            regLotes.forEach(async function(reg){
+                reg.lote = lote;
+                await StockProducto.findByIdAndUpdate({_id: reg.id}, reg, {new: true});
+                switch (reg.estado) {
+                    case 'Proceso':
+                        reg.cantidad -= difPlacas + difDescarte;
+                        reg.modificado = Date.now();
+                        if (reg.cantidad === 0) {
+                            await StockProducto.findByIdAndDelete({_id: reg.id});
+                        } else {
+                            await StockProducto.findByIdAndUpdate({_id: reg.id}, reg, {new: true});
+                        }
+                        break
+                    case 'Reproceso':
+                        reg.cantidad += difPlacas  + difDescarte;
+                        reg.modificado = Date.now();
+                        await StockProducto.findByIdAndUpdate({_id: reg.id}, reg, {new: true});
+                        if (regLotes.length === 1 && difPlacas < 0) {
+                            const nuevoLote = {
+                                lote: regLotes[0].lote,
+                                producto: regLotes[0].producto,
+                                responsable: regLotes[0].responsable,                        
+                                estado: "Proceso",
+                                cantidad: -difPlacas,
+                                modificado: Date.now(),
+                            }
+                            const loteEnProceso = new StockProducto(nuevoLote);
+                            await loteEnProceso.save();
+                        }
+                        break
+                    case 'Terminado':
+                        reg.modificado = Date.now();
+                        await StockProducto.findByIdAndUpdate({_id: reg.id}, reg, {new: true});
+                    default:
+                        break
+                }
+            });
 
             //Actualizar DB
             registro = await CSP.findByIdAndUpdate( {_id: id}, input, { new: true });
