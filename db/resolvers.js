@@ -271,7 +271,7 @@ const resolvers = {
         },
 
         obtenerUltimosModificados: async () => {
-            const lote = await StockProducto.find({"creado":{$gt:new Date(Date.now() - 24*60*60 * 1000)}})
+            const lote = await StockProducto.find({"creado":{$gt:new Date(Date.now() - 24*60*60 * 1000 * 30)}})
                 .sort({$natural:-1})
                 .limit(10);
             return lote;
@@ -537,7 +537,7 @@ const resolvers = {
 
         obtenerRegistrosSalidas: async () => {
 
-            let registros = await Salida.find({}).sort({$natural:-1});
+            let registros = await Salida.find({"creado":{$gt:new Date(Date.now() - 24*60*60 * 1000 * 35)}}).sort({$natural:-1});
 
             return registros;
         },
@@ -576,7 +576,7 @@ const resolvers = {
 
         obtenerRegistrosIngresos: async () => {
 
-            let registros = await Ingreso.find({}).sort({$natural:-1});
+            let registros = await Ingreso.find({"creado":{$gt:new Date(Date.now() - 24*60*60 * 1000 * 35)}}).sort({$natural:-1});
 
             return registros;
         },
@@ -593,7 +593,7 @@ const resolvers = {
 
         obtenerRegistrosCE: async () => {
 
-            let registros = await CPE.find({}).sort({$natural:-1});
+            let registros = await CPE.find({"creado":{$gt:new Date(Date.now() - 24*60*60 * 1000 * 35)}}).sort({$natural:-1});
             
             return registros;
         },
@@ -610,7 +610,7 @@ const resolvers = {
 
         obtenerRegistrosGE: async () => {
 
-            let registros = await CGE.find({}).sort({$natural:-1});
+            let registros = await CGE.find({"creado":{$gt:new Date(Date.now() - 24*60*60 * 1000 * 35)}}).sort({$natural:-1});
             
             return registros;
         },
@@ -627,7 +627,7 @@ const resolvers = {
 
         obtenerRegistrosPP: async () => {
 
-            let registros = await CPP.find({}).sort({$natural:-1});
+            let registros = await CPP.find({"creado":{$gt:new Date(Date.now() - 24*60*60 * 1000 * 35)}}).sort({$natural:-1});
             
             return registros;
         },
@@ -644,7 +644,7 @@ const resolvers = {
 
         obtenerRegistrosGP: async () => {
 
-            let registros = await CGP.find({}).sort({$natural:-1});
+            let registros = await CGP.find({"creado":{$gt:new Date(Date.now() - 24*60*60 * 1000 * 35)}}).sort({$natural:-1});
             
             return registros;
         },
@@ -661,7 +661,7 @@ const resolvers = {
 
         obtenerRegistrosSP: async () => {
 
-            let registros = await CSP.find({}).sort({$natural:-1});
+            let registros = await CSP.find({"creado":{$gt:new Date(Date.now() - 24*60*60 * 1000 * 35)}}).sort({$natural:-1});
             
             return registros;
         },
@@ -678,7 +678,7 @@ const resolvers = {
 
         obtenerRegistrosPG: async () => {
 
-            let registros = await PG.find({}).sort({$natural:-1});
+            let registros = await PG.find({"creado":{$gt:new Date(Date.now() - 24*60*60 * 1000 * 35)}}).sort({$natural:-1});
             
             return registros;
         },
@@ -695,7 +695,7 @@ const resolvers = {
 
         obtenerRegistrosCPG: async () => {
 
-            let registros = await CPG.find({}).sort({$natural:-1});
+            let registros = await CPG.find({"creado":{$gt:new Date(Date.now() - 24*60*60 * 1000 * 35)}}).sort({$natural:-1});
             
             return registros;
         },
