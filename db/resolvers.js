@@ -271,7 +271,7 @@ const resolvers = {
         },
 
         obtenerUltimosModificados: async () => {
-            const lote = await StockProducto.find({"creado":{$gt:new Date(Date.now() - 24*60*60 * 1000 * 30)}})
+            const lote = await StockProducto.find({"creado":{$gt:new Date(Date.now() - 24*60*60 * 1000)}})
                 .sort({$natural:-1})
                 .limit(10);
             return lote;
@@ -537,7 +537,7 @@ const resolvers = {
 
         obtenerRegistrosSalidas: async () => {
 
-            let registros = await Salida.find({"creado":{$gt:new Date(Date.now() - 24*60*60 * 1000 * 35)}}).sort({$natural:-1});
+            let registros = await Salida.find({}).sort({$natural:-1});
 
             return registros;
         },
