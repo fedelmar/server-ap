@@ -35,7 +35,7 @@ const CPESchema = mongoose.Schema({
     cantProducida: {
         type: Number
     },
-    cantDescarte: {
+    descarte: {
         type: Number
     },
     descarteBolsa: {
