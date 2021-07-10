@@ -1544,7 +1544,7 @@ const resolvers = {
 
         nuevoRegistroPE: async (_, {id, input}) => {
             
-            const { descarteBolsa, descarteEsponja, lBolsa, lEsponja, cantProducida } = input;
+            const { descarte, lBolsa, lEsponja, cantProducida } = input;
 
             let resultado;
             const finalizar = Date.now();
@@ -1557,12 +1557,11 @@ const resolvers = {
                     const loteEsponja = await StockInsumo.findOne({ lote: lEsponja});
 
                     loteBolsa.cantidad -= cantProducida;
-                    loteBolsa.cantidad -= descarteBolsa;
                     await StockInsumo.findByIdAndUpdate({_id: loteBolsa.id}, loteBolsa, {new: true})
 
 
-                    loteEsponja.cantidad -= cantProducida
-                    loteEsponja.cantidad -= descarteEsponja;
+                    loteEsponja.cantidad -= cantProducida;
+                    loteEsponja.cantidad += descarte;
                     await StockInsumo.findByIdAndUpdate({_id: loteEsponja.id}, loteEsponja, {new: true})
 
 
@@ -1666,6 +1665,8 @@ const resolvers = {
             
             let infoLote = await StockProducto.findOne({ lote: lote, estado: {$ne: "Terminado"} });
             let loteTerminado = await StockProducto.findOne({lote: lote, estado: "Terminado"});
+            let registro = await CPE.findOne({lote: lote});
+            let loteEsponja = await StockInsumo.findOne({lote: registro.lEsponja});
 
             try {
                 if(!infoLote) {
@@ -1675,6 +1676,10 @@ const resolvers = {
                 if (id) {
                     infoLote.modificado = Date.now();
                     infoLote.responsable = operario;
+
+                    // Se suma las esponjas recuperadas en el descarte al lote de Esponjas
+                    loteEsponja.cantidad += descarte;
+                    await StockInsumo.findByIdAndUpdate({_id: loteEsponja.id}, loteEsponja, {new: true})
              
                     // Actualizar info en el lote del producto
                     if(infoLote.cantidad > guardado + descarte) {
