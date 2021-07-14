@@ -1597,7 +1597,7 @@ const resolvers = {
 
         actualizarRegistroStockPE: async (_, { id, input }) => {
             const {
-              lote, cantProducida, descarteBolsa, descarteEsponja,
+              lote, cantProducida, descarte
             } = input;
             
             // Buscar existencia de planilla por ID
@@ -1614,12 +1614,11 @@ const resolvers = {
 
             // Calcular Diferencias
             let difCantidadProducida = cantProducida - registro.cantProducida;
-            let difDescarteBolsa = registro.descarteBolsa - descarteBolsa - difCantidadProducida;
-            let difDescarteEsponja = registro.descarteEsponja - descarteEsponja - difCantidadProducida;   
+            let difdescarte = registro.descarte - descarte - difCantidadProducida;  
 
             // Actualizar Stock de Insumos
-            regBolsa.cantidad += difDescarteBolsa;
-            regEsponja.cantidad += difDescarteEsponja;
+            regBolsa.cantidad += difdescarte;
+            regEsponja.cantidad += difdescarte;
             await StockInsumo.findByIdAndUpdate({ _id: regBolsa.id }, regBolsa, { new: true });
             await StockInsumo.findByIdAndUpdate({ _id: regEsponja.id }, regEsponja, { new: true });
             
