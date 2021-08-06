@@ -286,6 +286,12 @@ const typeDefs = gql`
         creado: Date
     }
 
+    type lGeles {
+        productoId: ID,
+        lote: String,
+        producto: String
+    }
+
     input UsuarioInput {
         nombre: String!
         apellido: String!
@@ -523,6 +529,7 @@ const typeDefs = gql`
         obtenerProductosTerminados: [ProductoTerminado]
         obtenerProductosTotal: [cantProducto]
         obtenerUltimosModificados: [sProducto]
+        obtenerStockGelesEnProceso: [lGeles]
 
         # Insumos
         obtenerInsumos: [Insumo]

@@ -39,10 +39,12 @@ const CPGSchema = mongoose.Schema({
         type: String,
     },
     dobleBolsa: {
-        type: Boolean
+        type: Boolean,
+        default: false
     },
     manta: {
-        type: Boolean
+        type: Boolean,
+        default: false
     },
     cantProducida: {
         type: Number

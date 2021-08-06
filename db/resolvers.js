@@ -138,6 +138,27 @@ const resolvers = {
             return lotesEsponjas;
         },
 
+        obtenerStockGelesEnProceso: async () => {
+            let listaProductos = await Producto.find({ categoria: 'Geles'});
+            let stockProductos = await StockProducto.find({ estado: 'Proceso'});            
+
+            let lotesEsponjas = [];
+
+            stockProductos.forEach(function(loteProducto) {
+                listaProductos.forEach(function(producto) {
+                    if (producto.id == loteProducto.producto) {
+                        lotesEsponjas.push({
+                            productoId: producto.id,
+                            lote: loteProducto.lote,
+                            producto: producto.nombre,
+                        })
+                    }
+                })
+            })
+
+            return lotesEsponjas;
+        },
+
         obtenerStockPlacas: async () => {
             let listaProductos = await Producto.find({});
             let stockProductos = await StockProducto.find({});            
@@ -1881,11 +1902,9 @@ const resolvers = {
             }
 
             let regLotes = await StockProducto.find({ lote: registro.lote });
-            console.log(regLotes)
 
             const difPlacas = sellado - registro.sellado;
             const difDescarte = descarte - registro.descarte;
-            console.log(difPlacas)
             regLotes.forEach(async function(reg){
                 reg.lote = lote;
                 await StockProducto.findByIdAndUpdate({_id: reg.id}, reg, {new: true});
@@ -2043,6 +2062,7 @@ const resolvers = {
         nuevoDobleRegistroCPG: async (_ , { id, input}) => {
             const { 
                 lote,
+                loteBolsa,
                 loteBolsaID,
                 cantProducida,
                 cantDescarte,
@@ -2051,21 +2071,14 @@ const resolvers = {
                 loteBolsaCristal,
                 cantDescarteBolsaCristal, 
             } = input;
-            
-            console.log('Input: ', input);
 
             // Obtener informacion en Insumos y Productos en Stock
             let bolsaStock = await StockInsumo.findById(loteBolsaID);
-            console.log('Stock bolsas: ', bolsaStock);
             let bolsaCristalStock = await StockInsumo.findOne({ lote: loteBolsaCristal});
-            console.log('Stock cristal bolsas: ', bolsaCristalStock);
-            let loteStock = await StockProducto.findOne({lote: lote, producto: productoID});
-            console.log('Lote en Stock: ', loteStock);
+            let loteStock = await StockProducto.findOne({ lote });
             try {
                 if (id) {
-                    console.log('Entra con id');
                     if (!loteBolsaCristal) {
-                        console.log('No existe bolsa cristal');
                         // Actualizar o crear nuevo lote de producto en el Stock
                         if (loteStock){
                            throw new Error('Ya existe ese lote en el stock');
@@ -2083,21 +2096,19 @@ const resolvers = {
                                 modificado: Date.now()                        
                             }
                             const loteTermiado = new StockProducto(nuevoLote);
-                            console.log('Se creo el lote: ', loteTermiado);
                             await loteTermiado.save();
                         }
                     } else {
+                        if (!bolsaStock) bolsaStock = await StockInsumo.findOne({ lote: loteBolsa });
                         // Actualizar la cantidad de Insumo de Bolsa simple
-                        bolsaStock.cantidad -= cantProducida;
-                        await StockInsumo.findByIdAndUpdate({_id: loteBolsaID}, bolsaStock, { new: true });
+                        await StockInsumo.findByIdAndUpdate({_id: bolsaStock.id}, bolsaStock, { new: true });
 
                         // Actualizar la cantidad de Insumo de Bolsa cristal
                         bolsaCristalStock.cantidad -= cantProducida + cantDescarteBolsaCristal;
                         await StockInsumos.findByIdAndUpdate({_id: bolsaCristalStock.id }, bolsaCristalStock, { new: true });
 
                         // Actualizar el stock de producto a estado terminado
-                        loteStock.estado = 'Terminado';
-                        loteStock.cantidad += cantProducida - cantDescarte;
+                        loteStock.cantidad += cantProducida;
                         await StockProducto.findByIdAndUpdate({_id: loteStock.id}, loteStock, { new: true });                        
                     }
 
@@ -2109,10 +2120,15 @@ const resolvers = {
 
                 } else {
                     // Abrir un nuevo rejistro activo
-                    console.log('Crea un nuevo registro: ');
                     input.creado = Date.now();
+                    input.dobleBolsa = true;
+                    // Recuperar datos de 1er registro en caso de que exista lote
+                    if (loteStock) {
+                        const primerReg = await CPG.findOne({ lote: loteStock.lote, estado: false });
+                        const { cliente, producto, loteBolsa, loteBolsaID, loteGel, cantDescarte, manta } = primerReg;
+                        input = { ...input, cliente, producto, loteBolsa, loteBolsaID, loteGel, cantDescarte, manta };
+                    }
                     const registro = new CPG(input);
-                    console.log(registro);
                     resultado = await registro.save();
                 }
             } catch (error) {
