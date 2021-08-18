@@ -558,7 +558,7 @@ const resolvers = {
 
         obtenerRegistrosSalidas: async () => {
 
-            let registros = await Salida.find({}).sort({$natural:-1});
+            let registros = await Salida.find({"fecha":{$gt:new Date(Date.now() - 24*60*60 * 1000 * 35)}}).sort({$natural:-1});
 
             return registros;
         },
