@@ -138,6 +138,27 @@ const resolvers = {
             return lotesEsponjas;
         },
 
+        obtenerStockGelesEnProceso: async () => {
+            let listaProductos = await Producto.find({ categoria: 'Geles'});
+            let stockProductos = await StockProducto.find({ estado: 'Proceso'});            
+
+            let lotesEsponjas = [];
+
+            stockProductos.forEach(function(loteProducto) {
+                listaProductos.forEach(function(producto) {
+                    if (producto.id == loteProducto.producto) {
+                        lotesEsponjas.push({
+                            productoId: producto.id,
+                            lote: loteProducto.lote,
+                            producto: producto.nombre,
+                        })
+                    }
+                })
+            })
+
+            return lotesEsponjas;
+        },
+
         obtenerStockPlacas: async () => {
             let listaProductos = await Producto.find({});
             let stockProductos = await StockProducto.find({});            
@@ -537,7 +558,7 @@ const resolvers = {
 
         obtenerRegistrosSalidas: async () => {
 
-            let registros = await Salida.find({}).sort({$natural:-1});
+            let registros = await Salida.find({"fecha":{$gt:new Date(Date.now() - 24*60*60 * 1000 * 35)}}).sort({$natural:-1});
 
             return registros;
         },
@@ -1881,11 +1902,9 @@ const resolvers = {
             }
 
             let regLotes = await StockProducto.find({ lote: registro.lote });
-            console.log(regLotes)
 
             const difPlacas = sellado - registro.sellado;
             const difDescarte = descarte - registro.descarte;
-            console.log(difPlacas)
             regLotes.forEach(async function(reg){
                 reg.lote = lote;
                 await StockProducto.findByIdAndUpdate({_id: reg.id}, reg, {new: true});
@@ -2040,6 +2059,83 @@ const resolvers = {
             return resultado;
         },
 
+        nuevoDobleRegistroCPG: async (_ , { id, input}) => {
+            const { 
+                lote,
+                loteBolsa,
+                loteBolsaID,
+                cantProducida,
+                cantDescarte,
+                operario,
+                productoID,
+                loteBolsaCristal,
+                cantDescarteBolsaCristal, 
+            } = input;
+
+            // Obtener informacion en Insumos y Productos en Stock
+            let bolsaStock = await StockInsumo.findById(loteBolsaID);
+            let bolsaCristalStock = await StockInsumo.findOne({ lote: loteBolsaCristal});
+            let loteStock = await StockProducto.findOne({ lote });
+            try {
+                if (id) {
+                    if (!loteBolsaCristal) {
+                        // Actualizar o crear nuevo lote de producto en el Stock
+                        if (loteStock){
+                           throw new Error('Ya existe ese lote en el stock');
+                        } else {
+                            // Actualizar la cantidad de Insumo de Bolsa simple
+                            bolsaStock.cantidad -= cantDescarte;
+                            await StockInsumo.findByIdAndUpdate({_id: loteBolsaID}, bolsaStock, { new: true });
+
+                            const nuevoLote = {
+                                lote: lote,
+                                estado: "Proceso",
+                                cantidad: 0,
+                                producto: productoID,
+                                responsable: operario,
+                                modificado: Date.now()                        
+                            }
+                            const loteTermiado = new StockProducto(nuevoLote);
+                            await loteTermiado.save();
+                        }
+                    } else {
+                        if (!bolsaStock) bolsaStock = await StockInsumo.findOne({ lote: loteBolsa });
+                        // Actualizar la cantidad de Insumo de Bolsa simple
+                        await StockInsumo.findByIdAndUpdate({_id: bolsaStock.id}, bolsaStock, { new: true });
+
+                        // Actualizar la cantidad de Insumo de Bolsa cristal
+                        bolsaCristalStock.cantidad -= cantProducida + cantDescarteBolsaCristal;
+                        await StockInsumos.findByIdAndUpdate({_id: bolsaCristalStock.id }, bolsaCristalStock, { new: true });
+
+                        // Actualizar el stock de producto a estado terminado
+                        loteStock.cantidad += cantProducida;
+                        await StockProducto.findByIdAndUpdate({_id: loteStock.id}, loteStock, { new: true });                        
+                    }
+
+                    // Actualizar los datos del registro y finalizarlo
+                    input.modificado = Date.now();
+                    input.estado = false;
+                    resultado = await CPG.findByIdAndUpdate( {_id: id}, input, { new: true })
+
+
+                } else {
+                    // Abrir un nuevo rejistro activo
+                    input.creado = Date.now();
+                    input.dobleBolsa = true;
+                    // Recuperar datos de 1er registro en caso de que exista lote
+                    if (loteStock) {
+                        const primerReg = await CPG.findOne({ lote: loteStock.lote, estado: false });
+                        const { cliente, producto, loteBolsa, loteBolsaID, loteGel, cantDescarte, manta } = primerReg;
+                        input = { ...input, cliente, producto, loteBolsa, loteBolsaID, loteGel, cantDescarte, manta };
+                    }
+                    const registro = new CPG(input);
+                    resultado = await registro.save();
+                }
+            } catch (error) {
+                console.log(error)
+            }
+            return resultado;
+        },
 
         actualizarRegistroCPG: async (_, { id, input }) => {
             // Buscar existencia de planilla por ID

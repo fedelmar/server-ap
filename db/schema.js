@@ -253,6 +253,8 @@ const typeDefs = gql`
         manta: Boolean,
         cantProducida: Int,
         cantDescarte: Int,
+        cantDescarteBolsaCristal: Int,
+        loteBolsaCristal: String,
         puesto1: String,
         puesto2: String,
         observaciones: String,
@@ -282,6 +284,12 @@ const typeDefs = gql`
         remito: String
         proveedor: String
         creado: Date
+    }
+
+    type lGeles {
+        productoId: ID,
+        lote: String,
+        producto: String
     }
 
     input UsuarioInput {
@@ -468,6 +476,8 @@ const typeDefs = gql`
         manta: Boolean,
         cantProducida: Int,
         cantDescarte: Int,
+        cantDescarteBolsaCristal: Int,
+        loteBolsaCristal: String,
         puesto1: String,
         puesto2: String,
         observaciones: String
@@ -519,6 +529,7 @@ const typeDefs = gql`
         obtenerProductosTerminados: [ProductoTerminado]
         obtenerProductosTotal: [cantProducto]
         obtenerUltimosModificados: [sProducto]
+        obtenerStockGelesEnProceso: [lGeles]
 
         # Insumos
         obtenerInsumos: [Insumo]
@@ -675,6 +686,7 @@ const typeDefs = gql`
 
         # Control de Produccion de Gel
         nuevoRegistroCPG(id: ID, input: CPGInput): CPG
+        nuevoDobleRegistroCPG(id: ID, input: CPGInput): CPG
         actualizarRegistroCPG(id: ID!, input: CPGInput): CPG
         eliminarRegistroCPG(id: ID!): String
 

@@ -39,15 +39,20 @@ const CPGSchema = mongoose.Schema({
         type: String,
     },
     dobleBolsa: {
-        type: Boolean
+        type: Boolean,
+        default: false
     },
     manta: {
-        type: Boolean
+        type: Boolean,
+        default: false
     },
     cantProducida: {
         type: Number
     },
     cantDescarte: {
+        type: Number
+    },
+    cantDescarteBolsaCristal: {
         type: Number
     },
     puesto1: {
@@ -57,6 +62,9 @@ const CPGSchema = mongoose.Schema({
         type: String
     },
     observaciones: {
+        type: String
+    },
+    loteBolsaCristal: {
         type: String
     },
     estado: {
