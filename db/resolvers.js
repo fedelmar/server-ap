@@ -83,6 +83,17 @@ const resolvers = {
             return producto;
         },
 
+        obtenerProductoPorNombre: async (_, { nombre }) => {
+            //Comprobar existencia del producto
+            const producto = await Producto.findOne({ nombre });
+
+            if (!producto) {
+                throw new Error('Producto no encontrado');
+            }
+
+            return producto;
+        },
+
         obtenerProductosPorCategoria: async (_, { input }) => {
             try {
                 const productos = await Producto.find({categoria: input});
@@ -111,6 +122,17 @@ const resolvers = {
             }
 
             return lote;
+        },
+
+        obtenerProductoStockPorLote: async (_, { lote }) => {
+            // Comprobar existencia del lote
+            const loteEnStock = await StockProducto.findOne({ lote });
+
+            if (!lote) {
+                throw new Error('Lote no encontrado');
+            }
+
+            return loteEnStock;
         },
 
         obtenerStockEsponjas: async () => {
@@ -2107,8 +2129,9 @@ const resolvers = {
                         bolsaCristalStock.cantidad -= cantProducida + cantDescarteBolsaCristal;
                         await StockInsumos.findByIdAndUpdate({_id: bolsaCristalStock.id }, bolsaCristalStock, { new: true });
 
-                        // Actualizar el stock de producto a estado terminado
+                        // Actualizar el stock de producto
                         loteStock.cantidad += cantProducida;
+                        loteStock.estado = 'Terminado';
                         await StockProducto.findByIdAndUpdate({_id: loteStock.id}, loteStock, { new: true });                        
                     }
 

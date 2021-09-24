@@ -517,11 +517,13 @@ const typeDefs = gql`
         # Productos
         obtenerProductos: [Producto]
         obtenerProducto(id: ID!): Producto
+        obtenerProductoPorNombre(nombre: String!): Producto
         obtenerProductosPorCategoria(input: String!): [Producto]
 
         # Stock Productos
         obtenerProductosStock: [sProducto]
         obtenerProductoStock(id: ID!): sProducto
+        obtenerProductoStockPorLote(lote: String!): sProducto
         existeProductoStock(id: ID!): Boolean
         obtenerStockEsponjas: [lEsponjas]
         obtenerStockPlacas: [lPlacas]
