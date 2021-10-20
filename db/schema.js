@@ -515,6 +515,7 @@ const typeDefs = gql`
         #-------------------------------#
 
         # Productos
+        buscarProducto(texto: String!): [Producto]
         obtenerProductos: [Producto]
         obtenerProducto(id: ID!): Producto
         obtenerProductoPorNombre(nombre: String!): Producto
@@ -587,25 +588,6 @@ const typeDefs = gql`
         obtenerRegistrosCPG: [CPG]
         obtenerRegistroCPG(id: ID!): CPG
 
-        #---------------------#
-        ######## Otros ########
-        #---------------------#
-
-        # Clientes
-        obtenerClientes: [Cliente]
-        obtenerClientesVendedor: [Cliente]
-        obtenerCliente(id: ID!): Cliente
-
-        # Pedidos
-        obtenerPedidos: [Pedido]
-        obtenerPedidosVendedor: [Pedido]
-        obtenerPedido(id: ID!): Pedido
-        obtenerPedidosEstado(estado: String!): [Pedido]
-
-        # Busquedas Avanzadas
-        mejoresClientes: [TopCliente]
-        mejoresVendedores: [TopVendedor]
-        buscarProducto(texto: String!): [Producto]
 
     }
 
@@ -691,20 +673,6 @@ const typeDefs = gql`
         nuevoDobleRegistroCPG(id: ID, input: CPGInput): CPG
         actualizarRegistroCPG(id: ID!, input: CPGInput): CPG
         eliminarRegistroCPG(id: ID!): String
-
-        #---------------------#
-        ######## Otros ########
-        #---------------------#
-
-        # Clientes
-        nuevoCliente(input: ClienteInput): Cliente
-        actualizarCliente(id: ID!, input: ClienteInput): Cliente
-        eliminarCliente(id: ID!): String
-
-        # Pedidos
-        nuevoPedido(input: PedidoInput): Pedido
-        actualizarPedido(id: ID!, input: PedidoInput): Pedido
-        eliminarPedido(id: ID!): String
     }
 `;
 
