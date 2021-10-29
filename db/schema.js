@@ -292,6 +292,11 @@ const typeDefs = gql`
         producto: String
     }
 
+    type IndDeProduccion {
+        producto: String,
+        indice: Float,
+    }
+
     input UsuarioInput {
         nombre: String!
         apellido: String!
@@ -315,6 +320,11 @@ const typeDefs = gql`
     input passwordInput {
         password: String!
         newPassword: String!
+    }
+    
+    input Fecha {
+        desde: Date,
+        hasta: Date,
     }
 
     input ProductoInput {
@@ -509,6 +519,10 @@ const typeDefs = gql`
         # Usuarios
         obtenerUsuario: Usuario
         obtenerUsuarios: [Usuario]
+
+        # Analisis de datos
+        indiceDeProduccion(tiempo: Fecha, modelo: String!): [IndDeProduccion]
+        indicePorProducto(tiempo: Fecha, producto: String!, modelo: String!): Float
 
         #-------------------------------#
         ###### PRODUCTOS E INSUMOS ######

@@ -10,9 +10,7 @@ const CGP = require('../models/CGP');
 const CSP = require('../models/CSP');
 const CPG = require('../models/CPG');
 const Insumo = require('../models/Insumos');
-const Pedido = require('../models/Pedidos');
 const Salida = require('../models/Salidas');
-const Cliente = require('../models/Clientes');
 const Ingreso = require('../models/Ingresos');
 const Producto = require('../models/Productos');
 const StockInsumo = require('../models/StockInsumos');
@@ -21,6 +19,7 @@ const StockProducto = require('../models/StockProductos');
 
 // IMPORT  QUERIES
 const querieUsuario = require('./queries/usuarios');
+const querieAnalisis = require('./queries/analisis');
 
 // IMPORT MUTATIONS
 const mutationUsuario = require('./mutations/usuarios');
@@ -48,6 +47,8 @@ const resolvers = {
     Query: {
         obtenerUsuario: querieUsuario.obtener,
         obtenerUsuarios: querieUsuario.obtenerTodos,
+        indicePorProducto: querieAnalisis.indicePorProducto,
+        indiceDeProduccion: querieAnalisis.indiceDeProduccion,
 
         obtenerProductos: async () => {
             try {
