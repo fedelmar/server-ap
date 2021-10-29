@@ -2081,7 +2081,7 @@ const resolvers = {
             return resultado;
         },
 
-        nuevoDobleRegistroCPG: async (_ , { id, input}) => {
+        nuevoDobleRegistroCPG: async (_ , { id, input, finalizado }) => {
             const { 
                 lote,
                 loteBolsa,
@@ -2091,7 +2091,8 @@ const resolvers = {
                 operario,
                 productoID,
                 loteBolsaCristal,
-                cantDescarteBolsaCristal, 
+                cantDescarteBolsaCristal,
+                producto 
             } = input;
 
             // Obtener informacion en Insumos y Productos en Stock
@@ -2130,8 +2131,24 @@ const resolvers = {
                         await StockInsumos.findByIdAndUpdate({_id: bolsaCristalStock.id }, bolsaCristalStock, { new: true });
 
                         // Actualizar el stock de producto
-                        loteStock.cantidad += cantProducida;
-                        loteStock.estado = 'Terminado';
+                        if (finalizado) {
+                            const lotes = await StockProducto.find({ lote });
+                            loteStock.cantidad += cantProducida + lotes[1].cantidad;
+                            loteStock.estado = 'Terminado';
+                            await StockProducto.findByIdAndDelete({_id: lotes[1]._id});
+                        } else {
+                            const { id } = await Producto.findOne({ nombre: producto });
+                            const nuevoLote = {
+                                lote: lote,
+                                estado: "Terminado",
+                                cantidad: cantProducida,
+                                producto: id,
+                                responsable: operario,
+                                modificado: Date.now()                        
+                            }
+                            const loteTermiado = new StockProducto(nuevoLote);
+                            await loteTermiado.save();
+                        };
                         await StockProducto.findByIdAndUpdate({_id: loteStock.id}, loteStock, { new: true });                        
                     }
 

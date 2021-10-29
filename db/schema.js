@@ -688,7 +688,7 @@ const typeDefs = gql`
 
         # Control de Produccion de Gel
         nuevoRegistroCPG(id: ID, input: CPGInput): CPG
-        nuevoDobleRegistroCPG(id: ID, input: CPGInput): CPG
+        nuevoDobleRegistroCPG(id: ID, input: CPGInput, finalizado: Boolean): CPG
         actualizarRegistroCPG(id: ID!, input: CPGInput): CPG
         eliminarRegistroCPG(id: ID!): String
 
