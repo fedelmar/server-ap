@@ -1419,8 +1419,8 @@ const resolvers = {
             const difPlacas = cantProducida - registro.cantProducida;
             const difDescarte = cantDescarte - registro.cantDescarte;
 
-            regPlaca.cantidad -= difPlacas + difDescarte;
-            regTapon.cantidad -= difPlacas + difDescarte;
+            if (regPlaca) regPlaca.cantidad -= difPlacas + difDescarte;
+            if (regTapon) regTapon.cantidad -= difPlacas + difDescarte;
 
             await StockInsumo.findByIdAndUpdate({_id: regPlaca.id}, regPlaca, {new: true});
             await StockInsumo.findByIdAndUpdate({_id: regTapon.id}, regTapon, {new: true});
