@@ -2133,9 +2133,10 @@ const resolvers = {
                         // Actualizar el stock de producto
                         if (finalizado) {
                             const lotes = await StockProducto.find({ lote });
-                            loteStock.cantidad += cantProducida + lotes[1].cantidad;
+                            const i = lotes.length > 1 ? 1 : 0 ;
+                            loteStock.cantidad += cantProducida + lotes[i].cantidad;
                             loteStock.estado = 'Terminado';
-                            await StockProducto.findByIdAndDelete({_id: lotes[1]._id});
+                            await StockProducto.findByIdAndDelete({_id: lotes[i]._id});
                         } else {
                             const { id } = await Producto.findOne({ nombre: producto });
                             const nuevoLote = {
@@ -2155,9 +2156,7 @@ const resolvers = {
                     // Actualizar los datos del registro y finalizarlo
                     input.modificado = Date.now();
                     input.estado = false;
-                    resultado = await CPG.findByIdAndUpdate( {_id: id}, input, { new: true })
-
-
+                    resultado = await CPG.findByIdAndUpdate( {_id: id}, input, { new: true });
                 } else {
                     // Abrir un nuevo rejistro activo
                     input.creado = Date.now();
