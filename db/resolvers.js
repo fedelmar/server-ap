@@ -2042,12 +2042,14 @@ const resolvers = {
                     await StockInsumo.findByIdAndUpdate( {_id: loteBolsaID}, bolsaStock, { new: true });
 
                     // Actualizar o crear nuevo lote de producto en el Stock
+                    console.log(loteStock)
                     if (loteStock){
                         loteStock.modificado = Date.now();
                         loteStock.responsable = operario;
                         loteStock.cantidad += cantProducida;
                         await StockProducto.findByIdAndUpdate( {_id: loteStock.id}, loteStock, { new: true });
                     } else {
+                        console.log('actualiza el que ya esta')
                         const nuevoLote = {
                             lote: lote,
                             estado: "Terminado",
@@ -2058,6 +2060,7 @@ const resolvers = {
                         }
                         const loteTermiado = new StockProducto(nuevoLote);
                         await loteTermiado.save();
+                        console.log(loteTerminado)
                     }
 
                     // Actualizar los datos del registro y finalizarlo
@@ -2136,7 +2139,10 @@ const resolvers = {
                             const i = lotes.length > 1 ? 1 : 0 ;
                             loteStock.cantidad += cantProducida + lotes[i].cantidad;
                             loteStock.estado = 'Terminado';
-                            await StockProducto.findByIdAndDelete({_id: lotes[i]._id});
+                            loteStock.responsable = operario;
+                            loteStock.modificado = Date.now(); 
+                            await StockProducto.findByIdAndUpdate({_id: lotes[i]._id});
+                            i = 1 ? await StockProducto.findByIdAndDelete({_id: lotes[0]._id}) : null;
                         } else {
                             const { id } = await Producto.findOne({ nombre: producto });
                             const nuevoLote = {
