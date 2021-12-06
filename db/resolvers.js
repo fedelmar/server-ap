@@ -2130,8 +2130,8 @@ const resolvers = {
                         // Actualizar el stock de producto
                         let loteTerminado = await StockProducto.findOne({ lote, estado: 'Terminado' });
                         if (finalizado) {
-                            const cantAnterior = loteTerminado.cantidad ? loteTerminado.cantidad : 0;
-                            loteStock.cantidad += cantProducida + cantAnteriorg;
+                            const cantAnterior = loteTerminado ? loteTerminado.cantidad : 0;
+                            loteStock.cantidad += cantProducida + cantAnterior;
                             loteStock.estado = 'Terminado';
                             loteStock.responsable = operario;
                             loteStock.modificado = Date.now(); 
