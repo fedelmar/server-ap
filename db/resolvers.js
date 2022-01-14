@@ -2099,14 +2099,11 @@ const resolvers = {
             try {
                 if (id) {
                     if (!loteBolsaCristal) {
+                        // Actualizar la cantidad de Insumo de Bolsa simple
+                        bolsaStock.cantidad -= cantDescarte;
+                        await StockInsumo.findByIdAndUpdate({_id: loteBolsaID}, bolsaStock, { new: true });
                         // Actualizar o crear nuevo lote de producto en el Stock
-                        if (loteStock){
-                           throw new Error('Ya existe ese lote en el stock');
-                        } else {
-                            // Actualizar la cantidad de Insumo de Bolsa simple
-                            bolsaStock.cantidad -= cantDescarte;
-                            await StockInsumo.findByIdAndUpdate({_id: loteBolsaID}, bolsaStock, { new: true });
-
+                        if (!loteStock){
                             const nuevoLote = {
                                 lote: lote,
                                 estado: "Proceso",
