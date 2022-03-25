@@ -20,6 +20,7 @@ const StockProducto = require('../models/StockProductos');
 // IMPORT  QUERIES
 const querieUsuario = require('./queries/usuarios');
 const querieAnalisis = require('./queries/analisis');
+const querieEsponjas = require('./queries/esponjas');
 
 // IMPORT MUTATIONS
 const mutationUsuario = require('./mutations/usuarios');
@@ -45,10 +46,17 @@ const resolvers = {
     }),
 
     Query: {
+        // USUARIOS
         obtenerUsuario: querieUsuario.obtener,
         obtenerUsuarios: querieUsuario.obtenerTodos,
+
+        // ANALISIS DE DATOS
         indicePorProducto: querieAnalisis.indicePorProducto,
         indiceDeProduccion: querieAnalisis.indiceDeProduccion,
+
+        // ESPONJAS
+        obtenerRegistrosPE: querieEsponjas.obtenerRegistrosPE,
+        obtenerRegistrosAbiertosPE: querieEsponjas.obtenerRegistrosAbiertosPE,
 
         obtenerProductos: async () => {
             try {
@@ -503,12 +511,7 @@ const resolvers = {
             return registro;
         },
 
-        obtenerRegistrosCE: async () => {
 
-            let registros = await CPE.find({"creado":{$gt:new Date(Date.now() - 24*60*60 * 1000 * 35)}}).sort({$natural:-1});
-            
-            return registros;
-        },
 
         obtenerRegistroCE: async (_, {id}) => {
             let registro = await CPE.findById(id);

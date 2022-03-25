@@ -575,7 +575,8 @@ const typeDefs = gql`
         obtenerRegistroIngreso(id: ID!): Ingreso 
 
         # Planillas de control de produccion de Esponjas
-        obtenerRegistrosCE: [CPE]
+        obtenerRegistrosPE(page: Int): [CPE]
+        obtenerRegistrosAbiertosPE: [CPE]
         obtenerRegistroCE(id: ID!): CPE
 
         # Planillas de contol de guardado de Esponjas
