@@ -584,16 +584,19 @@ const typeDefs = gql`
         obtenerRegistrosAbiertosGE: [CGE]
         obtenerRegistroGE(id: ID!): CGE
 
-        # produccion de Placas
-        obtenerRegistrosPP: [CPP]
+        # Produccion de Placas
+        obtenerRegistrosPP(page: Int): [CPP]
+        obtenerRegistrosAbiertosPP: [CPP]
         obtenerRegistroPP(id: ID!): CPP
 
-        # guardado de Placas
-        obtenerRegistrosGP: [CGP]
+        # Guardado de Placas
+        obtenerRegistrosGP(page: Int): [CGP]
+        obtenerRegistrosAbiertosGP: [CGP]
         obtenerRegistroGP(id: ID!): CGP
 
-        # sellado de Placas
-        obtenerRegistrosSP: [CSP]
+        # Sellado de Placas
+        obtenerRegistrosSP(page: Int): [CSP]
+        obtenerRegistrosAbiertosSP: [CSP]
         obtenerRegistroSP(id: ID!): CSP
 
         # Preparacion de Gel

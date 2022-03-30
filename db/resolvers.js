@@ -21,6 +21,7 @@ const StockProducto = require('../models/StockProductos');
 const querieUsuario = require('./queries/usuarios');
 const querieAnalisis = require('./queries/analisis');
 const querieEsponjas = require('./queries/esponjas');
+const queriePlacas = require('./queries/placas');
 
 // IMPORT MUTATIONS
 const mutationUsuario = require('./mutations/usuarios');
@@ -64,6 +65,22 @@ const resolvers = {
         obtenerRegistrosGE: querieEsponjas.obtenerRegistrosGE,
         obtenerRegistroGE: querieEsponjas.obtenerRegistroGE,
         obtenerRegistrosAbiertosGE: querieEsponjas.obtenerRegistrosAbiertosGE,
+
+        /**
+         * Placas
+         */
+        // Produccion
+        obtenerRegistrosPP: queriePlacas.obtenerRegistrosPP,
+        obtenerRegistrosAbiertosPP: queriePlacas.obtenerRegistrosAbiertosPP,
+        obtenerRegistroPP: queriePlacas.obtenerRegistroPP,
+        // Sellado
+        obtenerRegistrosSP: queriePlacas.obtenerRegistrosSP,
+        obtenerRegistrosAbiertosSP: queriePlacas.obtenerRegistrosAbiertosSP,
+        obtenerRegistroSP: queriePlacas.obtenerRegistroSP,
+        // Guardado
+        obtenerRegistrosGP: queriePlacas.obtenerRegistrosGP,
+        obtenerRegistrosAbiertosGP: queriePlacas.obtenerRegistrosAbiertosGP,
+        obtenerRegistroGP: queriePlacas.obtenerRegistroGP,
 
         obtenerProductos: async () => {
             try {
@@ -518,61 +535,8 @@ const resolvers = {
             return registro;
         },
 
-
-
         obtenerRegistroCE: async (_, {id}) => {
             let registro = await CPE.findById(id);
-            
-            if(!registro) {
-                throw new Error('Registro no encontrado');
-            }
-
-            return registro;
-        },
-
-        obtenerRegistrosPP: async () => {
-
-            let registros = await CPP.find({"creado":{$gt:new Date(Date.now() - 24*60*60 * 1000 * 35)}}).sort({$natural:-1});
-            
-            return registros;
-        },
-
-        obtenerRegistroPP: async (_, {id}) => {
-            let registro = await CPP.findById(id);
-            
-            if(!registro) {
-                throw new Error('Registro no encontrado');
-            }
-
-            return registro;
-        },
-
-        obtenerRegistrosGP: async () => {
-
-            let registros = await CGP.find({"creado":{$gt:new Date(Date.now() - 24*60*60 * 1000 * 35)}}).sort({$natural:-1});
-            
-            return registros;
-        },
-
-        obtenerRegistroGP: async (_, {id}) => {
-            let registro = await CGP.findById(id);
-            
-            if(!registro) {
-                throw new Error('Registro no encontrado');
-            }
-
-            return registro;
-        },
-
-        obtenerRegistrosSP: async () => {
-
-            let registros = await CSP.find({"creado":{$gt:new Date(Date.now() - 24*60*60 * 1000 * 35)}}).sort({$natural:-1});
-            
-            return registros;
-        },
-
-        obtenerRegistroSP: async (_, {id}) => {
-            let registro = await CSP.findById(id);
             
             if(!registro) {
                 throw new Error('Registro no encontrado');
