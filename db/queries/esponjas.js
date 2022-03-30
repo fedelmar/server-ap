@@ -1,21 +1,32 @@
 const CPE = require('../../models/CPE');
-const { PAGE_SIZE } = require('../../constants');
+const CGE = require('../../models/CGE');
+const { getRegs, getSingleReg, getOpenRegs } = require('../queries/common');
 
 const obtenerRegistrosPE = async (_, { page }) => {
-  page = page || 1;
-  const skip = (page - 1) * PAGE_SIZE;
-  return CPE.find({ estado: false })
-          .sort({ $natural: -1 })
-          .skip(skip)
-          .limit(PAGE_SIZE);
+  return getRegs(page, CPE);
 };
 
 const obtenerRegistrosAbiertosPE = async (_, {}) => {
-  return CPE.find({ estado: true })
-          .sort({ $natural: -1 });
+  return getOpenRegs(CPE);
+};
+
+const obtenerRegistrosGE = async (_, { page }) => {
+  const regs = getRegs(page, CGE);
+  return regs;
+};
+
+const obtenerRegistrosAbiertosGE = async (_, {}) => {
+  return getOpenRegs(CGE);
+};
+
+const obtenerRegistroGE = async (_, { id }) => {
+  return getSingleReg(id, CGE);
 };
 
 module.exports = {
   obtenerRegistrosPE,
   obtenerRegistrosAbiertosPE,
+  obtenerRegistroGE,
+  obtenerRegistrosGE,
+  obtenerRegistrosAbiertosGE,
 };

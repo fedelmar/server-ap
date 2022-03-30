@@ -565,41 +565,42 @@ const typeDefs = gql`
         ###### REGISTROS ######
         #---------------------#
 
-        # Planillas de control de Salidas
+        # Salidas
         obtenerRegistrosSalidas: [Salida]
         obtenerRegistroSalida(id: ID!): Salida
         obtenerLotesPorSalida(id: ID!): [LoteSalida]
 
-        # Planillas de control de Ingresos
+        # Ingresos
         obtenerRegistrosIngresos: [Ingreso]
         obtenerRegistroIngreso(id: ID!): Ingreso 
 
-        # Planillas de control de produccion de Esponjas
+        # Produccion de Esponjas
         obtenerRegistrosPE(page: Int): [CPE]
         obtenerRegistrosAbiertosPE: [CPE]
         obtenerRegistroCE(id: ID!): CPE
 
-        # Planillas de contol de guardado de Esponjas
-        obtenerRegistrosGE: [CGE]
+        # Guardado de Esponjas
+        obtenerRegistrosGE(page: Int): [CGE]
+        obtenerRegistrosAbiertosGE: [CGE]
         obtenerRegistroGE(id: ID!): CGE
 
-        # Planillas de control de produccion de Placas
+        # produccion de Placas
         obtenerRegistrosPP: [CPP]
         obtenerRegistroPP(id: ID!): CPP
 
-        # Planillas de contol de guardado de Placas
+        # guardado de Placas
         obtenerRegistrosGP: [CGP]
         obtenerRegistroGP(id: ID!): CGP
 
-        # Planillas de contol de sellado de Placas
+        # sellado de Placas
         obtenerRegistrosSP: [CSP]
         obtenerRegistroSP(id: ID!): CSP
 
-        # Planillas de contol de Preparacion de Gel
+        # Preparacion de Gel
         obtenerRegistrosPG: [PG]
         obtenerRegistroPG(id: ID!): PG
 
-        # Planillas de contol de Produccion de Gel
+        # Produccion de Gel
         obtenerRegistrosCPG: [CPG]
         obtenerRegistroCPG(id: ID!): CPG
 

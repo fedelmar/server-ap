@@ -54,9 +54,16 @@ const resolvers = {
         indicePorProducto: querieAnalisis.indicePorProducto,
         indiceDeProduccion: querieAnalisis.indiceDeProduccion,
 
-        // ESPONJAS
+        /**
+         * ESPONJAS
+         */
+        // Produccion
         obtenerRegistrosPE: querieEsponjas.obtenerRegistrosPE,
         obtenerRegistrosAbiertosPE: querieEsponjas.obtenerRegistrosAbiertosPE,
+        // Guardado
+        obtenerRegistrosGE: querieEsponjas.obtenerRegistrosGE,
+        obtenerRegistroGE: querieEsponjas.obtenerRegistroGE,
+        obtenerRegistrosAbiertosGE: querieEsponjas.obtenerRegistrosAbiertosGE,
 
         obtenerProductos: async () => {
             try {
@@ -515,23 +522,6 @@ const resolvers = {
 
         obtenerRegistroCE: async (_, {id}) => {
             let registro = await CPE.findById(id);
-            
-            if(!registro) {
-                throw new Error('Registro no encontrado');
-            }
-
-            return registro;
-        },
-
-        obtenerRegistrosGE: async () => {
-
-            let registros = await CGE.find({"creado":{$gt:new Date(Date.now() - 24*60*60 * 1000 * 35)}}).sort({$natural:-1});
-            
-            return registros;
-        },
-
-        obtenerRegistroGE: async (_, {id}) => {
-            let registro = await CGE.findById(id);
             
             if(!registro) {
                 throw new Error('Registro no encontrado');
