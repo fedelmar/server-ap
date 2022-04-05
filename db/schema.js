@@ -600,11 +600,13 @@ const typeDefs = gql`
         obtenerRegistroSP(id: ID!): CSP
 
         # Preparacion de Gel
-        obtenerRegistrosPG: [PG]
+        obtenerRegistrosPG(page: Int): [PG]
+        obtenerRegistrosAbiertosPG: [PG]
         obtenerRegistroPG(id: ID!): PG
 
         # Produccion de Gel
-        obtenerRegistrosCPG: [CPG]
+        obtenerRegistrosCPG(page: Int): [CPG]
+        obtenerRegistrosAbiertosCPG: [CPG]
         obtenerRegistroCPG(id: ID!): CPG
 
 

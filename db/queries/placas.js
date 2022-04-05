@@ -8,8 +8,7 @@ const { getRegs, getSingleReg, getOpenRegs } = require('../queries/common');
  * Producción de placas 
  */
 const obtenerRegistrosPP = async (_, { page }) => {
-  const res = await getRegs(page, CPP);
-  return res;
+  return getRegs(page, CPP);
 };
 
 const obtenerRegistrosAbiertosPP = async (_, {}) => {

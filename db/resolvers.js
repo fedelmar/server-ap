@@ -22,6 +22,7 @@ const querieUsuario = require('./queries/usuarios');
 const querieAnalisis = require('./queries/analisis');
 const querieEsponjas = require('./queries/esponjas');
 const queriePlacas = require('./queries/placas');
+const querieGel = require('./queries/gel');
 
 // IMPORT MUTATIONS
 const mutationUsuario = require('./mutations/usuarios');
@@ -81,6 +82,18 @@ const resolvers = {
         obtenerRegistrosGP: queriePlacas.obtenerRegistrosGP,
         obtenerRegistrosAbiertosGP: queriePlacas.obtenerRegistrosAbiertosGP,
         obtenerRegistroGP: queriePlacas.obtenerRegistroGP,
+
+        /**
+         * Gel
+         */
+        // Produccion
+        obtenerRegistrosCPG: querieGel.obtenerRegistrosCPG,
+        obtenerRegistrosAbiertosCPG: querieGel.obtenerRegistrosAbiertosCPG,
+        obtenerRegistroCPG: querieGel.obtenerRegistroCPG,
+        // Preparacion
+        obtenerRegistrosPG: querieGel.obtenerRegistrosPG,
+        obtenerRegistrosAbiertosPG: querieGel.obtenerRegistrosAbiertosPG,
+        obtenerRegistroPG: querieGel.obtenerRegistroPG,
 
         obtenerProductos: async () => {
             try {
@@ -537,40 +550,6 @@ const resolvers = {
 
         obtenerRegistroCE: async (_, {id}) => {
             let registro = await CPE.findById(id);
-            
-            if(!registro) {
-                throw new Error('Registro no encontrado');
-            }
-
-            return registro;
-        },
-
-        obtenerRegistrosPG: async () => {
-
-            let registros = await PG.find({"creado":{$gt:new Date(Date.now() - 24*60*60 * 1000 * 35)}}).sort({$natural:-1});
-            
-            return registros;
-        },
-
-        obtenerRegistroPG: async (_, {id}) => {
-            let registro = await PG.findById(id);
-            
-            if(!registro) {
-                throw new Error('Registro no encontrado');
-            }
-
-            return registro;
-        },
-
-        obtenerRegistrosCPG: async () => {
-
-            let registros = await CPG.find({"creado":{$gt:new Date(Date.now() - 24*60*60 * 1000 * 35)}}).sort({$natural:-1});
-            
-            return registros;
-        },
-
-        obtenerRegistroCPG: async (_, {id}) => {
-            let registro = await CPG.findById(id);
             
             if(!registro) {
                 throw new Error('Registro no encontrado');
