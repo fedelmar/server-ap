@@ -23,6 +23,8 @@ const querieAnalisis = require('./queries/analisis');
 const querieEsponjas = require('./queries/esponjas');
 const queriePlacas = require('./queries/placas');
 const querieGel = require('./queries/gel');
+const querieSalidas = require('./queries/salidas');
+const querieIngresos = require('./queries/ingresos');
 
 // IMPORT MUTATIONS
 const mutationUsuario = require('./mutations/usuarios');
@@ -94,6 +96,15 @@ const resolvers = {
         obtenerRegistrosPG: querieGel.obtenerRegistrosPG,
         obtenerRegistrosAbiertosPG: querieGel.obtenerRegistrosAbiertosPG,
         obtenerRegistroPG: querieGel.obtenerRegistroPG,
+
+        // Salidas
+        obtenerRegistrosSalidas: querieSalidas.obtenerRegistrosSalidas,
+        obtenerRegistroSalida: querieSalidas.obtenerRegistroSalida,
+        obtenerLotesPorSalida: querieSalidas.obtenerLotesPorSalida,
+
+        // Ingresos
+        obtenerRegistrosIngresos: querieIngresos.obtenerRegistrosIngresos,
+        obtenerRegistroIngreso: querieIngresos.obtenerRegistroIngreso,
 
         obtenerProductos: async () => {
             try {
@@ -490,62 +501,6 @@ const resolvers = {
             const productos = await Producto.find({$text: { $search: texto }})
 
             return productos;
-        },
-
-        obtenerRegistrosSalidas: async () => {
-
-            let registros = await Salida.find({"fecha":{$gt:new Date(Date.now() - 24*60*60 * 1000 * 35)}}).sort({$natural:-1});
-
-            return registros;
-        },
-
-        obtenerRegistroSalida: async (_, { id }) => {
-            let registro = await Salida.findById(id);
-
-            if(!registro) {
-                throw new Error('Registro no encontrado');
-            }
-
-            return registro;
-        },
-
-        obtenerLotesPorSalida: async (_, { id }) => {
-            let lote = await Salida.findById(id);
-            let stockProductos = await StockProducto.find({});
-            let productos = await Producto.find({});
-
-            const { lotes } = lote;
-
-            let lotesSalidas = [];
-            
-            lotes.forEach(function(index){
-                let loteSalida = stockProductos.find(i => i.id == index.lote)
-                let nombreProducto = productos.find(i => i.id == loteSalida.producto).nombre
-                lotesSalidas.push({
-                    lote: loteSalida.lote,
-                    producto: nombreProducto,
-                    cantidad: index.cantidad
-                })
-            })
-            
-            return lotesSalidas;
-        },
-
-        obtenerRegistrosIngresos: async () => {
-
-            let registros = await Ingreso.find({"creado":{$gt:new Date(Date.now() - 24*60*60 * 1000 * 35)}}).sort({$natural:-1});
-
-            return registros;
-        },
-
-        obtenerRegistroIngreso: async (_, { id }) => {
-            let registro = await Ingreso.findById(id);
-
-            if(!registro) {
-                throw new Error('Registro no encontrado');
-            }
-
-            return registro;
         },
 
         obtenerRegistroCE: async (_, {id}) => {

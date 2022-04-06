@@ -566,12 +566,12 @@ const typeDefs = gql`
         #---------------------#
 
         # Salidas
-        obtenerRegistrosSalidas: [Salida]
+        obtenerRegistrosSalidas(page: Int): [Salida]
         obtenerRegistroSalida(id: ID!): Salida
         obtenerLotesPorSalida(id: ID!): [LoteSalida]
 
         # Ingresos
-        obtenerRegistrosIngresos: [Ingreso]
+        obtenerRegistrosIngresos(page: Int): [Ingreso]
         obtenerRegistroIngreso(id: ID!): Ingreso 
 
         # Produccion de Esponjas
