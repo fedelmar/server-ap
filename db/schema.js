@@ -297,6 +297,11 @@ const typeDefs = gql`
         indice: Float,
     }
 
+    input DateRange {
+        start: String,
+        end: String,
+    }
+
     input UsuarioInput {
         nombre: String!
         apellido: String!
@@ -578,11 +583,13 @@ const typeDefs = gql`
         obtenerRegistrosPE(page: Int): [CPE]
         obtenerRegistrosAbiertosPE: [CPE]
         obtenerRegistroCE(id: ID!): CPE
+        getRegsByDatePE(input: DateRange!): [CPE]
 
         # Guardado de Esponjas
         obtenerRegistrosGE(page: Int): [CGE]
         obtenerRegistrosAbiertosGE: [CGE]
         obtenerRegistroGE(id: ID!): CGE
+        getRegsByDateGE(input: DateRange!): [CGE]
 
         # Produccion de Placas
         obtenerRegistrosPP(page: Int): [CPP]
@@ -608,7 +615,6 @@ const typeDefs = gql`
         obtenerRegistrosCPG(page: Int): [CPG]
         obtenerRegistrosAbiertosCPG: [CPG]
         obtenerRegistroCPG(id: ID!): CPG
-
 
     }
 

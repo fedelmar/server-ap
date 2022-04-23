@@ -20,7 +20,15 @@ const StockProducto = require('../models/StockProductos');
 // IMPORT  QUERIES
 const querieUsuario = require('./queries/usuarios');
 const querieAnalisis = require('./queries/analisis');
-const querieEsponjas = require('./queries/esponjas');
+const { 
+    obtenerRegistrosPE,
+    obtenerRegistrosAbiertosPE,
+    obtenerRegistrosGE,
+    obtenerRegistroGE,
+    obtenerRegistrosAbiertosGE,
+    getRegsByDatePE,
+    getRegsByDateGE,
+} = require('./queries/esponjas');
 const queriePlacas = require('./queries/placas');
 const querieGel = require('./queries/gel');
 const querieSalidas = require('./queries/salidas');
@@ -62,12 +70,14 @@ const resolvers = {
          * ESPONJAS
          */
         // Produccion
-        obtenerRegistrosPE: querieEsponjas.obtenerRegistrosPE,
-        obtenerRegistrosAbiertosPE: querieEsponjas.obtenerRegistrosAbiertosPE,
+        obtenerRegistrosPE,
+        obtenerRegistrosAbiertosPE,
+        getRegsByDatePE,
         // Guardado
-        obtenerRegistrosGE: querieEsponjas.obtenerRegistrosGE,
-        obtenerRegistroGE: querieEsponjas.obtenerRegistroGE,
-        obtenerRegistrosAbiertosGE: querieEsponjas.obtenerRegistrosAbiertosGE,
+        obtenerRegistrosGE,
+        obtenerRegistroGE,
+        obtenerRegistrosAbiertosGE,
+        getRegsByDateGE,
 
         /**
          * Placas

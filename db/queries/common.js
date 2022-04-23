@@ -12,19 +12,31 @@ const getRegs = (page, model) => {
 const getOpenRegs = (model) => {  
   return model.find({ estado: true })
               .sort({ $natural: -1 });
-}
+};
 
 const getSingleReg = async (id, model) => {
   const reg = await model.findById(id);
   if (!reg) {
     throw new Error('Registro no encontrado');
-  }
-
+  };
   return reg;
-}
+};
+
+const getRegsByDate = async (model, date) => {
+  const reg = await model.find({ 
+    estado: false,
+    creado: {
+      $gte: date.start,
+      $lt: date.end,
+    }
+  })
+  .sort({ $natural: -1 });
+  return reg;
+};
 
 module.exports = {
   getRegs,
   getOpenRegs,
   getSingleReg,
+  getRegsByDate,
 };

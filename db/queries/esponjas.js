@@ -1,32 +1,15 @@
 const CPE = require('../../models/CPE');
 const CGE = require('../../models/CGE');
-const { getRegs, getSingleReg, getOpenRegs } = require('../queries/common');
-
-const obtenerRegistrosPE = async (_, { page }) => {
-  return getRegs(page, CPE);
-};
-
-const obtenerRegistrosAbiertosPE = async (_, {}) => {
-  return getOpenRegs(CPE);
-};
-
-const obtenerRegistrosGE = async (_, { page }) => {
-  const regs = getRegs(page, CGE);
-  return regs;
-};
-
-const obtenerRegistrosAbiertosGE = async (_, {}) => {
-  return getOpenRegs(CGE);
-};
-
-const obtenerRegistroGE = async (_, { id }) => {
-  return getSingleReg(id, CGE);
-};
+const { getRegs, getSingleReg, getOpenRegs, getRegsByDate } = require('../queries/common');
 
 module.exports = {
-  obtenerRegistrosPE,
-  obtenerRegistrosAbiertosPE,
-  obtenerRegistroGE,
-  obtenerRegistrosGE,
-  obtenerRegistrosAbiertosGE,
+  // PRODUCCION
+  obtenerRegistrosPE: async (_, { page }) => getRegs(page, CPE),
+  obtenerRegistrosAbiertosPE: async (_, {}) => getOpenRegs(CPE),
+  getRegsByDatePE: async (_, { input }) => getRegsByDate(CPE, input),
+  // GUARDADO
+  obtenerRegistroGE: async (_, { id }) => getSingleReg(id, CGE),
+  obtenerRegistrosGE: async (_, { page }) => getRegs(page, CGE),
+  obtenerRegistrosAbiertosGE: async (_, {}) => getOpenRegs(CGE),
+  getRegsByDateGE: async (_, { input }) => getRegsByDate(CGE, input),
 };
