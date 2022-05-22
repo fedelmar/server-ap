@@ -292,6 +292,16 @@ const typeDefs = gql`
         producto: String
     }
 
+    type IndDeProduccion {
+        producto: String,
+        indice: Float,
+    }
+
+    input DateRange {
+        start: String,
+        end: String,
+    }
+
     input UsuarioInput {
         nombre: String!
         apellido: String!
@@ -315,6 +325,11 @@ const typeDefs = gql`
     input passwordInput {
         password: String!
         newPassword: String!
+    }
+    
+    input Fecha {
+        desde: Date,
+        hasta: Date,
     }
 
     input ProductoInput {
@@ -510,11 +525,16 @@ const typeDefs = gql`
         obtenerUsuario: Usuario
         obtenerUsuarios: [Usuario]
 
+        # Analisis de datos
+        indiceDeProduccion(tiempo: Fecha, modelo: String!): [IndDeProduccion]
+        indicePorProducto(tiempo: Fecha, producto: String!, modelo: String!): Float
+
         #-------------------------------#
         ###### PRODUCTOS E INSUMOS ######
         #-------------------------------#
 
         # Productos
+        buscarProducto(texto: String!): [Producto]
         obtenerProductos: [Producto]
         obtenerProducto(id: ID!): Producto
         obtenerProductoPorNombre(nombre: String!): Producto
@@ -550,62 +570,58 @@ const typeDefs = gql`
         ###### REGISTROS ######
         #---------------------#
 
-        # Planillas de control de Salidas
-        obtenerRegistrosSalidas: [Salida]
+        # Salidas
+        obtenerRegistrosSalidas(page: Int): [Salida]
         obtenerRegistroSalida(id: ID!): Salida
         obtenerLotesPorSalida(id: ID!): [LoteSalida]
+        getRegsByDateSalidas(input: DateRange!): [Salida]
 
-        # Planillas de control de Ingresos
-        obtenerRegistrosIngresos: [Ingreso]
-        obtenerRegistroIngreso(id: ID!): Ingreso 
+        # Ingresos
+        obtenerRegistrosIngresos(page: Int): [Ingreso]
+        obtenerRegistroIngreso(id: ID!): Ingreso
+        getRegsByDateIngreso(input: DateRange!): [Ingreso] 
 
-        # Planillas de control de produccion de Esponjas
-        obtenerRegistrosCE: [CPE]
+        # Produccion de Esponjas
+        obtenerRegistrosPE(page: Int): [CPE]
+        obtenerRegistrosAbiertosPE: [CPE]
         obtenerRegistroCE(id: ID!): CPE
+        getRegsByDatePE(input: DateRange!): [CPE]
 
-        # Planillas de contol de guardado de Esponjas
-        obtenerRegistrosGE: [CGE]
+        # Guardado de Esponjas
+        obtenerRegistrosGE(page: Int): [CGE]
+        obtenerRegistrosAbiertosGE: [CGE]
         obtenerRegistroGE(id: ID!): CGE
+        getRegsByDateGE(input: DateRange!): [CGE]
 
-        # Planillas de control de produccion de Placas
-        obtenerRegistrosPP: [CPP]
+        # Produccion de Placas
+        obtenerRegistrosPP(page: Int): [CPP]
+        obtenerRegistrosAbiertosPP: [CPP]
         obtenerRegistroPP(id: ID!): CPP
+        getRegsByDatePP(input: DateRange!): [CPP]
 
-        # Planillas de contol de guardado de Placas
-        obtenerRegistrosGP: [CGP]
+        # Guardado de Placas
+        obtenerRegistrosGP(page: Int): [CGP]
+        obtenerRegistrosAbiertosGP: [CGP]
         obtenerRegistroGP(id: ID!): CGP
+        getRegsByDateGP(input: DateRange!): [CGP]
 
-        # Planillas de contol de sellado de Placas
-        obtenerRegistrosSP: [CSP]
+        # Sellado de Placas
+        obtenerRegistrosSP(page: Int): [CSP]
+        obtenerRegistrosAbiertosSP: [CSP]
         obtenerRegistroSP(id: ID!): CSP
+        getRegsByDateSP(input: DateRange!): [CSP]
 
-        # Planillas de contol de Preparacion de Gel
-        obtenerRegistrosPG: [PG]
+        # Preparacion de Gel
+        obtenerRegistrosPG(page: Int): [PG]
+        obtenerRegistrosAbiertosPG: [PG]
         obtenerRegistroPG(id: ID!): PG
+        getRegsByDatePG(input: DateRange!): [PG]
 
-        # Planillas de contol de Produccion de Gel
-        obtenerRegistrosCPG: [CPG]
+        # Produccion de Gel
+        obtenerRegistrosCPG(page: Int): [CPG]
+        obtenerRegistrosAbiertosCPG: [CPG]
         obtenerRegistroCPG(id: ID!): CPG
-
-        #---------------------#
-        ######## Otros ########
-        #---------------------#
-
-        # Clientes
-        obtenerClientes: [Cliente]
-        obtenerClientesVendedor: [Cliente]
-        obtenerCliente(id: ID!): Cliente
-
-        # Pedidos
-        obtenerPedidos: [Pedido]
-        obtenerPedidosVendedor: [Pedido]
-        obtenerPedido(id: ID!): Pedido
-        obtenerPedidosEstado(estado: String!): [Pedido]
-
-        # Busquedas Avanzadas
-        mejoresClientes: [TopCliente]
-        mejoresVendedores: [TopVendedor]
-        buscarProducto(texto: String!): [Producto]
+        getRegsByDateCPG(input: DateRange!): [CPG]
 
     }
 
@@ -691,20 +707,6 @@ const typeDefs = gql`
         nuevoDobleRegistroCPG(id: ID, input: CPGInput, finalizado: Boolean): CPG
         actualizarRegistroCPG(id: ID!, input: CPGInput): CPG
         eliminarRegistroCPG(id: ID!): String
-
-        #---------------------#
-        ######## Otros ########
-        #---------------------#
-
-        # Clientes
-        nuevoCliente(input: ClienteInput): Cliente
-        actualizarCliente(id: ID!, input: ClienteInput): Cliente
-        eliminarCliente(id: ID!): String
-
-        # Pedidos
-        nuevoPedido(input: PedidoInput): Pedido
-        actualizarPedido(id: ID!, input: PedidoInput): Pedido
-        eliminarPedido(id: ID!): String
     }
 `;
 
