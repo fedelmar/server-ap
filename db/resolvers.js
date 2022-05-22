@@ -2,24 +2,31 @@ require('dotenv').config({ path:'variables.env' });
 const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
 
-const PG = require('../models/PG');
-const CPE = require('../models/CPE');
-const CGE = require('../models/CGE');
-const CPP = require('../models/CPP');
-const CGP = require('../models/CGP');
-const CSP = require('../models/CSP');
-const CPG = require('../models/CPG');
-const Insumo = require('../models/Insumos');
-const Salida = require('../models/Salidas');
-const Ingreso = require('../models/Ingresos');
-const Producto = require('../models/Productos');
-const StockInsumo = require('../models/StockInsumos');
-const StockInsumos = require('../models/StockInsumos');
-const StockProducto = require('../models/StockProductos');
+const {
+    PG,
+    CPE,
+    CGE,
+    CPP,
+    CGP,
+    CSP,
+    CPG,
+    Insumo,
+    Salida,
+    Ingreso,
+    Producto,
+    StockInsumo,
+    StockInsumos,
+    StockProducto,
+} = require('../models/index');
 
-// IMPORT  QUERIES
-const querieUsuario = require('./queries/usuarios');
-const querieAnalisis = require('./queries/analisis');
+const { 
+    obtenerUsuario,
+    obtenerUsuarios,
+} = require('./queries/usuarios');
+const {
+    indicePorProducto,
+    indiceDeProduccion,
+} = require('./queries/analisis');
 const { 
     obtenerRegistrosPE,
     obtenerRegistrosAbiertosPE,
@@ -29,10 +36,41 @@ const {
     getRegsByDatePE,
     getRegsByDateGE,
 } = require('./queries/esponjas');
-const queriePlacas = require('./queries/placas');
-const querieGel = require('./queries/gel');
-const querieSalidas = require('./queries/salidas');
-const querieIngresos = require('./queries/ingresos');
+const { 
+    obtenerRegistrosPP,
+    obtenerRegistrosAbiertosPP,
+    obtenerRegistroPP,
+    getRegsByDatePP,
+    obtenerRegistrosSP,
+    obtenerRegistrosAbiertosSP,
+    obtenerRegistroSP,
+    getRegsByDateSP,
+    obtenerRegistrosGP,
+    obtenerRegistrosAbiertosGP,
+    obtenerRegistroGP,
+    getRegsByDateGP,
+} = require('./queries/placas');
+const {         
+    obtenerRegistrosCPG,
+    obtenerRegistrosAbiertosCPG,
+    obtenerRegistroCPG,
+    getRegsByDateCPG,
+    obtenerRegistrosPG,
+    obtenerRegistrosAbiertosPG,
+    obtenerRegistroPG,
+    getRegsByDatePG,
+} = require('./queries/gel');
+const {
+    obtenerRegistrosSalidas,
+    obtenerRegistroSalida,
+    obtenerLotesPorSalida,
+    getRegsByDateSalidas,
+} = require('./queries/salidas');
+const {         
+    obtenerRegistrosIngresos,
+    obtenerRegistroIngreso,
+    getRegsByDateIngreso, 
+} = require('./queries/ingresos');
 
 // IMPORT MUTATIONS
 const mutationUsuario = require('./mutations/usuarios');
@@ -59,12 +97,12 @@ const resolvers = {
 
     Query: {
         // USUARIOS
-        obtenerUsuario: querieUsuario.obtener,
-        obtenerUsuarios: querieUsuario.obtenerTodos,
+        obtenerUsuario,
+        obtenerUsuarios,
 
         // ANALISIS DE DATOS
-        indicePorProducto: querieAnalisis.indicePorProducto,
-        indiceDeProduccion: querieAnalisis.indiceDeProduccion,
+        indicePorProducto,
+        indiceDeProduccion,
 
         /**
          * ESPONJAS
@@ -83,38 +121,46 @@ const resolvers = {
          * Placas
          */
         // Produccion
-        obtenerRegistrosPP: queriePlacas.obtenerRegistrosPP,
-        obtenerRegistrosAbiertosPP: queriePlacas.obtenerRegistrosAbiertosPP,
-        obtenerRegistroPP: queriePlacas.obtenerRegistroPP,
+        obtenerRegistrosPP,
+        obtenerRegistrosAbiertosPP,
+        obtenerRegistroPP,
+        getRegsByDatePP,
         // Sellado
-        obtenerRegistrosSP: queriePlacas.obtenerRegistrosSP,
-        obtenerRegistrosAbiertosSP: queriePlacas.obtenerRegistrosAbiertosSP,
-        obtenerRegistroSP: queriePlacas.obtenerRegistroSP,
+        obtenerRegistrosSP,
+        obtenerRegistrosAbiertosSP,
+        obtenerRegistroSP,
+        getRegsByDateSP,
         // Guardado
-        obtenerRegistrosGP: queriePlacas.obtenerRegistrosGP,
-        obtenerRegistrosAbiertosGP: queriePlacas.obtenerRegistrosAbiertosGP,
-        obtenerRegistroGP: queriePlacas.obtenerRegistroGP,
+        obtenerRegistrosGP,
+        obtenerRegistrosAbiertosGP,
+        obtenerRegistroGP,
+        getRegsByDateGP,
 
         /**
          * Gel
          */
         // Produccion
-        obtenerRegistrosCPG: querieGel.obtenerRegistrosCPG,
-        obtenerRegistrosAbiertosCPG: querieGel.obtenerRegistrosAbiertosCPG,
-        obtenerRegistroCPG: querieGel.obtenerRegistroCPG,
+        obtenerRegistrosCPG,
+        obtenerRegistrosAbiertosCPG,
+        obtenerRegistroCPG,
+        getRegsByDateCPG,
+        
         // Preparacion
-        obtenerRegistrosPG: querieGel.obtenerRegistrosPG,
-        obtenerRegistrosAbiertosPG: querieGel.obtenerRegistrosAbiertosPG,
-        obtenerRegistroPG: querieGel.obtenerRegistroPG,
+        obtenerRegistrosPG,
+        obtenerRegistrosAbiertosPG,
+        obtenerRegistroPG,
+        getRegsByDatePG,
 
         // Salidas
-        obtenerRegistrosSalidas: querieSalidas.obtenerRegistrosSalidas,
-        obtenerRegistroSalida: querieSalidas.obtenerRegistroSalida,
-        obtenerLotesPorSalida: querieSalidas.obtenerLotesPorSalida,
+        obtenerRegistrosSalidas,
+        obtenerRegistroSalida,
+        obtenerLotesPorSalida,
+        getRegsByDateSalidas,
 
         // Ingresos
-        obtenerRegistrosIngresos: querieIngresos.obtenerRegistrosIngresos,
-        obtenerRegistroIngreso: querieIngresos.obtenerRegistroIngreso,
+        obtenerRegistrosIngresos,
+        obtenerRegistroIngreso,
+        getRegsByDateIngreso,
 
         obtenerProductos: async () => {
             try {

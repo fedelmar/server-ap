@@ -1,10 +1,10 @@
 const Usuario = require('../../models/Usuarios');
 
-const obtener = async (_, { }, ctx) => {
+const obtenerUsuario = async (_, { }, ctx) => {
   return ctx.usuario;
 };
 
-const obtenerTodos = async () => {
+const obtenerUsuarios = async () => {
   try {
       const usuarios = await Usuario.find({});
       return usuarios
@@ -14,6 +14,6 @@ const obtenerTodos = async () => {
 };
 
 module.exports = {
-  obtener,
-  obtenerTodos,
+  obtenerUsuario,
+  obtenerUsuarios,
 };

@@ -2,12 +2,9 @@ const CPG = require('../../models/CPG');
 const PG = require('../../models/PG');
 
 const { PAGE_SIZE } = require('../../constants');
-const { getRegs, getSingleReg, getOpenRegs } = require('../queries/common');
+const { getRegs, getSingleReg, getOpenRegs, getRegsByDate } = require('../queries/common');
 
 
-/**
- * Preparacion de gel
- */
 const obtenerRegistrosPG = async (_, { page }) => {
   page = page || 1;
   const skip = (page - 1) * PAGE_SIZE;
@@ -17,34 +14,27 @@ const obtenerRegistrosPG = async (_, { page }) => {
           .limit(PAGE_SIZE);
 };
 
-const obtenerRegistrosAbiertosPG = async (_, {}) => {
-  return getOpenRegs(PG);
-};
-
-const obtenerRegistroPG = async (_, {id}) => {
-  return getSingleReg(id, PG)
-};
-
-/**
- * Produccion de gel
- */
-const obtenerRegistrosCPG = async (_, { page }) => {
-  return getRegs(page, CPG);
-};
-
-const obtenerRegistrosAbiertosCPG = async () => {
-  return getOpenRegs(CPG);
-};
-
-const obtenerRegistroCPG = async (_, {id}) => {
-  return getSingleReg(id, CPG)
+const getRegsByDatePG = async (_, { input }) => {
+  const { start, end } = input;
+  const reg = await PG.find({
+    creado: {
+      $gte: start,
+      $lt: end,
+    }
+  })
+  .sort({ $natural: -1 });
+  return reg;
 };
 
 module.exports = {
+  // PREPARADO
   obtenerRegistrosPG,
-  obtenerRegistrosAbiertosPG,
-  obtenerRegistroPG,
-  obtenerRegistrosCPG,
-  obtenerRegistrosAbiertosCPG,
-  obtenerRegistroCPG,
+  getRegsByDatePG,
+  obtenerRegistroPG: async (_, { id }) => getSingleReg(id, PG),
+  obtenerRegistrosAbiertosPG: async (_, {}) => getOpenRegs(PG),
+  // PRODUCCION
+  obtenerRegistroCPG: async (_, { id }) => getSingleReg(id, CPG),
+  obtenerRegistrosCPG: async (_, { page }) => getRegs(page, CPG),
+  obtenerRegistrosAbiertosCPG: async (_, {}) => getOpenRegs(CPG),
+  getRegsByDateCPG: async (_, { input }) => getRegsByDate(CPG, input),
 }

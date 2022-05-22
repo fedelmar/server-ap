@@ -1,16 +1,8 @@
 const Salidas = require("../../models/Salidas");
 const { getRegs, getSingleReg } = require('../queries/common');
 
-const obtenerRegistrosSalidas = async (_, { page }) => {
-  return getRegs(page, Salidas);
-};
-
-const obtenerRegistroSalida = async (_, { id }) => {
-  return getSingleReg(id, Salidas);
-};
-
 const obtenerLotesPorSalida = async (_, { id }) => {
-  let lote = await Salida.findById(id);
+  let lote = await Salidas.findById(id);
   let stockProductos = await StockProducto.find({});
   let productos = await Producto.find({});
 
@@ -31,9 +23,21 @@ const obtenerLotesPorSalida = async (_, { id }) => {
   return lotesSalidas;
 };
 
+const getRegsByDateSalidas =  async (_, { input }) => {
+  const { end, start } = input;
+  const reg = await Salidas.find({
+    fecha: {
+      $gte: start,
+      $lt: end,
+    }
+  })
+  .sort({ $natural: -1 });
+  return reg;
+};
 
 module.exports = {
-  obtenerRegistrosSalidas,
-  obtenerRegistroSalida,
-  obtenerLotesPorSalida
+  obtenerRegistrosSalidas: async (_, { page }) => getRegs(page, Salidas),
+  obtenerRegistroSalida: async (_, { id }) => getSingleReg(id, Salidas),
+  obtenerLotesPorSalida,
+  getRegsByDateSalidas,
 }

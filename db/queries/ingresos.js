@@ -1,18 +1,9 @@
 const Ingresos = require("../../models/Ingresos");
-const { getRegs, getSingleReg } = require('../queries/common');
+const { getRegs, getSingleReg, getRegsByDate } = require('../queries/common');
 
-
-const obtenerRegistrosIngresos = async (_, { page }) => {
-  const reg = getRegs(page, Ingresos);
-  return reg;
-
-};
-
-const obtenerRegistroIngreso = async (_, { id }) => {
-  return getSingleReg(id, Ingresos);
-};
 
 module.exports = {
-  obtenerRegistroIngreso,
-  obtenerRegistrosIngresos,
+  obtenerRegistroIngreso: async (_, { id }) => getSingleReg(id, Ingresos),
+  obtenerRegistrosIngresos: async (_, { page }) => getRegs(page, Ingresos),
+  getRegsByDateIngreso: async (_, { input }) => getRegsByDate(Ingresos, input)
 };

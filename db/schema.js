@@ -574,10 +574,12 @@ const typeDefs = gql`
         obtenerRegistrosSalidas(page: Int): [Salida]
         obtenerRegistroSalida(id: ID!): Salida
         obtenerLotesPorSalida(id: ID!): [LoteSalida]
+        getRegsByDateSalidas(input: DateRange!): [Salida]
 
         # Ingresos
         obtenerRegistrosIngresos(page: Int): [Ingreso]
-        obtenerRegistroIngreso(id: ID!): Ingreso 
+        obtenerRegistroIngreso(id: ID!): Ingreso
+        getRegsByDateIngreso(input: DateRange!): [Ingreso] 
 
         # Produccion de Esponjas
         obtenerRegistrosPE(page: Int): [CPE]
@@ -595,26 +597,31 @@ const typeDefs = gql`
         obtenerRegistrosPP(page: Int): [CPP]
         obtenerRegistrosAbiertosPP: [CPP]
         obtenerRegistroPP(id: ID!): CPP
+        getRegsByDatePP(input: DateRange!): [CPP]
 
         # Guardado de Placas
         obtenerRegistrosGP(page: Int): [CGP]
         obtenerRegistrosAbiertosGP: [CGP]
         obtenerRegistroGP(id: ID!): CGP
+        getRegsByDateGP(input: DateRange!): [CGP]
 
         # Sellado de Placas
         obtenerRegistrosSP(page: Int): [CSP]
         obtenerRegistrosAbiertosSP: [CSP]
         obtenerRegistroSP(id: ID!): CSP
+        getRegsByDateSP(input: DateRange!): [CSP]
 
         # Preparacion de Gel
         obtenerRegistrosPG(page: Int): [PG]
         obtenerRegistrosAbiertosPG: [PG]
         obtenerRegistroPG(id: ID!): PG
+        getRegsByDatePG(input: DateRange!): [PG]
 
         # Produccion de Gel
         obtenerRegistrosCPG(page: Int): [CPG]
         obtenerRegistrosAbiertosCPG: [CPG]
         obtenerRegistroCPG(id: ID!): CPG
+        getRegsByDateCPG(input: DateRange!): [CPG]
 
     }
 
