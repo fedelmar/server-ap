@@ -991,8 +991,8 @@ const resolvers = {
             const difPlacas = cantProducida - registro.cantProducida;
             const difDescarte = cantDescarte - registro.cantDescarte;
 
-            regPlaca.cantidad -= difPlacas + difDescarte;
-            regTapon.cantidad -= difPlacas + difDescarte;
+            if (regPlaca) regPlaca.cantidad -= difPlacas + difDescarte;
+            if (regTapon) regTapon.cantidad -= difPlacas + difDescarte;
 
             await StockInsumo.findByIdAndUpdate({_id: regPlaca.id}, regPlaca, {new: true});
             await StockInsumo.findByIdAndUpdate({_id: regTapon.id}, regTapon, {new: true});
@@ -1611,7 +1611,7 @@ const resolvers = {
                 if (id) {
                     // Actualizar la cantidad de Insumo
                     bolsaStock.cantidad -= cantProducida + cantDescarte;
-                    await StockInsumo.findByIdAndUpdate( {_id: loteBolsaID}, bolsaStock, { new: true });
+                    await StockInsumo.findByIdAndUpdate({_id: loteBolsaID}, bolsaStock, { new: true });
 
                     // Actualizar o crear nuevo lote de producto en el Stock
                     if (loteStock){
@@ -1631,13 +1631,10 @@ const resolvers = {
                         const loteTermiado = new StockProducto(nuevoLote);
                         await loteTermiado.save();
                     }
-
                     // Actualizar los datos del registro y finalizarlo
                     input.modificado = Date.now();
                     input.estado = false;
-                    resultado = await CPG.findByIdAndUpdate( {_id: id}, input, { new: true })
-
-
+                    resultado = await CPG.findByIdAndUpdate({_id: id}, input, { new: true })
                 } else {
 
                     // Abrir un nuevo rejistro activo
@@ -1653,7 +1650,7 @@ const resolvers = {
             return resultado;
         },
 
-        nuevoDobleRegistroCPG: async (_ , { id, input}) => {
+        nuevoDobleRegistroCPG: async (_ , { id, input, finalizado }) => {
             const { 
                 lote,
                 loteBolsa,
@@ -1663,7 +1660,8 @@ const resolvers = {
                 operario,
                 productoID,
                 loteBolsaCristal,
-                cantDescarteBolsaCristal, 
+                cantDescarteBolsaCristal,
+                producto 
             } = input;
 
             // Obtener informacion en Insumos y Productos en Stock
@@ -1673,14 +1671,11 @@ const resolvers = {
             try {
                 if (id) {
                     if (!loteBolsaCristal) {
+                        // Actualizar la cantidad de Insumo de Bolsa simple
+                        bolsaStock.cantidad -= cantDescarte;
+                        await StockInsumo.findByIdAndUpdate({_id: loteBolsaID}, bolsaStock, { new: true });
                         // Actualizar o crear nuevo lote de producto en el Stock
-                        if (loteStock){
-                           throw new Error('Ya existe ese lote en el stock');
-                        } else {
-                            // Actualizar la cantidad de Insumo de Bolsa simple
-                            bolsaStock.cantidad -= cantDescarte;
-                            await StockInsumo.findByIdAndUpdate({_id: loteBolsaID}, bolsaStock, { new: true });
-
+                        if (!loteStock){
                             const nuevoLote = {
                                 lote: lote,
                                 estado: "Proceso",
@@ -1700,19 +1695,43 @@ const resolvers = {
                         // Actualizar la cantidad de Insumo de Bolsa cristal
                         bolsaCristalStock.cantidad -= cantProducida + cantDescarteBolsaCristal;
                         await StockInsumos.findByIdAndUpdate({_id: bolsaCristalStock.id }, bolsaCristalStock, { new: true });
-
+                        
                         // Actualizar el stock de producto
-                        loteStock.cantidad += cantProducida;
-                        loteStock.estado = 'Terminado';
-                        await StockProducto.findByIdAndUpdate({_id: loteStock.id}, loteStock, { new: true });                        
+                        let loteTerminado = await StockProducto.findOne({ lote, estado: 'Terminado' });
+                        if (finalizado) {
+                            const cantAnterior = loteTerminado ? loteTerminado.cantidad : 0;
+                            loteStock.cantidad += cantProducida + cantAnterior;
+                            loteStock.estado = 'Terminado';
+                            loteStock.responsable = operario;
+                            loteStock.modificado = Date.now(); 
+                            await StockProducto.findByIdAndUpdate({_id: loteStock._id}, loteStock, { new: true });
+                            await StockProducto.findByIdAndDelete({ _id: loteTerminado._id});
+                        } else {
+                            if (!loteTerminado) {
+                                const { id } = await Producto.findOne({ nombre: producto });
+                                const nuevoLote = {
+                                    lote: lote,
+                                    estado: "Terminado",
+                                    cantidad: cantProducida,
+                                    producto: id,
+                                    responsable: operario,
+                                    modificado: Date.now(),
+                                }
+                                const nuevoLoteFinalizado = new StockProducto(nuevoLote);
+                                await nuevoLoteFinalizado.save();
+                            } else {
+                                loteTerminado.cantidad += cantProducida;
+                                loteTerminado.responsable = operario,
+                                loteTerminado.modificado = Date.now();
+                                await StockProducto.findByIdAndUpdate({_id: loteTerminado._id}, loteTerminado, { new: true });
+                            }
+                        }; 
                     }
 
                     // Actualizar los datos del registro y finalizarlo
                     input.modificado = Date.now();
                     input.estado = false;
-                    resultado = await CPG.findByIdAndUpdate( {_id: id}, input, { new: true })
-
-
+                    resultado = await CPG.findByIdAndUpdate( {_id: id}, input, { new: true });
                 } else {
                     // Abrir un nuevo rejistro activo
                     input.creado = Date.now();
