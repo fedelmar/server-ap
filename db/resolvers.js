@@ -1276,7 +1276,6 @@ const resolvers = {
 
         nuevoRegistroGE: async (_, { id, input}) => {
             const { guardado, descarte, lote, operario } = input;
-            
             let infoLote = await StockProducto.findOne({ lote: lote, estado: {$ne: "Terminado"} });
             let loteTerminado = await StockProducto.findOne({lote: lote, estado: "Terminado"});
             let registro = await CPE.findOne({lote: lote});
@@ -1292,8 +1291,10 @@ const resolvers = {
                     infoLote.responsable = operario;
 
                     // Se suma las esponjas recuperadas en el descarte al lote de Esponjas
-                    loteEsponja.cantidad += descarte;
-                    await StockInsumo.findByIdAndUpdate({_id: loteEsponja.id}, loteEsponja, {new: true})
+                    if (loteEsponja) {
+                        loteEsponja.cantidad += descarte;
+                        await StockInsumo.findByIdAndUpdate({_id: loteEsponja.id}, loteEsponja, {new: true})
+                    }
              
                     // Actualizar info en el lote del producto
                     if(infoLote.cantidad > guardado + descarte) {
