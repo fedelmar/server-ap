@@ -1,17 +1,18 @@
-const CPG = require('../../models/CPG');
-const PG = require('../../models/PG');
+const CPG = require("../../models/CPG");
+const PG = require("../../models/PG");
 
-const { PAGE_SIZE } = require('../../constants');
-const { getRegs, getSingleReg, getOpenRegs, getRegsByDate } = require('../queries/common');
-
+const { PAGE_SIZE } = require("../../constants");
+const {
+  getRegs,
+  getSingleReg,
+  getOpenRegs,
+  getRegsByDate,
+} = require("../queries/common");
 
 const obtenerRegistrosPG = async (_, { page }) => {
   page = page || 1;
   const skip = (page - 1) * PAGE_SIZE;
-  return PG.find({})
-          .sort({ $natural: -1 })
-          .skip(skip)
-          .limit(PAGE_SIZE);
+  return PG.find({}).sort({ $natural: -1 }).skip(skip).limit(PAGE_SIZE);
 };
 
 const getRegsByDatePG = async (_, { input }) => {
@@ -20,9 +21,8 @@ const getRegsByDatePG = async (_, { input }) => {
     creado: {
       $gte: start,
       $lt: end,
-    }
-  })
-  .sort({ $natural: -1 });
+    },
+  }).sort({ $natural: -1 });
   return reg;
 };
 
@@ -37,4 +37,4 @@ module.exports = {
   obtenerRegistrosCPG: async (_, { page }) => getRegs(page, CPG),
   obtenerRegistrosAbiertosCPG: async (_, {}) => getOpenRegs(CPG),
   getRegsByDateCPG: async (_, { input }) => getRegsByDate(CPG, input),
-}
+};
