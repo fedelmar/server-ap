@@ -1937,7 +1937,11 @@ const resolvers = {
                 loteStock,
                 { new: true }
               );
-              await StockProducto.findByIdAndDelete({ _id: loteTerminado._id });
+              if (loteTerminado) {
+                await StockProducto.findByIdAndDelete({
+                  _id: loteTerminado._id,
+                });
+              }
             } else {
               if (!loteTerminado) {
                 const { id } = await Producto.findOne({ nombre: producto });
