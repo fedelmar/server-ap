@@ -11,6 +11,7 @@ const obtenerStockInsumos = async () => {
 };
 
 const obtenerInsumosFaltantes = async () => {
+  // TODO Devolver sin placas y quimico
   try {
     const insumos = await StockInsumo.aggregate([
       {
