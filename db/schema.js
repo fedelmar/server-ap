@@ -40,6 +40,13 @@ const typeDefs = gql`
     categoria: String
   }
 
+  type InsumoConFaltante {
+    id: ID
+    nombre: String
+    categoria: String
+    cantidad: Int
+  }
+
   type sInsumo {
     id: ID
     lote: String
@@ -564,6 +571,7 @@ const typeDefs = gql`
     obtenerInsumoPorLote(input: String!): sInsumo
     obtenerInsumosPorInsumo: [cantInsumo]
     obtenerStockInsumosPorProducto(id: ID!): [sInsumoCompleto]
+    obtenerInsumosFaltantes: [sInsumoCompleto]
 
     #---------------------#
     ###### REGISTROS ######

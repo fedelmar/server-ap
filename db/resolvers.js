@@ -65,6 +65,10 @@ const {
   obtenerRegistroIngreso,
   getRegsByDateIngreso,
 } = require("./queries/ingresos");
+const {
+  obtenerStockInsumos,
+  obtenerInsumosFaltantes,
+} = require("./queries/insumos");
 
 // IMPORT MUTATIONS
 const mutationUsuario = require("./mutations/usuarios");
@@ -154,6 +158,10 @@ const resolvers = {
     obtenerRegistrosIngresos,
     obtenerRegistroIngreso,
     getRegsByDateIngreso,
+
+    // Insumos
+    obtenerStockInsumos,
+    obtenerInsumosFaltantes,
 
     obtenerProductos: async () => {
       try {
@@ -458,15 +466,6 @@ const resolvers = {
       }
 
       return insumo;
-    },
-
-    obtenerStockInsumos: async () => {
-      try {
-        const insumos = await StockInsumo.find({}).sort({ $natural: -1 });
-        return insumos;
-      } catch (error) {
-        console.log(error);
-      }
     },
 
     obtenerInsumoEnStock: async (_, { id }) => {
