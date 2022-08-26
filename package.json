@@ -15,7 +15,7 @@
     "dotenv": "^8.2.0",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.2",
-    "mongoose": "^6.0.14"
+    "mongoose": "^6.4.6"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"
