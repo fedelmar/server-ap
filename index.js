@@ -9,8 +9,7 @@ const { cron } = require('./crons/outOfStockEmail.js');
 
 //Conectar a la base de datos
 conectarDB();
-//Llamar servicios recurrentes
-cron();
+
 
 
 const schema = makeExecutableSchema({
@@ -46,3 +45,6 @@ const server = new ApolloServer({
 server.listen({ port: process.env.PORT || 4000 }).then(({ url }) => {
     console.log(`Servidor corriendo en ${url}`)
 })
+
+//Llamar servicios recurrentes
+cron();

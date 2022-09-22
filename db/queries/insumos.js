@@ -24,7 +24,7 @@ const obtenerInsumosFaltantes = async () => {
 
     const insumosFiltrados = insumos.filter((insumo) => insumo.count < 1000);
 
-    const insumosConFaltante = await insumosFiltrados.map(async (insumo) => {
+    const insumosConFaltante = await Promise.all(insumosFiltrados.map(async (insumo) => {
       const i = await Insumos.findOne({
         _id: insumo._id,
       });
@@ -33,9 +33,10 @@ const obtenerInsumosFaltantes = async () => {
         categoria: i.categoria,
         cantidad: insumo.count,
       };
-    });
+    }))
 
-    return insumosConFaltante;
+    return insumosConFaltante.filter((insumo) => insumo.categoria !== 'Quimico' && insumo.categoria !== 'Placas');
+
   } catch (error) {
     console.log(error);
   }

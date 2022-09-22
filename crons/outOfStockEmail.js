@@ -1,4 +1,6 @@
 const { CronJob } = require('cron');
+const { obtenerInsumosFaltantes } = require('../db/queries/insumos');
+
 
 //                    ┌────────────── second (optional)
 //                    │ ┌──────────── minute
@@ -9,11 +11,13 @@ const { CronJob } = require('cron');
 //                    │ │ │ │ │ │
 //                    │ │ │ │ │ │
 //                    * * * * * *
-const FREQUENCY = '*/10 * * * * *';
+const FREQUENCY = '*/60 * * * * *';
 
 
-const outOfStockEmail = () => {
-  console.log("SOY UN CRON CORRIENDO");
+const outOfStockEmail = async () => {
+  const insumosFaltantes = await obtenerInsumosFaltantes();
+  //const result = await Promise.all(insumosFaltantes);
+  console.log('Insumos Faltantes:', insumosFaltantes);
 };
 
 
