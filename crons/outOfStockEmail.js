@@ -11,13 +11,23 @@ const { obtenerInsumosFaltantes } = require('../db/queries/insumos');
 //                    │ │ │ │ │ │
 //                    │ │ │ │ │ │
 //                    * * * * * *
-const FREQUENCY = '*/60 * * * * *';
+const FREQUENCY = '*/10 * * * * *';
+
+let insumosFaltantesAnt = null;
 
 
 const outOfStockEmail = async () => {
   const insumosFaltantes = await obtenerInsumosFaltantes();
-  //const result = await Promise.all(insumosFaltantes);
-  console.log('Insumos Faltantes:', insumosFaltantes);
+  let compararInsumos = JSON.stringify(insumosFaltantes) !== JSON.stringify(insumosFaltantesAnt);
+  if (insumosFaltantes && compararInsumos) {
+    console.log("ENVIAR EMAIL");
+  }
+  
+  // console.log("INSUMOS ANTERIOR: ", JSON.stringify(insumosFaltantesAnt));
+  // console.log("INSUMOS FALTANTES: ", JSON.stringify(insumosFaltantes));
+  console.log("Comparar Insumos: ", compararInsumos);
+  insumosFaltantesAnt = insumosFaltantes;
+
 };
 
 
