@@ -1,5 +1,6 @@
 const { CronJob } = require('cron');
 const { obtenerInsumosFaltantes } = require('../db/queries/insumos');
+//const { Insumos } = require('')
 
 
 //                    ┌────────────── second (optional)
@@ -25,7 +26,7 @@ const outOfStockEmail = async () => {
   
   // console.log("INSUMOS ANTERIOR: ", JSON.stringify(insumosFaltantesAnt));
   // console.log("INSUMOS FALTANTES: ", JSON.stringify(insumosFaltantes));
-  console.log("Comparar Insumos: ", compararInsumos);
+  // console.log("Comparar Insumos: ", compararInsumos);
   insumosFaltantesAnt = insumosFaltantes;
 
 };

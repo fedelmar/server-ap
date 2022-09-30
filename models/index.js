@@ -12,6 +12,7 @@ const Producto = require('./Productos');
 const StockInsumo = require('./StockInsumos');
 const StockInsumos = require('./StockInsumos');
 const StockProducto = require('./StockProductos');
+const InsumosFaltantes = require('./InsumosFaltantes');
 
 module.exports = {
   PG,
@@ -28,4 +29,5 @@ module.exports = {
   StockInsumo,
   StockInsumos,
   StockProducto,
+  InsumosFaltantes
 }

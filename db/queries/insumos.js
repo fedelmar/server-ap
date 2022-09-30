@@ -1,5 +1,6 @@
 const StockInsumo = require("../../models/StockInsumos");
 const Insumos = require("../../models/Insumos");
+const InsumosFaltantes = require("../../models/InsumosFaltantes");
 
 const obtenerStockInsumos = async () => {
   try {
@@ -19,7 +20,7 @@ const obtenerInsumosFaltantes = async () => {
           count: { $sum: "$cantidad" },
         },
       },
-    ]);
+    ]).sort({ $natural: -1 });
 
     const insumosIDsFaltante = insumos.filter((insumo) => insumo.count < 1000);
 
@@ -35,18 +36,7 @@ const obtenerInsumosFaltantes = async () => {
     }))
 
     const insumosDatosFaltanteFiltrado = insumosDatosFaltante
-      .filter((insumo) => insumo.categoria !== 'Quimico' && insumo.categoria !== 'Placas')
-      .sort((a, b) => {
-        let insumoA = a.insumo;
-        let insumoB = b.insumo;
-        if (insumoA < insumoB) {
-          return -1;
-        }
-        if (insumoA > insumoB) {
-          return 1;
-        }
-        return 0;
-      });
+      .filter((insumo) => insumo.categoria !== 'Quimico' && insumo.categoria !== 'Placas');
 
     return insumosDatosFaltanteFiltrado;
 
@@ -55,7 +45,17 @@ const obtenerInsumosFaltantes = async () => {
   }
 };
 
+const obtenerInsumosFaltantesModelo = async () => {
+  try {
+    const faltantes = await InsumosFaltantes.find({});
+    return faltantes;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   obtenerStockInsumos,
   obtenerInsumosFaltantes,
+  obtenerInsumosFaltantesModelo
 };

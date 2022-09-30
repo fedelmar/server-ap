@@ -17,6 +17,7 @@ const {
   StockInsumo,
   StockInsumos,
   StockProducto,
+  InsumosFaltantes
 } = require("../models/index");
 
 const { obtenerUsuario, obtenerUsuarios } = require("./queries/usuarios");
@@ -800,6 +801,44 @@ const resolvers = {
       lote = await StockInsumo.findByIdAndDelete({ _id: id });
 
       return "Lote eliminado del stock.";
+    },
+
+    nuevoInsumoFaltante: async (_, { input }) => {
+      const existenInsumos = await InsumosFaltantes.find({});
+      if (existenInsumos) {
+        throw new Error("Ya existen");
+      }
+      try {
+        const nuevosFaltantes = new InsumosFaltantes(input);
+        const faltantes = await nuevosFaltantes.save();
+
+        return faltantes;
+
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    actualizarInsumoFaltante: async (_, { id, input }) => {
+      let faltantes = await InsumosFaltantes.find({});
+      if (!faltantes) {
+        throw new Error("No existen Insumos faltantes");
+      }
+      faltantes = await InsumosFaltantes.findByIdAndUpdate({ _id: id }, input, {
+        new: true,
+      });
+
+      return faltantes;
+    },
+
+    eliminarInsumoFaltante: async (_, { id, input }) => {
+      let faltantes = await InsumosFaltantes.find({});
+      if (!faltantes) {
+        throw new Error("No existen insumos faltantes");
+      }
+      faltantes = await InsumosFaltantes.findByIdAndDelete({ _id: id })
+
+      return "Insumos faltantes eliminados.";
     },
 
     nuevoRegistroSalida: async (_, { input }) => {
