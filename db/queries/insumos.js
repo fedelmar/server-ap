@@ -20,7 +20,10 @@ const obtenerInsumosFaltantes = async () => {
           count: { $sum: "$cantidad" },
         },
       },
-    ]).sort({ $natural: -1 });
+      {
+        $sort: { categoria: -1 }
+      }
+    ]);
 
     const insumosIDsFaltante = insumos.filter((insumo) => insumo.count < 1000);
 
