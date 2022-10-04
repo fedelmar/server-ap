@@ -1,21 +1,20 @@
 const InsumosFaltantes = require('../../models/InsumosFaltantes');
 
-const nuevoInsumoFaltante = async (_, { input }) => {
-    // const { stringFaltantes } = input;
-    // console.log(stringFaltantes);
-    // const existenInsumos = await InsumosFaltantes.find({});
-    // if (existenInsumos) {
-    //     throw new Error("Ya existen");
-    // }
-    // try {
-    //     const nuevosFaltantes = new InsumosFaltantes(input);
-    //     const faltantes = await nuevosFaltantes.save();
+const nuevoInsumoFaltante = async (input) => {
+    const existenInsumos = await InsumosFaltantes.find({});
+    if (existenInsumos.length != 0) {
+        throw new Error("Ya existen");
+    }
+    try {
+        console.log("tipo input: ", typeof(input));
+        const nuevosFaltantes = new InsumosFaltantes({input});
+        const faltantes = await nuevosFaltantes.save();
 
-    //     return faltantes;
+        return faltantes;
 
-    // } catch (error) {
-    //     console.log(error);
-    // }
+    } catch (error) {
+        console.log(error);
+    }
 };
 
 const actualizarInsumoFaltante = async (_, { id, input }) => {

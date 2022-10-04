@@ -19,8 +19,8 @@ let insumosFaltantesAnt = null;
 
 const outOfStockEmail = async () => {
   const insumosFaltantes = await obtenerInsumosFaltantes();
-  const stringFaltantes = JSON.stringify(insumosFaltantes);
-  nuevoInsumoFaltante(stringFaltantes);
+  console.log("tipo en cron: ", typeof(JSON.stringify(insumosFaltantes)));
+  nuevoInsumoFaltante(JSON.stringify(insumosFaltantes));
   // let compararInsumos = JSON.stringify(insumosFaltantes) !== JSON.stringify(insumosFaltantesAnt);
   // if (insumosFaltantes && compararInsumos) {
   //   console.log("ENVIAR EMAIL");
