@@ -30,7 +30,7 @@ const actualizarInsumoFaltante = async ( id, input ) => {
     return faltantes;
 };
 
-const eliminarInsumoFaltante = async ({ id, input }) => {
+const eliminarInsumoFaltante = async ( id, input ) => {
     let faltantes = await InsumosFaltantes.find({});
     if (!faltantes) {
         console.log("No existen insumos faltantes");
