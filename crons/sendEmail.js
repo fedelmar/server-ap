@@ -5,21 +5,22 @@ const sendEmail = (mailContent, subject) => {
     service: "gmail",
     auth: {
       user: "martin.mdp92@gmail.com",
-      pass: "PASS_LLAVE",
+      pass: process.env.EMAIL_KEY,
     },
   });
 
   const mailOptions = {
     from: "martin.mdp92@gmail.com",
-    to: ["martinrdilorenzo@gmail.com"],
+    to: ["martinrdilorenzo@gmail.com", "fsuarez91@gmail.com"],
     subject: subject,
     text: mailContent,
   };
 
-  transporter.sendMail(mailOptions, function (error, info) {
+  transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.log(error);
     } else {
+      console.log("Se envio el email: " + subject);
       console.log("Email sent: " + info.response);
     }
   });

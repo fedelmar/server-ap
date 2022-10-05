@@ -1,9 +1,11 @@
-const { CronJob } = require('cron');
-const { obtenerInsumosFaltantes } = require('../db/queries/insumos');
-const { nuevoInsumoFaltante, actualizarInsumoFaltante } = require("../db/mutations/insumosFaltantes");
+const { CronJob } = require("cron");
+const { obtenerInsumosFaltantes } = require("../db/queries/insumos");
+const {
+  nuevoInsumoFaltante,
+  actualizarInsumoFaltante,
+} = require("../db/mutations/insumosFaltantes");
 const { obtenerInsumosFaltantesModelo } = require("../db/queries/insumos");
 const { sendEmail } = require("./sendEmail.js");
-
 
 //                    ┌────────────── second (optional)
 //                    │ ┌──────────── minute
@@ -14,27 +16,26 @@ const { sendEmail } = require("./sendEmail.js");
 //                    │ │ │ │ │ │
 //                    │ │ │ │ │ │
 //                    * * * * * *
-const FREQUENCY = '*/10 * * * * *';
-
+const FREQUENCY = "*/10 * * * * *";
 
 const outOfStockEmail = async () => {
-  const insumosFaltantes = JSON.stringify(await obtenerInsumosFaltantes());
-  const insumosFaltantesGuardado = await obtenerInsumosFaltantesModelo();
-  if (insumosFaltantesGuardado.length !== 0) {
-    const { id, faltantes } = insumosFaltantesGuardado[0];
-    if (insumosFaltantes !== faltantes) {
-      const subject = "Hay nuevos Faltantes";
-      const mailContent = insumosFaltantes;
+  const insumosFaltantes = await obtenerInsumosFaltantes();
+  const insumosFaltantesString = JSON.stringify(insumosFaltantes);
+  const insumosFaltantesGuardados = await obtenerInsumosFaltantesModelo();
+  if (insumosFaltantesGuardados.length !== 0) {
+    const { id, faltantes } = insumosFaltantesGuardados[0];
+    if (insumosFaltantesString !== faltantes) {
+      const subject = "Hay insumos en faltante.";
+      const mailContent = insumosFaltantesString;
       sendEmail(mailContent, subject);
-      console.log("Enviar Email\n");
-      actualizarInsumoFaltante(id, insumosFaltantes);
+      actualizarInsumoFaltante(id, insumosFaltantesString);
     }
   } else {
-    console.log("se guarda por primera vez\n");
-    nuevoInsumoFaltante(insumosFaltantes);
+    nuevoInsumoFaltante(insumosFaltantesString);
+    const mailContent = insumosFaltantesString;
+    sendEmail(mailContent, "Hay nuevos insumos en faltante.");
   }
 };
-
 
 const Job = (funct) => {
   const job = new CronJob(
@@ -42,15 +43,13 @@ const Job = (funct) => {
     funct,
     null,
     true,
-    'America/Argentina/Buenos_Aires',
+    "America/Argentina/Buenos_Aires",
     false,
-    true,
+    true
   );
   job.start();
 };
 
-
-
 exports.cron = () => {
   Job(outOfStockEmail);
-}
+};
