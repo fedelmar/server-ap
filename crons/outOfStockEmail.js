@@ -1,6 +1,8 @@
 const { CronJob } = require('cron');
 const { obtenerInsumosFaltantes } = require('../db/queries/insumos');
-const { nuevoInsumoFaltante } = require("../db/mutations/insumosFaltantes");
+const { nuevoInsumoFaltante, actualizarInsumoFaltante } = require("../db/mutations/insumosFaltantes");
+const { obtenerInsumosFaltantesModelo } = require("../db/queries/insumos");
+const { sendEmail } = require("./sendEmail");
 
 
 //                    ┌────────────── second (optional)
@@ -14,22 +16,21 @@ const { nuevoInsumoFaltante } = require("../db/mutations/insumosFaltantes");
 //                    * * * * * *
 const FREQUENCY = '*/10 * * * * *';
 
-let insumosFaltantesAnt = null;
-
 
 const outOfStockEmail = async () => {
-  const insumosFaltantes = await obtenerInsumosFaltantes();
-  console.log("tipo en cron: ", typeof(JSON.stringify(insumosFaltantes)));
-  nuevoInsumoFaltante(JSON.stringify(insumosFaltantes));
-  // let compararInsumos = JSON.stringify(insumosFaltantes) !== JSON.stringify(insumosFaltantesAnt);
-  // if (insumosFaltantes && compararInsumos) {
-  //   console.log("ENVIAR EMAIL");
-  // }
-
-  // console.log("INSUMOS ANTERIOR: ", JSON.stringify(insumosFaltantesAnt));
-  // console.log("INSUMOS FALTANTES: ", JSON.stringify(insumosFaltantes));
-  // console.log("Comparar Insumos: ", compararInsumos);
-  insumosFaltantesAnt = insumosFaltantes;
+  const insumosFaltantes = JSON.stringify(await obtenerInsumosFaltantes());
+  const insumosFaltantesGuardado = await obtenerInsumosFaltantesModelo();
+  if (insumosFaltantesGuardado.length !== 0) {
+    const { id, faltantes } = insumosFaltantesGuardado[0];
+    if (insumosFaltantes !== faltantes) {
+      sendEmail();
+      console.log("Enviar Email\n");
+      actualizarInsumoFaltante(id, insumosFaltantes);
+    }
+  } else {
+    console.log("se guarda por primera vez\n");
+    nuevoInsumoFaltante(insumosFaltantes);
+  }
 
 };
 

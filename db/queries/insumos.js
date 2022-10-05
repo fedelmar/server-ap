@@ -21,7 +21,7 @@ const obtenerInsumosFaltantes = async () => {
         },
       },
       {
-        $sort: { categoria: -1 }
+        $sort: { _id: -1 }
       }
     ]);
 

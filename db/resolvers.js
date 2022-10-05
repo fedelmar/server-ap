@@ -74,12 +74,6 @@ const {
 // IMPORT MUTATIONS
 const mutationUsuario = require("./mutations/usuarios");
 
-const {
-  nuevoInsumoFaltante,
-  actualizarInsumoFaltante,
-  eliminarInsumoFaltante
-} = require('./mutations/insumosFaltantes');
-
 //RESOLVERS
 const resolvers = {
   Date: new GraphQLScalarType({
@@ -601,9 +595,6 @@ const resolvers = {
     autenticarUsuario: mutationUsuario.autenticar,
     actualizarUsuario: mutationUsuario.actualizar,
     modificarPassword: mutationUsuario.modificarPassword,
-    nuevoInsumoFaltante,
-    actualizarInsumoFaltante,
-    eliminarInsumoFaltante,
 
     nuevoProducto: async (_, { input }) => {
       //Verificar existencia del producto
