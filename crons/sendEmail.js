@@ -1,6 +1,6 @@
-const { nodemailer } = require("nodemailer");
+const nodemailer = require("nodemailer");
 
-export const sendEmail: () => void = () => {
+const sendEmail = (mailContent, subject) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -12,8 +12,8 @@ export const sendEmail: () => void = () => {
   const mailOptions = {
     from: "martin.mdp92@gmail.com",
     to: ["martinrdilorenzo@gmail.com"],
-    subject: "HAY PASAJES DE TREN",
-    text: "HAY PASAJES DE TREN. ENTRA A LA WEB DE TRENES ARGENTINOS: https://www.argentina.gob.ar/transporte/trenes-argentinos/pasajes-larga-distancia",
+    subject: subject,
+    text: mailContent,
   };
 
   transporter.sendMail(mailOptions, function (error, info) {
@@ -24,3 +24,5 @@ export const sendEmail: () => void = () => {
     }
   });
 };
+
+module.exports = { sendEmail };

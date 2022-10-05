@@ -2,7 +2,7 @@ const { CronJob } = require('cron');
 const { obtenerInsumosFaltantes } = require('../db/queries/insumos');
 const { nuevoInsumoFaltante, actualizarInsumoFaltante } = require("../db/mutations/insumosFaltantes");
 const { obtenerInsumosFaltantesModelo } = require("../db/queries/insumos");
-const { sendEmail } = require("./sendEmail.ts");
+const { sendEmail } = require("./sendEmail.js");
 
 
 //                    ┌────────────── second (optional)
@@ -23,7 +23,9 @@ const outOfStockEmail = async () => {
   if (insumosFaltantesGuardado.length !== 0) {
     const { id, faltantes } = insumosFaltantesGuardado[0];
     if (insumosFaltantes !== faltantes) {
-      sendEmail();
+      const subject = "Hay nuevos Faltantes";
+      const mailContent = insumosFaltantes;
+      sendEmail(mailContent, subject);
       console.log("Enviar Email\n");
       actualizarInsumoFaltante(id, insumosFaltantes);
     }
