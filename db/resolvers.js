@@ -1510,7 +1510,7 @@ const resolvers = {
       }
       let regLotes = await StockProducto.find({ lote: registro.lote });
 
-      let difPlacas = guardado - registro.guardado;
+      let difGuardado = guardado - registro.guardado;
 
       if (regLotes.length > 1) {
         let enProceso = regLotes.find((l) => l.estado === "Proceso");
