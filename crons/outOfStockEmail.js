@@ -25,20 +25,17 @@ const outOfStockEmail = async () => {
   const insumosFaltantesGuardados = await obtenerInsumosFaltantesModelo();
   
   if (insumosFaltantesGuardados.length !== 0) {
-    console.log("ingresa en en inf porq ya hay insumos guardados")
+    console.log("ingresa en el if, ya hay insumos guardados")
     const { id, faltantes } = insumosFaltantesGuardados[0];
     if (insumosFaltantesString !== faltantes) {
-      console.log('Manda el mail porq son diferentes')
-      const subject = "Hay insumos en faltante.";
-      const mailContent = insumosFaltantesString;
-      sendEmail(mailContent, subject);
+      console.log('Manda el mail, insumos son diferentes')
+      sendEmail(insumosFaltantes, "Hay insumos en faltante.");
       actualizarInsumoFaltante(id, insumosFaltantesString);
     }
   } else {
-    console.log("ingresa en en else porq no hay")
+    console.log("ingresa en en else, no hay insumos guardados")
     nuevoInsumoFaltante(insumosFaltantesString);
-    const mailContent = insumosFaltantesString;
-    sendEmail(mailContent, "Hay nuevos insumos en faltante.");
+    sendEmail(insumosFaltantes, "Hay nuevos insumos en faltante.");
   }
 };
 
