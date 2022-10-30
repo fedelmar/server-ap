@@ -1,5 +1,6 @@
 const StockInsumo = require("../../models/StockInsumos");
 const Insumos = require("../../models/Insumos");
+const InsumosFaltantes = require("../../models/InsumosFaltantes");
 
 const obtenerStockInsumos = async () => {
   try {
@@ -11,7 +12,6 @@ const obtenerStockInsumos = async () => {
 };
 
 const obtenerInsumosFaltantes = async () => {
-  // TODO Devolver sin placas y quimico
   try {
     const insumos = await StockInsumo.aggregate([
       {
@@ -20,11 +20,14 @@ const obtenerInsumosFaltantes = async () => {
           count: { $sum: "$cantidad" },
         },
       },
+      {
+        $sort: { _id: -1 }
+      }
     ]);
 
-    const insumosFiltrados = insumos.filter((insumo) => insumo.count < 1000);
+    const insumosIDsFaltante = insumos.filter((insumo) => insumo.count < 1000);
 
-    const insumosConFaltante = await insumosFiltrados.map(async (insumo) => {
+    const insumosDatosFaltante = await Promise.all(insumosIDsFaltante.map(async (insumo) => {
       const i = await Insumos.findOne({
         _id: insumo._id,
       });
@@ -33,9 +36,22 @@ const obtenerInsumosFaltantes = async () => {
         categoria: i.categoria,
         cantidad: insumo.count,
       };
-    });
+    }))
 
-    return insumosConFaltante;
+    const insumosDatosFaltanteFiltrado = insumosDatosFaltante
+      .filter((insumo) => insumo.categoria !== 'Quimico' && insumo.categoria !== 'Placas');
+
+    return insumosDatosFaltanteFiltrado;
+
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const obtenerInsumosFaltantesModelo = async () => {
+  try {
+    const faltantes = await InsumosFaltantes.find({});
+    return faltantes;
   } catch (error) {
     console.log(error);
   }
@@ -44,4 +60,5 @@ const obtenerInsumosFaltantes = async () => {
 module.exports = {
   obtenerStockInsumos,
   obtenerInsumosFaltantes,
+  obtenerInsumosFaltantesModelo
 };

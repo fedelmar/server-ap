@@ -17,6 +17,7 @@ const {
   StockInsumo,
   StockInsumos,
   StockProducto,
+  InsumosFaltantes
 } = require("../models/index");
 
 const { obtenerUsuario, obtenerUsuarios } = require("./queries/usuarios");

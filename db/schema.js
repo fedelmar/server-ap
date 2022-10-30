@@ -662,6 +662,7 @@ const typeDefs = gql`
     actualizarInsumoStock(id: ID!, input: sInsumoInput): sInsumo
     eliminarInsumoStock(id: ID!): String
 
+
     #---------------------#
     ###### REGISTROS ######
     #---------------------#
