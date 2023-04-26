@@ -40,7 +40,6 @@ const server = new ApolloServer({
 
 //Iniciar el servidor
 server.listen({port: process.env.PORT || 4000}).then( ({url}) => {
-    // programar la tarea para que se ejecute a las 9:30 a.m. el primer día del mes
-    job();
+    job(),
     console.log(`Servidor corriendo en ${url}`)
 })

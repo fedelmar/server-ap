@@ -11,7 +11,7 @@ const {
   PREPARACION_GEL,
   INGRESOS,
   SALIDAS,
-} = require("./constants");
+} = require("../constants");
 const fs = require('fs');
 const path = require('path');
 
@@ -81,7 +81,7 @@ const crearPDF = (datos, modelo) => {
 
   // Guardamos el documento en la carpeta 'Reports' dentro del directorio actual
   let reportDate = moment().format("DD-MM-YYYY");
-  const filePath = path.join(__dirname, 'Reports', `${fileName}_${reportDate}.pdf`);
+  const filePath = path.join(__dirname, '../Reports', `${fileName}_${reportDate}.pdf`);
   fs.writeFileSync(filePath, doc.output());
   
   return {
