@@ -1,19 +1,21 @@
-const { format } = require("../resources/date");
+const { format } = require('../resources/date')
 
 const PRODUCCION_ESPONJAS = {
   export: {
     head: [
-      ['Fecha',
-      'Operario',
-      'Lote',
-      "Inicio",
-      "Cierre",
-      "Producto",
-      "Bolsa", 
-      "Esponja",
-      "Produccion",
-      "Descarte",
-      "Observaciones"]
+      [
+        'Fecha',
+        'Operario',
+        'Lote',
+        'Inicio',
+        'Cierre',
+        'Producto',
+        'Bolsa',
+        'Esponja',
+        'Produccion',
+        'Descarte',
+        'Observaciones'
+      ]
     ],
     regFormat: (registro) => [
       format(new Date(registro.creado), 'dd/MM/yy'),
@@ -29,64 +31,64 @@ const PRODUCCION_ESPONJAS = {
       registro.observaciones
     ],
     title: 'REGISTRO DE PRODUCCIÓN DE ESPONJAS',
-    fileName: 'Produccion Esponjas',
+    fileName: 'Produccion Esponjas'
   },
   columnas: [
     {
       Header: 'Fecha',
-      accessor: 'creado',
+      accessor: 'creado'
     },
     {
       Header: 'Operario',
-      accessor: 'operario',
+      accessor: 'operario'
     },
     {
       Header: 'Lote',
-      accessor: 'lote',
+      accessor: 'lote'
     },
     {
       Header: 'Horario',
-      accessor: 'horario',
+      accessor: 'horario'
     },
     {
       Header: 'Producto',
-      accessor: 'producto',
+      accessor: 'producto'
     },
     {
       Header: 'Lote Bolsa',
-      accessor: 'lBolsa',
+      accessor: 'lBolsa'
     },
     {
       Header: 'Lote Esponja',
-      accessor: 'lEsponja',
+      accessor: 'lEsponja'
     },
     {
       Header: 'Produccion',
-      accessor: 'cantProducida',
+      accessor: 'cantProducida'
     },
     {
       Header: 'Descarte',
-      accessor: 'descarte',
-    },    
+      accessor: 'descarte'
+    },
     {
       Header: 'D. Bolsa',
-      accessor: 'descarteBolsa',
+      accessor: 'descarteBolsa'
     },
     {
       Header: 'Observaciones',
-      accessor: 'observaciones',
+      accessor: 'observaciones'
     },
     {
       Header: 'Editar',
-      accessor: 'editar',
+      accessor: 'editar'
     },
     {
       Header: 'Eliminar',
-      accessor: 'eliminar',
-    },
-  ],
+      accessor: 'eliminar'
+    }
+  ]
 }
 
-module.exports={
-  PRODUCCION_ESPONJAS,
+module.exports = {
+  PRODUCCION_ESPONJAS
 }

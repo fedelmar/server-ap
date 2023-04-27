@@ -1,20 +1,22 @@
-const { format } = require("../resources/date");
+const { format } = require('../resources/date')
 
 const PRODUCCION_PLACAS = {
   export: {
     head: [
-      ['Fecha',
-      'Operario',
-      'Lote',
-      "Inicio",
-      "Cierre",
-      "Producto",
-      "Placa", 
-      "Tapón",
-      "PCM",
-      "Produccion",
-      "Descarte",
-      "Observaciones"]
+      [
+        'Fecha',
+        'Operario',
+        'Lote',
+        'Inicio',
+        'Cierre',
+        'Producto',
+        'Placa',
+        'Tapón',
+        'PCM',
+        'Produccion',
+        'Descarte',
+        'Observaciones'
+      ]
     ],
     regFormat: (registro) => [
       format(new Date(registro.creado), 'dd/MM/yy'),
@@ -29,66 +31,66 @@ const PRODUCCION_PLACAS = {
       registro.cantProducida,
       registro.cantDescarte,
       registro.observaciones
-  ],
+    ],
     title: 'REGISTRO DE PRODUCCIÓN DE PLACAS',
-    fileName: 'Produccion Placas',
+    fileName: 'Produccion Placas'
   },
   columnas: [
     {
       Header: 'Fecha',
-      accessor: 'creado',
+      accessor: 'creado'
     },
     {
       Header: 'Operario',
-      accessor: 'operario',
+      accessor: 'operario'
     },
     {
       Header: 'Lote',
-      accessor: 'lote',
+      accessor: 'lote'
     },
     {
       Header: 'Horario',
-      accessor: 'horario',
+      accessor: 'horario'
     },
     {
       Header: 'Producto',
-      accessor: 'producto',
+      accessor: 'producto'
     },
     {
       Header: 'Llenado',
-      accessor: 'llenado',
+      accessor: 'llenado'
     },
     {
       Header: 'Placa LI/LP',
-      accessor: 'lPlaca',
+      accessor: 'lPlaca'
     },
     {
       Header: 'Tapón',
-      accessor: 'lTapon',
+      accessor: 'lTapon'
     },
     {
       Header: 'Produccion',
-      accessor: 'cantProducida',
+      accessor: 'cantProducida'
     },
     {
       Header: 'Descarte',
-      accessor: 'cantDescarte',
+      accessor: 'cantDescarte'
     },
     {
       Header: 'Observaciones',
-      accessor: 'observaciones',
+      accessor: 'observaciones'
     },
     {
       Header: 'Editar',
-      accessor: 'editar',
+      accessor: 'editar'
     },
     {
       Header: 'Eliminar',
-      accessor: 'eliminar',
-    },
-  ],
+      accessor: 'eliminar'
+    }
+  ]
 }
 
-module.exports={
-  PRODUCCION_PLACAS,
+module.exports = {
+  PRODUCCION_PLACAS
 }

@@ -1,68 +1,70 @@
-const { format } = require("../resources/date");
+const { format } = require('../resources/date')
 
 const PREPARACION_GEL = {
   export: {
     head: [
-      ['Fecha',
-      'Lote',
-      "Hora",
-      "Llenado",
-      "Cantidad",
-      "Lote Insumo",
-      "Tanque Nº",
-      "Operario",
-      "Observaciones"]
+      [
+        'Fecha',
+        'Lote',
+        'Hora',
+        'Llenado',
+        'Cantidad',
+        'Lote Insumo',
+        'Tanque Nº',
+        'Operario',
+        'Observaciones'
+      ]
     ],
     regFormat: (registro) => [
       format(new Date(registro.creado), 'dd/MM/yy'),
       registro.lote,
       format(new Date(registro.creado), 'HH:mm'),
-      registro.llenado === true ? "SI" : "NO",
+      registro.llenado === true ? 'SI' : 'NO',
       registro.cantidad,
       registro.loteInsumo,
       registro.tanque,
       registro.operario,
       registro.observaciones
-  ],
+    ],
     title: 'REGISTRO DE PREPARACION DE GEL',
-    fileName: 'Preparado Gel',
+    fileName: 'Preparado Gel'
   },
   columnas: [
     {
       Header: 'Fecha',
-      accessor: 'fecha',
+      accessor: 'fecha'
     },
     {
-        Header: 'Lote',
-        accessor: 'lote',
+      Header: 'Lote',
+      accessor: 'lote'
     },
     {
-        Header: 'Hora',
-        accessor: 'hora',
+      Header: 'Hora',
+      accessor: 'hora'
     },
     {
       Header: 'Llenado',
-      accessor: 'llenado',
+      accessor: 'llenado'
     },
     {
       Header: 'Cantidad',
-      accessor: 'cantidad',
+      accessor: 'cantidad'
     },
     {
       Header: 'Lote Insumo',
-      accessor: 'loteInsumo',
+      accessor: 'loteInsumo'
     },
     {
       Header: 'Tanque Nº',
-      accessor: 'tanque',
+      accessor: 'tanque'
     },
     {
       Header: 'Operario',
-      accessor: 'operario',
+      accessor: 'operario'
     },
     {
       Header: 'Observaciones',
-      accessor: 'observaciones',
+      accessor: 'observaciones'
     },
     {
       Header: 'Editar',
@@ -71,10 +73,10 @@ const PREPARACION_GEL = {
     {
       Header: 'Eliminar',
       accessor: 'eliminar'
-    },
-  ],
+    }
+  ]
 }
 
-module.exports={
-  PREPARACION_GEL,
+module.exports = {
+  PREPARACION_GEL
 }

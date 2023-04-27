@@ -1,19 +1,20 @@
-const { format } = require("../resources/date");
-
+const { format } = require('../resources/date')
 
 const GUARDADO_ESPONJAS = {
   export: {
     head: [
-      ['Fecha',
-      'Operario',
-      'Lote',
-      "Inicio",
-      "Cierre",
-      "Producto",
-      "Caja", 
-      "Esponjas",
-      "Descarte",
-      "Observaciones"]
+      [
+        'Fecha',
+        'Operario',
+        'Lote',
+        'Inicio',
+        'Cierre',
+        'Producto',
+        'Caja',
+        'Esponjas',
+        'Descarte',
+        'Observaciones'
+      ]
     ],
     regFormat: (registro) => [
       format(new Date(registro.creado), 'dd/MM/yy'),
@@ -26,62 +27,62 @@ const GUARDADO_ESPONJAS = {
       registro.guardado,
       registro.descarte,
       registro.observaciones
-  ],
+    ],
     title: 'REGISTRO DE GUARDADO DE ESPONJAS',
-    fileName: 'Guardado Esponjas',
+    fileName: 'Guardado Esponjas'
   },
   columnas: [
     {
       Header: 'Fecha',
-      accessor: 'fecha',
+      accessor: 'fecha'
     },
     {
       Header: 'Horario',
-      accessor: 'horario',
+      accessor: 'horario'
     },
     {
       Header: 'Producto',
-      accessor: 'producto',
+      accessor: 'producto'
     },
     {
       Header: 'Lote',
-      accessor: 'lote',
+      accessor: 'lote'
     },
     {
       Header: 'Tipo de Caja',
-      accessor: 'caja',
+      accessor: 'caja'
     },
     {
       Header: 'Descarte de caja',
-      accessor: 'descCajas',
+      accessor: 'descCajas'
     },
     {
       Header: 'Esponjas',
-      accessor: 'guardado',
+      accessor: 'guardado'
     },
     {
       Header: 'Descarte',
-      accessor: 'descarte',
+      accessor: 'descarte'
     },
     {
       Header: 'Operario',
-      accessor: 'operario',
+      accessor: 'operario'
     },
     {
       Header: 'Observaciones',
-      accessor: 'observaciones',
+      accessor: 'observaciones'
     },
     {
       Header: 'Editar',
-      accessor: 'editar',
+      accessor: 'editar'
     },
     {
       Header: 'Eliminar',
-      accessor: 'eliminar',
-    },
-  ],
+      accessor: 'eliminar'
+    }
+  ]
 }
 
-module.exports= {
-  GUARDADO_ESPONJAS,
+module.exports = {
+  GUARDADO_ESPONJAS
 }

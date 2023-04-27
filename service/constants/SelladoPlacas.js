@@ -1,17 +1,19 @@
-const { format } = require("../resources/date");
+const { format } = require('../resources/date')
 
 const SELLADO_PLACAS = {
   export: {
     head: [
-      ['Fecha',
-      'Operario',
-      'Lote',
-      "Inicio",
-      "Cierre",
-      "Producto",
-      "Placas",
-      "Descarte",
-      "Observaciones"]
+      [
+        'Fecha',
+        'Operario',
+        'Lote',
+        'Inicio',
+        'Cierre',
+        'Producto',
+        'Placas',
+        'Descarte',
+        'Observaciones'
+      ]
     ],
     regFormat: (registro) => [
       format(new Date(registro.creado), 'dd/MM/yy'),
@@ -23,53 +25,53 @@ const SELLADO_PLACAS = {
       registro.sellado,
       registro.descarte,
       registro.observaciones
-  ],
+    ],
     title: 'REGISTRO DE SELLADO DE PLACAS',
-    fileName: 'Sellado Placas',
+    fileName: 'Sellado Placas'
   },
   columnas: [
     {
       Header: 'Fecha',
-      accessor: 'fecha',
+      accessor: 'fecha'
     },
     {
       Header: 'Horario',
-      accessor: 'horario',
+      accessor: 'horario'
     },
     {
       Header: 'Producto',
-      accessor: 'producto',
+      accessor: 'producto'
     },
     {
       Header: 'Lote',
-      accessor: 'lote',
+      accessor: 'lote'
     },
     {
       Header: 'Placas',
-      accessor: 'sellado',
+      accessor: 'sellado'
     },
     {
       Header: 'Descarte',
-      accessor: 'descarte',
+      accessor: 'descarte'
     },
     {
       Header: 'Operario',
-      accessor: 'operario',
+      accessor: 'operario'
     },
     {
       Header: 'Observaciones',
-      accessor: 'observaciones',
+      accessor: 'observaciones'
     },
     {
       Header: 'Editar',
-      accessor: 'editar',
+      accessor: 'editar'
     },
     {
       Header: 'Eliminar',
-      accessor: 'eliminar',
-    },
-  ],
+      accessor: 'eliminar'
+    }
+  ]
 }
-module.exports={
-  SELLADO_PLACAS,
+module.exports = {
+  SELLADO_PLACAS
 }

@@ -1,24 +1,26 @@
-const { format } = require("../resources/date");
+const { format } = require('../resources/date')
 
 const PRODUCCION_GEL = {
   export: {
     head: [
-      ['Fecha',
-      'Lote',
-      "Inicio",
-      "Cierre",
-      "Operario",
-      "Producto",
-      "Cliente",
-      "Bolsa",
-      "Gel",
-      "DB",
-      "M",
-      "Prod.",
-      "Descarte",
-      "P1",
-      "P2",
-      "Observaciones"]
+      [
+        'Fecha',
+        'Lote',
+        'Inicio',
+        'Cierre',
+        'Operario',
+        'Producto',
+        'Cliente',
+        'Bolsa',
+        'Gel',
+        'DB',
+        'M',
+        'Prod.',
+        'Descarte',
+        'P1',
+        'P2',
+        'Observaciones'
+      ]
     ],
     regFormat: (registro) => [
       format(new Date(registro.creado), 'dd/MM/yy'),
@@ -30,81 +32,81 @@ const PRODUCCION_GEL = {
       registro.cliente,
       registro.loteBolsa,
       registro.loteGel,
-      registro.dobleBolsa === true ? "SI" : "NO",
-      registro.manta === true ? "SI" : "NO",
+      registro.dobleBolsa === true ? 'SI' : 'NO',
+      registro.manta === true ? 'SI' : 'NO',
       registro.cantProducida,
       registro.cantDescarte,
       registro.puesto1,
       registro.puesto2,
       registro.observaciones
-  ],
+    ],
     title: 'REGISTRO DE PRODUCCION DE BOLSAS DE GEL',
-    fileName: 'Produccion Gel',
+    fileName: 'Produccion Gel'
   },
   columnas: [
     {
       Header: 'Fecha',
-      accessor: 'creado',
+      accessor: 'creado'
     },
     {
       Header: 'Operario',
-      accessor: 'operario',
+      accessor: 'operario'
     },
     {
       Header: 'Lote',
-      accessor: 'lote',
+      accessor: 'lote'
     },
     {
-        Header: 'Cliente',
-        accessor: 'cliente'
+      Header: 'Cliente',
+      accessor: 'cliente'
     },
     {
       Header: 'Horario',
-      accessor: 'horario',
+      accessor: 'horario'
     },
     {
       Header: 'Producto',
-      accessor: 'producto',
+      accessor: 'producto'
     },
     {
-        Header: 'Bolsa',
-        accessor: 'loteBolsa',
+      Header: 'Bolsa',
+      accessor: 'loteBolsa'
     },
     {
-        Header: 'Gel',
-        accessor: 'loteGel',
+      Header: 'Gel',
+      accessor: 'loteGel'
     },
     {
-        Header: 'DB',
-        accessor: 'dobleBolsa',
+      Header: 'DB',
+      accessor: 'dobleBolsa'
     },
     {
-        Header: 'M',
-        accessor: 'manta',
-    },    
+      Header: 'M',
+      accessor: 'manta'
+    },
     {
       Header: 'Produccion',
-      accessor: 'cantProducida',
+      accessor: 'cantProducida'
     },
     {
       Header: 'Descarte',
-      accessor: 'cantDescarte',
+      accessor: 'cantDescarte'
     },
     {
       Header: 'Observaciones',
-      accessor: 'observaciones',
+      accessor: 'observaciones'
     },
     {
       Header: 'Editar',
-      accessor: 'editar',
+      accessor: 'editar'
     },
     {
       Header: 'Eliminar',
-      accessor: 'eliminar',
-    },
-  ],
+      accessor: 'eliminar'
+    }
+  ]
 }
 
-module.exports={
-  PRODUCCION_GEL,
+module.exports = {
+  PRODUCCION_GEL
 }

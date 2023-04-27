@@ -1,53 +1,53 @@
-const { format } = require("../resources/date");
+const { format } = require('../resources/date')
 
 const INGRESOS = {
   export: {
-    head: [["Fecha", "Insumo", "Cantidad", "Remito", "Proveedor", "Lote"]],
+    head: [['Fecha', 'Insumo', 'Cantidad', 'Remito', 'Proveedor', 'Lote']],
     regFormat: (registro) => [
-      format(new Date(registro.creado), "dd/MM/yy"),
+      format(new Date(registro.creado), 'dd/MM/yy'),
       registro.insumo,
       registro.cantidad,
       registro.remito,
       registro.proveedor,
-      registro.lote,
+      registro.lote
     ],
-    title: "REGISTRO DE INGREO DE INSUMOS",
-    fileName: "Ingresos",
+    title: 'REGISTRO DE INGREO DE INSUMOS',
+    fileName: 'Ingresos'
   },
   columnas: [
     {
-      Header: "Fecha",
-      accessor: "fecha",
+      Header: 'Fecha',
+      accessor: 'fecha'
     },
     {
-      Header: "Insumo",
-      accessor: "insumo",
+      Header: 'Insumo',
+      accessor: 'insumo'
     },
     {
-      Header: "Cantidad",
-      accessor: "cantidad",
+      Header: 'Cantidad',
+      accessor: 'cantidad'
     },
     {
-      Header: "Remito",
-      accessor: "remito",
+      Header: 'Remito',
+      accessor: 'remito'
     },
     {
-      Header: "Proveedor",
-      accessor: "proveedor",
+      Header: 'Proveedor',
+      accessor: 'proveedor'
     },
     {
-      Header: "Lote",
-      accessor: "lote",
+      Header: 'Lote',
+      accessor: 'lote'
     },
     {
-      Header: "Editar",
-      accessor: "editar",
+      Header: 'Editar',
+      accessor: 'editar'
     },
     {
-      Header: "Eliminar",
-      accessor: "eliminar",
-    },
-  ],
-};
+      Header: 'Eliminar',
+      accessor: 'eliminar'
+    }
+  ]
+}
 
-module.exports={ INGRESOS };
+module.exports = { INGRESOS }

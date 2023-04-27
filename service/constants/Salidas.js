@@ -1,53 +1,47 @@
-const { format } = require("../resources/date");
+const { format } = require('../resources/date')
 
 const SALIDAS = {
   export: {
-    head: [["Fecha", "Remito", "Cliente", "Lote", "Producto", "Cantidad"]],
+    head: [['Fecha', 'Remito', 'Cliente', 'Lote', 'Producto', 'Cantidad']],
     regFormat: (registro) => [
       format(new Date(registro.fecha)),
       registro.remito,
       registro.cliente,
-      registro.lotes.map(a => 
-          `${a.lote}\n`
-      ),
-      registro.lotes.map(a => 
-          `${a.producto}\n`
-      ),
-      registro.lotes.map(a => 
-          `${a.cantidad} \n`
-      )
+      registro.lotes.map((a) => `${a.lote}\n`),
+      registro.lotes.map((a) => `${a.producto}\n`),
+      registro.lotes.map((a) => `${a.cantidad} \n`)
     ],
-    title: "REGISTRO DE SALIDA DE PRODUCTOS",
-    fileName: "Salidas.pdf",
+    title: 'REGISTRO DE SALIDA DE PRODUCTOS',
+    fileName: 'Salidas.pdf'
   },
   columnas: [
     {
       Header: 'Fecha',
-      accessor: 'fecha',
+      accessor: 'fecha'
     },
     {
       Header: 'Cliente',
-      accessor: 'cliente',
+      accessor: 'cliente'
     },
     {
       Header: 'Remito',
-      accessor: 'remito',
+      accessor: 'remito'
     },
     {
       Header: 'Lotes',
-      accessor: 'lotes',
+      accessor: 'lotes'
     },
     {
       Header: 'Editar',
-      accessor: 'editar',
+      accessor: 'editar'
     },
     {
       Header: 'Eliminar',
-      accessor: 'eliminar',
-    },
-  ],
-};
+      accessor: 'eliminar'
+    }
+  ]
+}
 
 module.exports = {
   SALIDAS
-};
+}

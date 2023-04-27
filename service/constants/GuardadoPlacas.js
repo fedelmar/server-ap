@@ -1,82 +1,82 @@
-const { format } = require("../resources/date");
+const { format } = require('../resources/date')
 
 const GUARDADO_PLACAS = {
   export: {
     head: [
       [
-        "Fecha",
-        "Operario",
-        "Lote",
-        "Inicio",
-        "Cierre",
-        "Producto",
-        "Pallet",
-        "Placas",
-        "Descarte",
-        "Observaciones",
-      ],
+        'Fecha',
+        'Operario',
+        'Lote',
+        'Inicio',
+        'Cierre',
+        'Producto',
+        'Pallet',
+        'Placas',
+        'Descarte',
+        'Observaciones'
+      ]
     ],
     regFormat: (registro) => [
-      format(new Date(registro.creado), "dd/MM/yy"),
+      format(new Date(registro.creado), 'dd/MM/yy'),
       registro.operario,
       registro.lote,
-      format(new Date(registro.creado), "HH:mm"),
-      format(new Date(registro.modificado), "HH:mm"),
+      format(new Date(registro.creado), 'HH:mm'),
+      format(new Date(registro.modificado), 'HH:mm'),
       registro.producto,
       registro.pallet,
       registro.guardado,
       registro.descarte,
-      registro.observaciones,
+      registro.observaciones
     ],
-    title: "REGISTRO DE GUARDADO DE PLACAS",
-    fileName: "Guardado Placas",
+    title: 'REGISTRO DE GUARDADO DE PLACAS',
+    fileName: 'Guardado Placas'
   },
   columnas: [
     {
-      Header: "Fecha",
-      accessor: "fecha",
+      Header: 'Fecha',
+      accessor: 'fecha'
     },
     {
-      Header: "Horario",
-      accessor: "horario",
+      Header: 'Horario',
+      accessor: 'horario'
     },
     {
-      Header: "Producto",
-      accessor: "producto",
+      Header: 'Producto',
+      accessor: 'producto'
     },
     {
-      Header: "Lote",
-      accessor: "lote",
+      Header: 'Lote',
+      accessor: 'lote'
     },
     {
-      Header: "Pallet",
-      accessor: "pallet",
+      Header: 'Pallet',
+      accessor: 'pallet'
     },
     {
-      Header: "Placas",
-      accessor: "guardado",
+      Header: 'Placas',
+      accessor: 'guardado'
     },
     {
-      Header: "Descarte",
-      accessor: "descarte",
+      Header: 'Descarte',
+      accessor: 'descarte'
     },
     {
-      Header: "Operario",
-      accessor: "operario",
+      Header: 'Operario',
+      accessor: 'operario'
     },
     {
-      Header: "Observaciones",
-      accessor: "observaciones",
+      Header: 'Observaciones',
+      accessor: 'observaciones'
     },
     {
-      Header: "Editar",
-      accessor: "editar",
+      Header: 'Editar',
+      accessor: 'editar'
     },
     {
-      Header: "Eliminar",
-      accessor: "eliminar",
-    },
-  ],
-};
+      Header: 'Eliminar',
+      accessor: 'eliminar'
+    }
+  ]
+}
 
-module.exports={ GUARDADO_PLACAS };
+module.exports = { GUARDADO_PLACAS }
