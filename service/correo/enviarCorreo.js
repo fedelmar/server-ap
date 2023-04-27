@@ -1,5 +1,6 @@
 const nodemailer = require('nodemailer')
 const moment = require('moment')
+const { eliminarPDF } = require('./eliminarPDF')
 
 // Función que envía el PDF por correo electrónico
 const enviarCorreo = (attachments) => {
@@ -33,7 +34,9 @@ const enviarCorreo = (attachments) => {
     } else {
       console.log('Correo electrónico enviado: ' + info.response)
     }
-  })
+  });
+
+  eliminarPDF();
 }
 
 module.exports = {

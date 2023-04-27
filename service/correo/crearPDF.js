@@ -15,7 +15,7 @@ const {
 const fs = require('fs')
 const path = require('path')
 
-const crearPDF = (datos, modelo) => {
+const crearPDF = async (datos, modelo) => {
   let modelFormat
   switch (modelo) {
     case 'PRODUCCION_ESPONJAS':
@@ -83,7 +83,7 @@ const crearPDF = (datos, modelo) => {
     '../Reports',
     `${fileName}_${reportDate}.pdf`
   )
-  fs.writeFileSync(filePath, doc.output())
+  await fs.writeFileSync(filePath, doc.output())
 
   return {
     fileName: `${fileName}_${reportDate}.pdf`,

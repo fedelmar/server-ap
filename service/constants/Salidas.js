@@ -12,7 +12,7 @@ const SALIDAS = {
       registro.lotes.map((a) => `${a.cantidad} \n`)
     ],
     title: 'REGISTRO DE SALIDA DE PRODUCTOS',
-    fileName: 'Salidas.pdf'
+    fileName: 'Salidas'
   },
   columnas: [
     {
