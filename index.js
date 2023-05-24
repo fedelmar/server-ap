@@ -3,6 +3,7 @@ const typeDefs = require('./db/schema');
 const resolvers = require('./db/resolvers');
 const jwt = require('jsonwebtoken');
 const conectarDB = require('./config/db');
+const { job } = require('./service/job');
 require('dotenv').config({ path:'variables.env' });
 
 
@@ -39,5 +40,6 @@ const server = new ApolloServer({
 
 //Iniciar el servidor
 server.listen({port: process.env.PORT || 4000}).then( ({url}) => {
+    job(),
     console.log(`Servidor corriendo en ${url}`)
 })
