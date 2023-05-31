@@ -46,7 +46,7 @@ const enviarReportes = async () => {
 
   const ProduccionEsponjas = await getRegsByDatePE(undefined, inputDate)
   attachments.push(crearPDF(ProduccionEsponjas, 'PRODUCCION_ESPONJAS'))
-
+  console.log(attachments)
   await enviarCorreo(attachments)
 }
 module.exports = { enviarReportes }
