@@ -48,8 +48,7 @@ const enviarReportes = async () => {
   attachments.push(crearPDF(ProduccionEsponjas, 'PRODUCCION_ESPONJAS'))
 
   Promise.all(attachments).then((value) => {
-    console.log(value)
-    enviarCorreo(attachments)
+    enviarCorreo(value)
   })
 }
 module.exports = { enviarReportes }
