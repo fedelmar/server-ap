@@ -47,6 +47,8 @@ const enviarReportes = async () => {
   const ProduccionEsponjas = await getRegsByDatePE(undefined, inputDate)
   attachments.push(crearPDF(ProduccionEsponjas, 'PRODUCCION_ESPONJAS'))
 
-  await enviarCorreo(attachments)
+  Promise.all(attachments).then((value) => {
+    enviarCorreo(value)
+  })
 }
 module.exports = { enviarReportes }
