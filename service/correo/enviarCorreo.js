@@ -33,7 +33,7 @@ const enviarCorreo = (attachments) => {
       console.log(error)
     } else {
       console.log('Correo electrónico enviado: ' + info.response)
-      eliminarPDF();
+      // eliminarPDF();
     }
   });
 
