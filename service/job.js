@@ -6,8 +6,8 @@ let tarea
 const job = async () => {
   const regla = new schedule.RecurrenceRule()
   regla.month = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-  regla.hour = 9
-  regla.minute = 30
+  regla.hour = 14
+  regla.minute = 00
   regla.second = 0
 
   regla.date = 1
