@@ -1112,21 +1112,21 @@ const resolvers = {
     nuevoRegistroGP: async (_, { id, input }) => {
       const { guardado, descarte, lote, operario } = input;
 
-      let infoLote = await StockProducto.findOne({
-        lote: lote,
-        estado: { $ne: "Terminado" },
-      });
-      let loteTerminado = await StockProducto.findOne({
-        lote: lote,
-        estado: "Terminado",
-      });
-
       try {
-        if (!infoLote) {
-          throw new Error("Lote no encontrado");
-        }
-
         if (id) {
+          const registroGuardado = await CGP.findById(id);
+          if (!registroGuardado) {
+            throw new Error("Registro no encontrado");
+          }
+
+          let infoLote = await StockProducto.findById(registroGuardado.loteID);
+          if (!infoLote) {
+            throw new Error("Lote no encontrado");
+          }
+          let loteTerminado = await StockProducto.findOne({
+            lote: infoLote.lote,
+            estado: "Terminado",
+          });
           infoLote.responsable = operario;
           infoLote.modificado = Date.now();
           // Actualizar info en el lote del producto
